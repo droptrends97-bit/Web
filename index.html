@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Abyssal — A Living Guide to the Fish of Our Oceans</title>
+<meta name="description" content="An immersive, interactive field guide to fish: swim through the ocean's depth zones, release species into a living tank, study anatomy, and find your spirit fish.">
+<meta name="theme-color" content="#04141f">
+<meta property="og:title" content="Abyssal — A Living Guide to the Fish of Our Oceans">
+<meta property="og:description" content="Descend through six ocean zones, release fish into a living tank, and meet the strangest swimmers on Earth.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="data:">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%90%A0%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ============ PRELOADER ============ -->
+<div id="preloader" class="preloader" role="status" aria-live="polite">
+  <div class="preloader__inner">
+    <svg class="preloader__fish" viewBox="0 0 120 60" aria-hidden="true">
+      <path class="pl-body" d="M12 30 C 30 6, 74 6, 92 30 C 74 54, 30 54, 12 30 Z"/>
+      <path class="pl-tail" d="M92 30 L 114 14 L 108 30 L 114 46 Z"/>
+      <circle class="pl-eye" cx="34" cy="26" r="3.2"/>
+    </svg>
+    <div class="preloader__bar"><i id="preloaderBar"></i></div>
+    <p class="preloader__label">Filling the tank<span class="dots"><i>.</i><i>.</i><i>.</i></span></p>
+  </div>
+</div>
+
+<!-- ============ LIVE BACKGROUND TANK ============ -->
+<canvas id="tank" class="tank" aria-hidden="true"></canvas>
+<div class="tank-vignette" aria-hidden="true"></div>
+<div class="grain" aria-hidden="true"></div>
+
+<!-- scroll progress -->
+<div class="progress" aria-hidden="true"><i id="progressBar"></i></div>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<!-- ============ NAV ============ -->
+<header class="nav" id="nav">
+  <a class="nav__brand" href="#hero" data-scroll>
+    <span class="nav__mark" aria-hidden="true">
+      <svg viewBox="0 0 40 24"><path d="M3 12 C 10 3, 25 3, 30 12 C 25 21, 10 21, 3 12 Z"/><path d="M30 12 L 39 5 L 36 12 L 39 19 Z"/></svg>
+    </span>
+    <span class="nav__word">Abyssal</span>
+  </a>
+
+  <nav class="nav__links" aria-label="Primary">
+    <a href="#descent" data-scroll>Descent</a>
+    <a href="#species" data-scroll>Species</a>
+    <a href="#anatomy" data-scroll>Anatomy</a>
+    <a href="#scale" data-scroll>Scale</a>
+    <a href="#feed" data-scroll>Feed</a>
+    <a href="#quiz" data-scroll>Quiz</a>
+  </nav>
+
+  <div class="nav__actions">
+    <button class="icon-btn" id="soundBtn" aria-pressed="false" title="Toggle ambient sound">
+      <svg class="ic-off" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M17 8l4 8M21 8l-4 8" class="slash"/></svg>
+      <svg class="ic-on" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 010 7M19 6a8.5 8.5 0 010 12" class="waves"/></svg>
+      <span class="sr-only">Toggle ambient ocean sound</span>
+    </button>
+    <button class="icon-btn" id="motionBtn" aria-pressed="false" title="Reduce motion">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h6M15 12h6M12 3v6M12 15v6"/><circle cx="12" cy="12" r="2.6"/></svg>
+      <span class="sr-only">Toggle reduced motion</span>
+    </button>
+    <a class="btn btn--sm btn--primary" href="#join" data-scroll>Get the field guide</a>
+    <button class="nav__burger" id="burger" aria-expanded="false" aria-controls="mobileMenu"><span></span><span></span><span></span><span class="sr-only">Menu</span></button>
+  </div>
+</header>
+
+<div class="mobile-menu" id="mobileMenu" hidden>
+  <a href="#descent" data-scroll>Descent</a>
+  <a href="#species" data-scroll>Species</a>
+  <a href="#anatomy" data-scroll>Anatomy</a>
+  <a href="#scale" data-scroll>Scale</a>
+  <a href="#feed" data-scroll>Feed</a>
+  <a href="#quiz" data-scroll>Quiz</a>
+  <a href="#join" data-scroll class="mm-cta">Get the field guide</a>
+</div>
+
+<main id="main">
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="hero">
+  <div class="hero__inner">
+    <p class="eyebrow reveal" data-reveal>
+      <span class="pulse-dot" aria-hidden="true"></span>
+      Live tank &middot; <span id="liveCount">0</span> fish swimming right now
+    </p>
+
+    <h1 class="hero__title">
+      <span class="line reveal" data-reveal data-delay="60"><em>Thirty-six thousand</em></span>
+      <span class="line reveal" data-reveal data-delay="140">species. One ocean.</span>
+      <span class="line reveal" data-reveal data-delay="220">Zero silence.</span>
+    </h1>
+
+    <p class="hero__lede reveal" data-reveal data-delay="320">
+      Fish were the first vertebrates, and they never stopped experimenting — glass bodies, glowing lures,
+      antifreeze blood, eyes that look up through their own skulls. Scroll to descend.
+      Everything you see swimming behind this text is simulated in real time.
+    </p>
+
+    <div class="hero__cta reveal" data-reveal data-delay="400">
+      <a class="btn btn--primary btn--lg magnetic" href="#descent" data-scroll>Begin the descent</a>
+      <a class="btn btn--ghost btn--lg magnetic" href="#species" data-scroll>Meet the species</a>
+    </div>
+
+    <ul class="hero__proof reveal" data-reveal data-delay="480">
+      <li><b>6</b> depth zones</li>
+      <li><b>12</b> species profiles</li>
+      <li><b>0</b> plugins, 100% hand&#8209;drawn code</li>
+    </ul>
+  </div>
+
+  <button class="scroll-cue" data-scroll data-target="#pulse" aria-label="Scroll down">
+    <span class="scroll-cue__line" aria-hidden="true"></span>
+    <span class="scroll-cue__label">scroll</span>
+  </button>
+</section>
+
+<!-- ============ STATS ============ -->
+<section class="pulse" id="pulse">
+  <div class="wrap">
+    <header class="sec-head reveal" data-reveal>
+      <p class="kicker">The pulse of the water</p>
+      <h2>More vertebrate species swim than walk, fly, or crawl — combined.</h2>
+    </header>
+
+    <div class="stat-grid">
+      <article class="stat reveal" data-reveal data-delay="0">
+        <b class="stat__num" data-count="36000" data-suffix="+">0</b>
+        <span class="stat__label">described fish species</span>
+        <p>Roughly half of all vertebrates. A new one is described every few days.</p>
+      </article>
+      <article class="stat reveal" data-reveal data-delay="80">
+        <b class="stat__num" data-count="10935" data-suffix=" m">0</b>
+        <span class="stat__label">deepest fish sighting</span>
+        <p>A snailfish filmed in the Izu-Ogasawara Trench — under 1.1 tonnes of pressure per cm².</p>
+      </article>
+      <article class="stat reveal" data-reveal data-delay="160">
+        <b class="stat__num" data-count="80" data-suffix="%">0</b>
+        <span class="stat__label">of deep-sea fish glow</span>
+        <p>Bioluminescence is not exotic down there. It is the default way to be seen.</p>
+      </article>
+      <article class="stat reveal" data-reveal data-delay="240">
+        <b class="stat__num" data-count="500" data-suffix=" Myr">0</b>
+        <span class="stat__label">of continuous evolution</span>
+        <p>Jawless swimmers appeared before forests, before flowers, before bones as we know them.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ DEPTH DESCENT ============ -->
+<section class="descent" id="descent">
+  <div class="descent__sticky">
+    <div class="wrap descent__grid">
+      <div class="descent__rail" aria-hidden="true">
+        <div class="rail__track"><i id="railFill"></i></div>
+        <ul class="rail__ticks" id="railTicks"></ul>
+      </div>
+
+      <div class="descent__copy">
+        <p class="kicker">Descent &middot; <span id="zoneIndex">01</span> / 06</p>
+        <h2 class="zone__name" id="zoneName">Sunlight Zone</h2>
+        <p class="zone__range" id="zoneRange">0 – 200 m</p>
+        <p class="zone__text" id="zoneText"></p>
+
+        <dl class="zone__meta">
+          <div><dt>Light</dt><dd id="zoneLight">—</dd></div>
+          <div><dt>Pressure</dt><dd id="zonePressure">—</dd></div>
+          <div><dt>Temp</dt><dd id="zoneTemp">—</dd></div>
+        </dl>
+
+        <p class="zone__resident">Resident: <b id="zoneResident">—</b></p>
+      </div>
+
+      <div class="descent__gauge" aria-hidden="true">
+        <div class="gauge__depth"><span id="gaugeDepth">0</span><i>m</i></div>
+        <div class="gauge__bar"><i id="gaugeFill"></i></div>
+      </div>
+    </div>
+  </div>
+  <div class="descent__spacer" id="descentSpacer"></div>
+</section>
+
+<!-- ============ SPECIES EXPLORER ============ -->
+<section class="species" id="species">
+  <div class="wrap">
+    <header class="sec-head reveal" data-reveal>
+      <p class="kicker">Field guide</p>
+      <h2>Twelve swimmers worth knowing</h2>
+      <p class="sec-sub">Every card is drawn frame-by-frame — no images, no video. Press <b>Release</b> and the
+        species joins the live tank behind the page, with its own body plan and swimming style.</p>
+    </header>
+
+    <div class="filters reveal" data-reveal>
+      <div class="chips" role="group" aria-label="Filter species by habitat">
+        <button class="chip is-active" data-filter="all">All</button>
+        <button class="chip" data-filter="reef">Reef</button>
+        <button class="chip" data-filter="open">Open ocean</button>
+        <button class="chip" data-filter="deep">Deep sea</button>
+        <button class="chip" data-filter="fresh">Freshwater</button>
+        <button class="chip" data-filter="cold">Polar &amp; cold</button>
+      </div>
+      <label class="search">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l5 5"/></svg>
+        <input type="search" id="speciesSearch" placeholder="Search 12 species…" aria-label="Search species">
+      </label>
+    </div>
+
+    <div class="species__grid" id="speciesGrid"></div>
+
+    <p class="species__empty" id="speciesEmpty" hidden>No fish match that net. <button class="link" id="clearFilters">Clear the filters</button></p>
+
+    <div class="tank-controls reveal" data-reveal>
+      <p><b id="tankCount">0</b> fish in the live tank</p>
+      <button class="btn btn--ghost btn--sm" id="releaseAll">Release one of each</button>
+      <button class="btn btn--ghost btn--sm" id="resetTank">Reset tank</button>
+    </div>
+  </div>
+</section>
+
+<!-- species drawer -->
+<aside class="drawer" id="drawer" aria-hidden="true" aria-labelledby="drawerName" role="dialog" aria-modal="true">
+  <div class="drawer__scrim" data-close-drawer></div>
+  <div class="drawer__panel" role="document">
+    <button class="drawer__close" data-close-drawer aria-label="Close species detail">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <div class="drawer__stage"><canvas id="drawerCanvas"></canvas></div>
+    <div class="drawer__body">
+      <p class="kicker" id="drawerLatin">—</p>
+      <h3 id="drawerName">—</h3>
+      <p class="drawer__blurb" id="drawerBlurb"></p>
+
+      <ul class="drawer__facts" id="drawerFacts"></ul>
+
+      <div class="bars" id="drawerBars"></div>
+
+      <div class="drawer__cta">
+        <button class="btn btn--primary" id="drawerRelease">Release into the tank</button>
+        <span class="drawer__status" id="drawerStatus" role="status"></span>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- ============ ANATOMY ============ -->
+<section class="anatomy" id="anatomy">
+  <div class="wrap">
+    <header class="sec-head reveal" data-reveal>
+      <p class="kicker">Blueprint</p>
+      <h2>One body, engineered for a fluid 800× denser than air</h2>
+      <p class="sec-sub">Tap any marker. The labels are live — the fish keeps breathing while you read.</p>
+    </header>
+
+    <div class="anatomy__stage reveal" data-reveal>
+      <svg class="anatomy__svg" id="anatomySvg" viewBox="0 0 900 460" role="img" aria-label="Interactive diagram of fish anatomy">
+        <defs>
+          <linearGradient id="bodyGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#8fe6ff"/>
+            <stop offset="46%" stop-color="#39a8d8"/>
+            <stop offset="100%" stop-color="#125f88"/>
+          </linearGradient>
+          <linearGradient id="finGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#7fd8f5" stop-opacity=".85"/>
+            <stop offset="100%" stop-color="#2b7fae" stop-opacity=".35"/>
+          </linearGradient>
+          <clipPath id="bodyClip">
+            <path d="M120 236 C 190 138, 380 118, 520 148 C 620 170, 672 202, 700 234 C 668 268, 616 300, 520 322 C 380 352, 190 332, 120 236 Z"/>
+          </clipPath>
+          <radialGradient id="eyeGrad">
+            <stop offset="0%" stop-color="#0a0f14"/>
+            <stop offset="70%" stop-color="#12222c"/>
+            <stop offset="100%" stop-color="#dff6ff"/>
+          </radialGradient>
+        </defs>
+
+        <g id="fishRig">
+          <!-- fins behind body -->
+          <path class="an-part" data-part="dorsal" d="M395 168 C 420 96, 520 88, 560 150 C 505 140, 440 150, 395 168 Z" fill="url(#finGrad)"/>
+          <path class="an-part" data-part="pelvic" d="M395 300 C 400 344, 432 360, 452 340 C 430 330, 412 316, 405 298 Z" fill="url(#finGrad)"/>
+          <path class="an-part" data-part="anal" d="M520 300 C 528 344, 566 352, 580 330 C 556 322, 536 314, 528 298 Z" fill="url(#finGrad)"/>
+          <path class="an-part" data-part="caudal" d="M690 232 C 742 186, 796 160, 838 150 C 812 196, 806 262, 836 316 C 792 302, 738 274, 690 236 Z" fill="url(#finGrad)"/>
+
+          <!-- body -->
+          <path class="an-part an-body" data-part="body" d="M120 236 C 190 138, 380 118, 520 148 C 620 170, 672 202, 700 234 C 668 268, 616 300, 520 322 C 380 352, 190 332, 120 236 Z" fill="url(#bodyGrad)"/>
+
+          <!-- lateral line -->
+          <path class="an-part an-line" data-part="lateral" d="M235 224 C 340 208, 470 210, 660 232" fill="none"/>
+
+          <!-- gill cover -->
+          <path class="an-part" data-part="gills" d="M258 168 C 240 218, 244 262, 268 306" fill="none"/>
+
+          <!-- pectoral fin (animated) -->
+          <path class="an-part an-pectoral" id="pectoral" data-part="pectoral" d="M300 258 C 330 300, 372 322, 396 306 C 366 292, 336 276, 316 254 Z" fill="url(#finGrad)"/>
+
+          <!-- swim bladder (internal) -->
+          <ellipse class="an-part an-internal" data-part="bladder" cx="430" cy="212" rx="86" ry="30"/>
+
+          <!-- eye -->
+          <circle class="an-eye-white" cx="196" cy="216" r="21" fill="#eafaff" opacity=".9"/>
+          <circle class="an-part an-eye" data-part="eye" cx="196" cy="216" r="15" fill="url(#eyeGrad)"/>
+          <circle cx="190" cy="210" r="4.5" fill="#fff" opacity=".85"/>
+
+          <!-- mouth -->
+          <path class="an-part an-mouth" data-part="mouth" d="M122 240 C 140 252, 158 254, 172 250" fill="none"/>
+
+          <!-- scales hint -->
+          <g class="an-scales" aria-hidden="true"></g>
+        </g>
+
+        <g id="hotspots"></g>
+      </svg>
+
+      <div class="anatomy__label" id="anatomyLabel" aria-live="polite">
+        <h4 id="anLabelTitle">Pick a part</h4>
+        <p id="anLabelText">Hover or tap the glowing markers to dissect — politely — a generic bony fish.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SCALE COMPARISON ============ -->
+<section class="scale" id="scale">
+  <div class="wrap">
+    <header class="sec-head reveal" data-reveal>
+      <p class="kicker">Sense of scale</p>
+      <h2>From a grain of rice to a bus with gills</h2>
+      <p class="sec-sub">Drag the slider. Every silhouette is drawn to the same metre.</p>
+    </header>
+
+    <div class="scale__stage reveal" data-reveal>
+      <canvas id="scaleCanvas"></canvas>
+      <div class="scale__readout">
+        <h3 id="scaleName">—</h3>
+        <p id="scaleLen">—</p>
+        <p class="scale__note" id="scaleNote">—</p>
+      </div>
+    </div>
+
+    <div class="scale__control reveal" data-reveal>
+      <input type="range" id="scaleSlider" min="0" max="7" value="3" step="1" aria-label="Choose a fish to compare with a 1.8 metre diver">
+      <ul class="scale__ticks" id="scaleTicks"></ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FEED ============ -->
+<section class="feed" id="feed">
+  <div class="wrap feed__grid">
+    <div class="feed__copy reveal" data-reveal>
+      <p class="kicker">Interaction</p>
+      <h2>Drop food. Watch a shoal decide.</h2>
+      <p>Click or drag anywhere on the page — including here — to release food into the water.
+        The fish don't follow a path; each one weighs hunger against its neighbours, then steers.
+        Nothing is scripted, so the swarm never repeats itself.</p>
+
+      <ul class="feed__stats">
+        <li><b id="pelletsDropped">0</b><span>pellets dropped</span></li>
+        <li><b id="pelletsEaten">0</b><span>eaten</span></li>
+        <li><b id="feedFrenzy">calm</b><span>shoal state</span></li>
+      </ul>
+
+      <div class="feed__buttons">
+        <button class="btn btn--primary magnetic" id="feedBurst">Scatter a handful</button>
+        <button class="btn btn--ghost magnetic" id="calmBtn">Calm the water</button>
+      </div>
+      <p class="feed__hint">Tip: hold the mouse still and the shy ones come closer. Move fast and they scatter.</p>
+    </div>
+
+    <div class="feed__pool" id="feedPool" aria-hidden="true">
+      <div class="pool__ring"></div>
+      <div class="pool__ring pool__ring--2"></div>
+      <div class="pool__ring pool__ring--3"></div>
+      <p class="pool__hint">click the water</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ QUIZ ============ -->
+<section class="quiz" id="quiz">
+  <div class="wrap">
+    <header class="sec-head reveal" data-reveal>
+      <p class="kicker">Five questions</p>
+      <h2>Which fish are you, really?</h2>
+    </header>
+
+    <div class="quiz__card reveal" data-reveal>
+      <div class="quiz__progress"><i id="quizProgress"></i></div>
+
+      <div class="quiz__stage" id="quizStage">
+        <div class="quiz__step is-active" data-step="0">
+          <p class="quiz__q" id="quizQ">—</p>
+          <div class="quiz__answers" id="quizAnswers"></div>
+        </div>
+      </div>
+
+      <div class="quiz__result" id="quizResult" hidden>
+        <div class="result__stage"><canvas id="resultCanvas"></canvas></div>
+        <div class="result__body">
+          <p class="kicker">You are</p>
+          <h3 id="resultName">—</h3>
+          <p id="resultText">—</p>
+          <div class="result__cta">
+            <a class="btn btn--primary magnetic" href="#join" data-scroll>Get my species dossier</a>
+            <button class="btn btn--ghost" id="quizRetry">Take it again</button>
+          </div>
+        </div>
+      </div>
+
+      <p class="quiz__meta"><span id="quizStepLabel">Question 1 of 5</span> · no data leaves your browser</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONVERSION / JOIN ============ -->
+<section class="join" id="join">
+  <div class="wrap join__grid">
+    <div class="join__copy reveal" data-reveal>
+      <p class="kicker">The field guide</p>
+      <h2>Twelve dossiers. One email. No chum.</h2>
+      <p>Illustrated profiles, depth charts, and the sourcing notes behind every number on this page —
+        delivered once, then a short letter each month when something genuinely strange surfaces.</p>
+      <ul class="ticks">
+        <li>Printable depth-zone poster (A2, vector)</li>
+        <li>Species dossiers with citations</li>
+        <li>Unsubscribe in one click, forever</li>
+      </ul>
+    </div>
+
+    <form class="join__form reveal" data-reveal id="joinForm" novalidate>
+      <label class="field">
+        <span>Your name</span>
+        <input type="text" name="name" id="joinName" autocomplete="name" placeholder="Jules Verne">
+      </label>
+      <label class="field">
+        <span>Email</span>
+        <input type="email" name="email" id="joinEmail" autocomplete="email" placeholder="you@ocean.org" required>
+        <em class="field__err" id="joinErr"></em>
+      </label>
+      <fieldset class="field field--radio">
+        <legend>What pulls you in?</legend>
+        <label><input type="radio" name="interest" value="reef" checked><span>Reefs</span></label>
+        <label><input type="radio" name="interest" value="deep"><span>The deep</span></label>
+        <label><input type="radio" name="interest" value="all"><span>All of it</span></label>
+      </fieldset>
+      <button class="btn btn--primary btn--lg magnetic" type="submit" id="joinSubmit">Send me the guide</button>
+      <p class="join__fine">Demo form — nothing is transmitted anywhere.</p>
+      <div class="join__done" id="joinDone" hidden>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"/></svg>
+        <p>Welcome aboard, <b id="joinDoneName">friend</b>. Check the tank — we released a fish in your honour.</p>
+      </div>
+    </form>
+  </div>
+
+  <div class="wrap">
+    <div class="faq reveal" data-reveal>
+      <h3>Small print, honestly answered</h3>
+      <div class="faq__list" id="faqList"></div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap footer__grid">
+    <div>
+      <a class="nav__brand" href="#hero" data-scroll>
+        <span class="nav__mark" aria-hidden="true"><svg viewBox="0 0 40 24"><path d="M3 12 C 10 3, 25 3, 30 12 C 25 21, 10 21, 3 12 Z"/><path d="M30 12 L 39 5 L 36 12 L 39 19 Z"/></svg></span>
+        <span class="nav__word">Abyssal</span>
+      </a>
+      <p class="footer__note">Built with plain HTML, CSS and JavaScript. Every fish on this page is
+        procedurally drawn and independently steered — there is not a single image file in this project.</p>
+    </div>
+    <nav aria-label="Footer">
+      <h4>Explore</h4>
+      <a href="#descent" data-scroll>Depth zones</a>
+      <a href="#species" data-scroll>Species guide</a>
+      <a href="#anatomy" data-scroll>Anatomy</a>
+      <a href="#scale" data-scroll>Scale</a>
+    </nav>
+    <div>
+      <h4>Sources</h4>
+      <p class="footer__note">Figures reflect widely published ranges from FishBase, NOAA and peer-reviewed
+        surveys. Where estimates disagree, the conservative number is shown.</p>
+    </div>
+  </div>
+  <div class="wrap footer__base">
+    <p>© <span id="year">2026</span> Abyssal. A demonstration project.</p>
+    <p><button class="link" id="topBtn">Back to the surface ↑</button></p>
+  </div>
+</footer>
+
+<div class="toasts" id="toasts" aria-live="polite" aria-atomic="false"></div>
+
+<script src="js/utils.js"></script>
+<script src="js/data.js"></script>
+<script src="js/fish-art.js"></script>
+<script src="js/tank.js"></script>
+<script src="js/sections.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
