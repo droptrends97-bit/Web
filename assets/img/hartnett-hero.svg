@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" width="1600" height="1000" role="img" aria-label="DEMO — COUNTER WIDE placeholder">
+  <rect width="1600" height="1000" fill="#08302E"/>
+  <rect x="16" y="16" width="1568" height="968" fill="none" stroke="#E7E3D6" stroke-width="2.88" stroke-dasharray="19.2 19.2" opacity="0.45"/>
+  <g font-family="ui-monospace, 'IBM Plex Mono', Menlo, Consolas, monospace" fill="#E7E3D6" text-anchor="middle">
+    <text x="800" y="364" font-size="51.2" letter-spacing="4.48" font-weight="600">DEMO — COUNTER WIDE</text>
+    <text x="800" y="428" font-size="30.4" opacity="0.78">Butcher counter, warm interior light,</text>
+    <text x="800" y="476" font-size="30.4" opacity="0.78">dark background. Shot for a dark-green</text>
+    <text x="800" y="524" font-size="30.4" opacity="0.78">site. Real shop, Cork or similar.</text>
+    <text x="800" y="936" font-size="25.6" letter-spacing="3.20" opacity="0.6">hartnett-hero.jpg &#183; 1600&#215;1000 &#183; ASSET SLOT &#8212; REPLACE</text>
+  </g>
+</svg>

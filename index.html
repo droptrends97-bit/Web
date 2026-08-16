@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="en-IE" class="no-js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>East Coast Digital — websites for trades on the east coast</title>
+<meta name="description" content="We build websites for electricians, plumbers, plasterers and garages on the Irish east coast. One price, live in a fortnight, and you can ring the person who built it.">
+<meta name="theme-color" content="#E7E3D6">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="East Coast Digital">
+<meta property="og:description" content="Websites for trades and service businesses on the Irish east coast. One price. Live in a fortnight.">
+<meta property="og:image" content="/assets/img/og.svg"><!-- ASSET SLOT: replace with og.jpg 1200x630 -->
+<meta property="og:locale" content="en_IE">
+
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%23083030'/><path d='M6 21h20' stroke='%230A6A5E' stroke-width='3'/><path d='M6 11h13' stroke='%23E7E3D6' stroke-width='3'/></svg>">
+
+<link rel="preload" href="/assets/fonts/rokkitt-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/ibm-plex-sans-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/css/main.css">
+
+<script>document.documentElement.className = document.documentElement.className.replace('no-js', 'js');</script>
+</head>
+
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<!-- ─── the course line: progress, contents and jump nav in one ─────────── -->
+<nav class="course" aria-label="Page course">
+  <div class="course__track" aria-hidden="true"><span class="course__drawn"></span></div>
+  <ul class="course__waypoints"><!-- populated from section data by main.js; static fallback below --></ul>
+</nav>
+<div class="course-bar" aria-hidden="true"><span class="course-bar__drawn"></span></div>
+
+<header class="masthead">
+  <div class="masthead__inner">
+    <a class="wordmark" href="#hero">
+      <span class="wordmark__name">East Coast Digital</span>
+      <span class="wordmark__place">Malahide, Co. Dublin</span>
+    </a>
+    <nav class="masthead__nav" aria-label="Main">
+      <a href="#build">Example build</a>
+      <a href="#process">Process</a>
+      <a href="#pricing">Pricing</a>
+    </nav>
+    <div class="masthead__act">
+      <!-- PLACEHOLDER NUMBER — replace with the real line before launch -->
+      <a class="masthead__tel" href="tel:+35315550134">01 555 0134</a>
+      <a class="btn btn--solid masthead__cta" href="#contact">Get a start date</a>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- ═══ 1. HERO — paper, medium density, the reveal ═════════════════════ -->
+<section class="room room--paper hero" id="hero" data-town="Malahide" data-lat="53.4508">
+  <p class="label">Malahide · 53.4508°N</p>
+
+  <h1 class="hero__head">Your business deserves a website that doesn&rsquo;t embarrass you.</h1>
+
+  <figure class="reveal" data-reveal data-trade="Plasterer" data-town="Malahide">
+    <div class="reveal__frame">
+      <div class="reveal__layer reveal__layer--before">
+        <!-- ASSET SLOT hero-before · 1600×1000 · srcset 800w/1600w once real -->
+        <img src="/assets/img/hero-before.svg" width="1600" height="1000" alt="The business's existing website as we found it: a small, dated page from 2011.">
+        <p class="reveal__tag reveal__tag--before">Before<span class="u-long"> &middot; as found,</span> 2011</p>
+      </div>
+      <div class="reveal__layer reveal__layer--after">
+        <img src="/assets/img/hero-after.svg" width="1600" height="1000" alt="The same business rebuilt by East Coast Digital: a clear, current homepage." fetchpriority="high">
+        <p class="reveal__tag reveal__tag--after">After<span class="u-long"> &middot; built by us</span></p>
+      </div>
+
+      <div class="reveal__handle" data-reveal-handle
+           role="slider" tabindex="0"
+           aria-label="Drag to compare the old site with the rebuild"
+           aria-valuemin="0" aria-valuemax="100" aria-valuenow="30"
+           aria-valuetext="30 per cent old site, 70 per cent rebuild">
+        <span class="reveal__grip">
+          <svg viewBox="0 0 24 12" aria-hidden="true" focusable="false"><path d="M9.5 1 4 6l5.5 5M14.5 1 20 6l-5.5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"/></svg>
+        </span>
+        <span class="reveal__griplabel">Drag</span>
+      </div>
+
+      <p class="reveal__chip"><span data-reveal-trade>Plasterer</span> &middot; <span data-reveal-place>Malahide</span></p>
+    </div>
+
+    <figcaption class="reveal__cap">
+      <span class="reveal__cap-js">This is the page we build for you <em>before</em> we ring you. Drag it across.</span>
+      <span class="reveal__cap-nojs">Left: the site as we found it. Right: the rebuild.</span>
+    </figcaption>
+  </figure>
+
+  <div class="hero__foot">
+    <p class="hero__lede">We build sites for trades and service businesses on the east coast.
+      One fixed price, live in a fortnight, and the person who built it answers the phone.</p>
+    <p class="hero__acts">
+      <a class="btn btn--solid" href="#build">See a build for your trade</a>
+      <a class="btn btn--quiet" href="tel:+35315550134">01 555 0134</a>
+    </p>
+  </div>
+</section>
+
+<!-- ═══ 2. THE PROBLEM — deep water, dense, oxide ═══════════════════════ -->
+<section class="room room--depth problem" id="problem" data-town="Dublin" data-lat="53.3498">
+  <div class="problem__head">
+    <p class="label">Dublin · 53.3498°N</p>
+    <h2>Most small business websites are working against them.</h2>
+  </div>
+
+  <ol class="ledger">
+    <li class="ledger__row">
+      <span class="ledger__no">01</span>
+      <h3 class="ledger__name">No site at all</h3>
+      <p class="ledger__note">A Facebook page is not a website. It ranks for nothing, it changes whenever they change it, and half the people looking for you at nine on a Tuesday evening will never find it.</p>
+    </li>
+    <li class="ledger__row">
+      <span class="ledger__no">02</span>
+      <h3 class="ledger__name">Built years ago</h3>
+      <p class="ledger__note">A site from 2013 tells someone you might be gone. The number on it is often the old one. The photos are of jobs you did before your youngest was born.</p>
+    </li>
+    <li class="ledger__row">
+      <span class="ledger__no">03</span>
+      <h3 class="ledger__name">Slow and cluttered</h3>
+      <p class="ledger__note">Four seconds to load on a phone and they are already back in the search results, ringing the fella listed under you.</p>
+    </li>
+  </ol>
+
+  <!-- ASSET SLOT problem-shopfront · 2400×900 -->
+  <img class="problem__band" src="/assets/img/problem-shopfront.svg" width="2400" height="900" loading="lazy" decoding="async" alt="A shuttered shopfront on an Irish town street.">
+</section>
+
+<!-- ═══ 3. WHO WE ARE — paper, nearly empty ═════════════════════════════ -->
+<section class="room room--paper about" id="about" data-town="Bray" data-lat="53.2028">
+  <p class="label">Bray · 53.2028°N</p>
+  <div class="about__grid">
+    <div class="about__say">
+      <h2 class="about__head">Two of us, in Malahide.<br>We build the site, then we answer&nbsp;the&nbsp;phone.</h2>
+    </div>
+    <figure class="about__fig">
+      <!-- ASSET SLOT who-workshop · 1200×1600 -->
+      <img src="/assets/img/who-workshop.svg" width="1200" height="1600" loading="lazy" decoding="async" alt="A tradesperson's van with the doors open, tools and materials inside.">
+    </figure>
+  </div>
+</section>
+
+<!-- ═══ 4. THE BUILD — full bleed, maximal, the one pinned sequence ═════ -->
+<section class="room room--land build" id="build" data-town="Greystones" data-lat="53.1424">
+  <div class="build__intro">
+    <p class="label">Greystones · 53.1424°N</p>
+    <h2>A full example build &mdash; not a thumbnail, the real thing.</h2>
+    <p class="build__note">Hartnett &amp; Sons is a butcher we invented so we could show you a finished
+      site instead of describing one. Every word and every page below is real, working HTML.
+      Scroll straight through it.</p>
+    <p class="build__escape"><a class="btn btn--quiet" href="#process">Skip the build</a></p>
+  </div>
+
+  <div class="build__stage" data-build-stage>
+    <div class="build__scroller" data-build-scroller>
+
+      <!-- ─── Hartnett &amp; Sons — the demo build ─────────────────────── -->
+      <div class="demo" role="group" aria-label="Example build: Hartnett and Sons Butchers">
+        <header class="demo__nav">
+          <p class="demo__mark">Hartnett &amp; Sons</p>
+          <ul>
+            <li>The counter</li>
+            <li>Order</li>
+            <li>Find us</li>
+          </ul>
+          <p class="demo__tel">021 431 0088</p>
+        </header>
+
+        <div class="demo__hero">
+          <div class="demo__hero-copy">
+            <p class="demo__eyebrow">Family butchers &middot; Cork &middot; since 1974</p>
+            <h3>Meat cut the way it was cut for your grandmother.</h3>
+            <p>Dry-aged on the bone for twenty-eight days. Lamb from the Beara peninsula.
+              Sausages made on the premises every Tuesday and Friday morning.</p>
+            <p class="demo__cta">Order by Thursday for the weekend</p>
+          </div>
+          <!-- ASSET SLOT hartnett-hero · 1600×1000 -->
+          <img src="/assets/img/hartnett-hero.svg" width="1600" height="1000" loading="lazy" decoding="async" alt="The counter at Hartnett and Sons.">
+        </div>
+
+        <div class="demo__cuts">
+          <article class="demo__cut">
+            <!-- ASSET SLOT hartnett-cut-1 · 800×800 -->
+            <img src="/assets/img/hartnett-cut-1.svg" width="800" height="800" loading="lazy" decoding="async" alt="Dry-aged sirloin on butcher's paper.">
+            <h4>Dry-aged sirloin</h4>
+            <p>28 days on the bone. Cut to the thickness you ask for.</p>
+            <p class="demo__price">€24.50 / kg</p>
+          </article>
+          <article class="demo__cut">
+            <!-- ASSET SLOT hartnett-cut-2 · 800×800 -->
+            <img src="/assets/img/hartnett-cut-2.svg" width="800" height="800" loading="lazy" decoding="async" alt="Bone-in lamb shoulder.">
+            <h4>Beara lamb shoulder</h4>
+            <p>Bone in, for a long Sunday in the oven.</p>
+            <p class="demo__price">€13.90 / kg</p>
+          </article>
+          <article class="demo__cut">
+            <!-- ASSET SLOT hartnett-cut-3 · 800×800 -->
+            <img src="/assets/img/hartnett-cut-3.svg" width="800" height="800" loading="lazy" decoding="async" alt="Coiled sausages on a tray.">
+            <h4>Our own sausages</h4>
+            <p>Made here Tuesday and Friday. Nothing in them you can't say.</p>
+            <p class="demo__price">€9.20 / kg</p>
+          </article>
+        </div>
+
+        <div class="demo__foot">
+          <div class="demo__hours">
+            <h4>Opening hours</h4>
+            <dl>
+              <div><dt>Tue &ndash; Fri</dt><dd>8.00 &ndash; 17.30</dd></div>
+              <div><dt>Saturday</dt><dd>8.00 &ndash; 16.00</dd></div>
+              <div><dt>Sun &amp; Mon</dt><dd>Closed</dd></div>
+            </dl>
+          </div>
+          <div class="demo__find">
+            <h4>Find us</h4>
+            <p>14 Barrack Street<br>Cork City<br>T12 XY84</p>
+            <p class="demo__tel-lg">021 431 0088</p>
+          </div>
+          <!-- ASSET SLOT hartnett-counter · 1000×1000 -->
+          <img class="demo__square" src="/assets/img/hartnett-counter.svg" width="1000" height="1000" loading="lazy" decoding="async" alt="Hands wrapping an order in butcher's paper.">
+        </div>
+      </div>
+      <!-- ─── end demo ───────────────────────────────────────────────── -->
+
+    </div>
+  </div>
+
+  <p class="build__after">That is a €500 site. Yours would have your work in it, your town, and your number at the top.</p>
+</section>
+
+<!-- ═══ 5. HOW IT RUNS — land, dense, tabular ═══════════════════════════ -->
+<section class="room room--land process" id="process" data-town="Wicklow" data-lat="52.9808">
+  <p class="label">Wicklow · 52.9808°N</p>
+  <h2 class="process__head">How it runs</h2>
+
+  <div class="steps">
+    <article class="step">
+      <p class="step__no">One</p>
+      <h3 class="step__name">Build</h3>
+      <div class="step__body">
+        <p>You send us photos off your phone and a rough idea of what you do and where you work.
+          We write the copy, edit the pictures and build the pages. You get a link, usually inside a week.
+          Nothing is public until you say so.</p>
+        <ul class="spec">
+          <li><span>What we need</span><span>Photos, your number, the areas you cover</span></li>
+          <li><span>What you write</span><span>Nothing</span></li>
+          <li><span>How long</span><span>About a week</span></li>
+        </ul>
+      </div>
+    </article>
+
+    <article class="step">
+      <p class="step__no">Two</p>
+      <h3 class="step__name">Launch</h3>
+      <div class="step__body">
+        <p>You ring and tell us what's wrong with it. We fix it while you're still on the phone.
+          Then we point the domain at it and it's live, on Google, with your hours and your number.
+          Changes happen live, not by email chains.</p>
+        <ul class="spec">
+          <li><span>Domain</span><span>We buy it and set it up</span></li>
+          <li><span>Google</span><span>Business profile sorted the same day</span></li>
+          <li><span>Changes after</span><span>Ring us. Same day.</span></li>
+        </ul>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- ═══ 6. PRICING — deep water, sparse, two figures at equal size ══════ -->
+<section class="room room--depth pricing" id="pricing" data-town="Arklow" data-lat="52.7936">
+  <p class="label">Arklow · 52.7936°N</p>
+  <h2 class="pricing__head">One website. One price. No tiers, no upsells.</h2>
+
+  <div class="quote">
+    <div class="quote__fig">
+      <p class="quote__amount">€500</p>
+      <p class="quote__what">to build it. Paid when it goes live, not before.</p>
+    </div>
+
+    <div class="quote__fig quote__fig--todo">
+      <!--
+        PRICING PLACEHOLDER — the monthly figure has not been supplied.
+        Replace BOTH the amount and the description below, and delete the
+        quote__fig--todo modifier and the .quote__flag paragraph.
+      -->
+      <p class="quote__amount">€<span class="quote__blank">00</span><span class="quote__per">/month</span></p>
+      <p class="quote__what">after that, for hosting, the domain and any changes you ring in.</p>
+      <p class="quote__flag">To confirm &mdash; figure not yet set</p>
+    </div>
+  </div>
+
+  <ul class="manifest">
+    <li>Up to five pages</li>
+    <li>Written for you, not by you</li>
+    <li>Your photos edited</li>
+    <li>Domain &amp; hosting set up</li>
+    <li>Google Business Profile sorted</li>
+    <li>Live in a fortnight</li>
+  </ul>
+
+  <p class="pricing__act"><a class="btn btn--solid btn--wide" href="#contact">Get a start date</a></p>
+  <p class="pricing__plain">That is the whole price. There is no setup fee and no contract to sign.</p>
+</section>
+
+<!-- ═══ 7. CONTACT — paper, calm close ══════════════════════════════════ -->
+<section class="room room--paper contact" id="contact" data-town="Wexford" data-lat="52.3369">
+  <p class="label">Wexford · 52.3369°N</p>
+  <div class="contact__grid">
+    <div class="contact__say">
+      <h2>Tell us what you do and we'll build the front page before you pay us anything.</h2>
+      <p class="contact__direct">
+        <a class="contact__tel" href="tel:+35315550134">01 555 0134</a>
+        <a class="contact__mail" href="mailto:hello@eastcoastdigital.ie">hello@eastcoastdigital.ie</a>
+      </p>
+      <p class="contact__hours">Answered 8am to 8pm, seven days. If we miss you we ring back the same day.</p>
+    </div>
+
+    <!-- The action needs wiring to a real handler before launch — see ASSETS.md -->
+    <form class="form" method="post" action="/enquiry">
+      <p class="field">
+        <label for="f-name">Your name</label>
+        <input id="f-name" name="name" type="text" autocomplete="name" required>
+      </p>
+      <p class="field">
+        <label for="f-trade">Your trade</label>
+        <input id="f-trade" name="trade" type="text" placeholder="Plasterer, sparks, garage…" required>
+      </p>
+      <p class="field">
+        <label for="f-phone">Phone</label>
+        <input id="f-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" required>
+      </p>
+      <p class="field">
+        <label for="f-area">Where do you work?</label>
+        <input id="f-area" name="area" type="text" placeholder="North county Dublin, north Wicklow…">
+      </p>
+      <p class="field">
+        <label for="f-note">Anything else</label>
+        <textarea id="f-note" name="note" rows="3"></textarea>
+      </p>
+      <p class="field field--submit">
+        <button class="btn btn--solid btn--wide" type="submit">Send it &mdash; you'll get a reply today</button>
+      </p>
+    </form>
+  </div>
+
+  <!-- ASSET SLOT contact-coast · 2400×800 -->
+  <img class="contact__band" src="/assets/img/contact-coast.svg" width="2400" height="800" loading="lazy" decoding="async" alt="The east coast on an overcast day.">
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="footer__inner">
+    <p class="footer__mark">East Coast Digital</p>
+    <nav class="footer__nav" aria-label="Footer">
+      <a href="#build">Example build</a>
+      <a href="#process">Process</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <p class="footer__meta">Malahide, Co. Dublin &middot; 53.4508°N 6.1500°W</p>
+    <p class="footer__meta"><a href="tel:+35315550134">01 555 0134</a> &middot; <a href="mailto:hello@eastcoastdigital.ie">hello@eastcoastdigital.ie</a></p>
+  </div>
+</footer>
+
+<!-- mobile only: the two things a person on a phone actually wants -->
+<div class="dock" aria-hidden="false">
+  <a class="dock__btn dock__btn--quiet" href="tel:+35315550134">Call 01 555 0134</a>
+  <a class="dock__btn dock__btn--solid" href="#contact">Get a start date</a>
+</div>
+
+<script src="/assets/js/gsap.min.js" defer></script>
+<script src="/assets/js/ScrollTrigger.min.js" defer></script>
+<script src="/assets/js/main.js" defer></script>
+</body>
+</html>

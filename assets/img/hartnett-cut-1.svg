@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" width="800" height="800" role="img" aria-label="DEMO — PRODUCT 1 placeholder">
+  <rect width="800" height="800" fill="#08302E"/>
+  <rect x="8" y="8" width="784" height="784" fill="none" stroke="#E7E3D6" stroke-width="1.44" stroke-dasharray="9.6 9.6" opacity="0.45"/>
+  <g font-family="ui-monospace, 'IBM Plex Mono', Menlo, Consolas, monospace" fill="#E7E3D6" text-anchor="middle">
+    <text x="400" y="344" font-size="25.6" letter-spacing="2.24" font-weight="600">DEMO — PRODUCT 1</text>
+    <text x="400" y="376" font-size="15.2" opacity="0.78">Dry-aged sirloin on paper.</text>
+    <text x="400" y="400" font-size="15.2" opacity="0.78">Square, dark ground, top light.</text>
+    <text x="400" y="768" font-size="12.8" letter-spacing="1.60" opacity="0.6">hartnett-cut-1.jpg &#183; 800&#215;800 &#183; ASSET SLOT &#8212; REPLACE</text>
+  </g>
+</svg>

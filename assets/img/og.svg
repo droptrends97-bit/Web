@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630" role="img" aria-label="OPEN GRAPH CARD placeholder">
+  <rect width="1200" height="630" fill="#E7E3D6"/>
+  <rect x="12" y="12" width="1176" height="606" fill="none" stroke="#101615" stroke-width="2.16" stroke-dasharray="14.4 14.4" opacity="0.45"/>
+  <g font-family="ui-monospace, 'IBM Plex Mono', Menlo, Consolas, monospace" fill="#101615" text-anchor="middle">
+    <text x="600" y="231" font-size="38.4" letter-spacing="3.36" font-weight="600">OPEN GRAPH CARD</text>
+    <text x="600" y="279" font-size="22.8" opacity="0.78">Export as og.jpg (1200x630).</text>
+    <text x="600" y="315" font-size="22.8" opacity="0.78">Wordmark + the after build.</text>
+    <text x="600" y="582" font-size="19.2" letter-spacing="2.40" opacity="0.6">og.jpg &#183; 1200&#215;630 &#183; ASSET SLOT &#8212; REPLACE</text>
+  </g>
+</svg>

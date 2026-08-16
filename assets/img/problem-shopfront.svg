@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2400 900" width="2400" height="900" role="img" aria-label="PROBLEM — FULL-BLEED BAND placeholder">
+  <rect width="2400" height="900" fill="#08302E"/>
+  <rect x="24" y="24" width="2352" height="852" fill="none" stroke="#E7E3D6" stroke-width="4.32" stroke-dasharray="28.8 28.8" opacity="0.45"/>
+  <g font-family="ui-monospace, 'IBM Plex Mono', Menlo, Consolas, monospace" fill="#E7E3D6" text-anchor="middle">
+    <text x="1200" y="246" font-size="76.8" letter-spacing="6.72" font-weight="600">PROBLEM — FULL-BLEED BAND</text>
+    <text x="1200" y="342" font-size="45.6" opacity="0.78">Irish town shopfront, shuttered or with a</text>
+    <text x="1200" y="414" font-size="45.6" opacity="0.78">handwritten sign. Overcast, flat light,</text>
+    <text x="1200" y="486" font-size="45.6" opacity="0.78">low saturation. No people.</text>
+    <text x="1200" y="804" font-size="38.4" letter-spacing="4.80" opacity="0.6">problem-shopfront.jpg &#183; 2400&#215;900 &#183; ASSET SLOT &#8212; REPLACE</text>
+  </g>
+</svg>
