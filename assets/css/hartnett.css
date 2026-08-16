@@ -1,0 +1,152 @@
+/* ==========================================================================
+   Hartnett & Sons, Family Butchers — Blackpool, Cork
+   The demo build. A deliberately separate world from eastcoastdigital.ie:
+   its own palette, its own type scale, its own voice.
+   Scoped under .hn so it can sit inside the agency page or stand alone.
+   ========================================================================== */
+
+.hn {
+  --green: #10231a;
+  --green-deep: #0a170f;
+  --cream: #f2ebdc;
+  --gold: #c08b2c;
+  --paper: #e6dcc6;
+
+  background: var(--green);
+  color: var(--cream);
+  font-family: 'Newsreader', Georgia, serif;
+  font-size: 17px;
+  line-height: 1.6;
+}
+
+.hn h1, .hn h2, .hn h3, .hn h4 {
+  font-family: 'Newsreader', Georgia, serif;
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: -0.015em;
+  line-height: 1.05;
+  margin: 0;
+}
+.hn p { margin: 0 0 1em; }
+.hn a { color: inherit; }
+
+.hn__wrap { max-width: 70rem; margin-inline: auto; padding-inline: clamp(1.25rem, 4vw, 3rem); }
+
+.hn__eyebrow {
+  font-family: 'Archivo', sans-serif;
+  font-weight: 600;
+  font-stretch: 110%;
+  font-size: 0.6875rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+/* bar */
+.hn__bar {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 0.9rem 0;
+  border-bottom: 1px solid rgba(242, 235, 220, 0.16);
+  font-family: 'Archivo', sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.hn__mark { font-family: 'Newsreader', Georgia, serif; font-size: 1.25rem; font-weight: 600; letter-spacing: -0.01em; text-transform: none; margin-right: auto; }
+.hn__navlinks { display: none; gap: 1.5rem; }
+.hn__navlinks a { text-decoration: none; opacity: 0.8; }
+.hn__call { color: var(--gold); text-decoration: none; white-space: nowrap; }
+@media (min-width: 48rem) { .hn__navlinks { display: flex; } }
+
+/* hero */
+.hn__hero { position: relative; display: grid; }
+.hn__hero img { grid-area: 1 / 1; width: 100%; height: 100%; object-fit: cover; max-height: 34rem; }
+.hn__hero-copy {
+  grid-area: 1 / 1;
+  align-self: center;
+  padding: clamp(2rem, 5vw, 4rem) 0;
+  background: linear-gradient(to right, rgba(10, 23, 15, 0.92) 35%, rgba(10, 23, 15, 0));
+  width: 100%;
+}
+.hn__title {
+  font-size: clamp(2rem, 5.5vw, 4rem);
+  max-width: 15ch;
+  margin: 0.75rem 0 1rem;
+}
+.hn__hero p { max-width: 32ch; color: rgba(242, 235, 220, 0.86); }
+
+.hn__btn {
+  display: inline-block;
+  font-family: 'Archivo', sans-serif;
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 0.9rem 1.4rem;
+  background: var(--gold);
+  color: var(--green-deep);
+  margin-top: 0.5rem;
+}
+
+/* strip of facts */
+.hn__facts {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  border-bottom: 1px solid rgba(242, 235, 220, 0.16);
+}
+.hn__facts div {
+  padding: 1.25rem;
+  border-top: 1px solid rgba(242, 235, 220, 0.16);
+  border-right: 1px solid rgba(242, 235, 220, 0.16);
+  font-family: 'Archivo', sans-serif;
+  font-size: 0.6875rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.hn__facts b { display: block; font-family: 'Newsreader', serif; font-size: 1.5rem; font-weight: 600; letter-spacing: 0; text-transform: none; color: var(--gold); margin-bottom: 0.15rem; }
+@media (min-width: 48rem) { .hn__facts { grid-template-columns: repeat(4, 1fr); } }
+
+/* counter section */
+.hn__section { padding: clamp(2.5rem, 6vw, 4.5rem) 0; }
+.hn__h2 { font-size: clamp(1.5rem, 3.5vw, 2.5rem); margin: 0.5rem 0 1rem; max-width: 20ch; }
+.hn__cols { display: grid; gap: 2rem; }
+@media (min-width: 48rem) { .hn__cols { grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; } }
+
+.hn__cuts { display: grid; gap: 1.25rem; grid-template-columns: repeat(2, 1fr); margin-top: 2rem; }
+@media (min-width: 48rem) { .hn__cuts { grid-template-columns: repeat(3, 1fr); } }
+.hn__cut { background: var(--green-deep); border: 1px solid rgba(242, 235, 220, 0.14); }
+.hn__cut img { width: 100%; aspect-ratio: 1; object-fit: cover; }
+.hn__cut div { padding: 0.875rem 1rem 1.1rem; }
+.hn__h3 { font-size: 1.125rem; margin-bottom: 0.25rem; }
+.hn__cut span { font-family: 'Archivo', sans-serif; font-size: 0.6875rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); }
+
+/* hours + contact */
+.hn__hours { background: var(--paper); color: var(--green-deep); }
+.hn__hours .hn__eyebrow { color: #6b5320; }
+.hn__hours .hn__h2 { color: var(--green-deep); }
+.hn__table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+.hn__table th, .hn__table td {
+  text-align: left;
+  padding: 0.65rem 0;
+  border-bottom: 1px solid rgba(16, 35, 26, 0.2);
+  font-family: 'Archivo', sans-serif;
+  font-size: 0.8125rem;
+  letter-spacing: 0.06em;
+  font-weight: 500;
+}
+.hn__table th { text-transform: uppercase; letter-spacing: 0.14em; font-size: 0.6875rem; color: #4a5a4f; }
+.hn__table td:last-child { text-align: right; }
+
+.hn__foot {
+  background: var(--green-deep);
+  padding: 2rem 0;
+  font-family: 'Archivo', sans-serif;
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(242, 235, 220, 0.6);
+}
+.hn__foot div { display: flex; flex-wrap: wrap; gap: 0.75rem 2rem; justify-content: space-between; }

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="1000" viewBox="0 0 1400 1000" role="img" aria-label="Hero — BEFORE — placeholder">
+  <rect width="1400" height="1000" fill="#D8CEBA"/>
+  <rect x="30" y="30" width="1340" height="940" fill="none" stroke="#0E1518" stroke-opacity=".28" stroke-dasharray="6 6"/>
+  <text x="60" y="89" font-family="ui-monospace, Menlo, monospace" font-size="29" font-weight="700" fill="#0E1518" letter-spacing="1">HERO — BEFORE</text>
+  <text x="60" y="115.1" font-family="ui-monospace, Menlo, monospace" font-size="18" fill="#0E1518" opacity=".9">1400×1000  ·  hero-before.svg</text>
+  <text x="60" y="135.4" font-family="ui-monospace, Menlo, monospace" font-size="18" fill="#0E1518" opacity=".72">Screenshot of the SAME business's dead website, or a faithful reconstruction of one. Table layout, stretched logo,</text>
+  <text x="60" y="162.4" font-family="ui-monospace, Menlo, monospace" font-size="18" fill="#0E1518" opacity=".72">stock handshake photo, Flash-era navy gradient bar, "Copyright 2011". Must be plausibly real — not a caricature.</text>
+  <text x="60" y="189.4" font-family="ui-monospace, Menlo, monospace" font-size="18" fill="#0E1518" opacity=".72">Desktop viewport, captured at 1400 wide, top of page only. Business name visible.</text>
+</svg>
