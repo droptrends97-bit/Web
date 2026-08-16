@@ -1,11 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1600" width="1200" height="1600" role="img" aria-label="WHO WE ARE — PORTRAIT placeholder">
-  <rect width="1200" height="1600" fill="#D6D0BE"/>
-  <rect x="16" y="16" width="1168" height="1568" fill="none" stroke="#101615" stroke-width="2.88" stroke-dasharray="19.2 19.2" opacity="0.45"/>
-  <g font-family="ui-monospace, 'IBM Plex Mono', Menlo, Consolas, monospace" fill="#101615" text-anchor="middle">
-    <text x="600" y="664" font-size="51.2" letter-spacing="4.48" font-weight="600">WHO WE ARE — PORTRAIT</text>
-    <text x="600" y="728" font-size="30.4" opacity="0.78">Irish trade at work: van doors open, hawk</text>
-    <text x="600" y="776" font-size="30.4" opacity="0.78">and trowel, buckets, Irish reg plate.</text>
-    <text x="600" y="824" font-size="30.4" opacity="0.78">Daylight, no flash, no stock gloss.</text>
-    <text x="600" y="1536" font-size="25.6" letter-spacing="3.20" opacity="0.6">who-workshop.jpg &#183; 1200&#215;1600 &#183; ASSET SLOT &#8212; REPLACE</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1500" width="1200" height="1500" role="img" aria-label="WHO WE ARE placeholder">
+  <rect width="1200" height="1500" fill="#E1EBEE"/>
+  <g fill="#0D4A5C" text-anchor="middle" font-family="ui-sans-serif, -apple-system, Segoe UI, Helvetica, Arial, sans-serif">
+    <circle cx="600" cy="645" r="31.5" fill="#0D4A5C" opacity="0.16"/>
+    <text x="600" y="699" font-size="39.0" font-weight="700" letter-spacing="3.00">WHO WE ARE</text>
+    <text x="600" y="750" font-size="26.2" opacity="0.72">Irish trade at work: van doors open, tools,</text>
+    <text x="600" y="795" font-size="26.2" opacity="0.72">Irish reg plate. Daylight, no stock gloss.</text>
+    <text x="600" y="1449" font-size="22.5" opacity="0.5">who-workshop.jpg &#183; 1200&#215;1500 &#183; asset slot</text>
   </g>
 </svg>

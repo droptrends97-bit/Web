@@ -1,10 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" width="1000" height="1000" role="img" aria-label="DEMO — HANDS / SQUARE placeholder">
-  <rect width="1000" height="1000" fill="#08302E"/>
-  <rect x="10" y="10" width="980" height="980" fill="none" stroke="#E7E3D6" stroke-width="1.80" stroke-dasharray="12.0 12.0" opacity="0.45"/>
-  <g font-family="ui-monospace, 'IBM Plex Mono', Menlo, Consolas, monospace" fill="#E7E3D6" text-anchor="middle">
-    <text x="500" y="430" font-size="32.0" letter-spacing="2.80" font-weight="600">DEMO — HANDS / SQUARE</text>
-    <text x="500" y="470" font-size="19.0" opacity="0.78">Hands, block, knife, paper wrap.</text>
-    <text x="500" y="500" font-size="19.0" opacity="0.78">Close, tactile, warm key light.</text>
-    <text x="500" y="960" font-size="16.0" letter-spacing="2.00" opacity="0.6">hartnett-counter.jpg &#183; 1000&#215;1000 &#183; ASSET SLOT &#8212; REPLACE</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" width="1000" height="1000" role="img" aria-label="DEMO — HANDS placeholder">
+  <rect width="1000" height="1000" fill="#1B2E24"/>
+  <g fill="#C89A4E" text-anchor="middle" font-family="ui-sans-serif, -apple-system, Segoe UI, Helvetica, Arial, sans-serif">
+    <circle cx="500" cy="430" r="21.0" fill="#C89A4E" opacity="0.16"/>
+    <text x="500" y="466" font-size="26.0" font-weight="700" letter-spacing="2.00">DEMO — HANDS</text>
+    <text x="500" y="500" font-size="17.5" opacity="0.72">Hands, block, knife, paper wrap.</text>
+    <text x="500" y="530" font-size="17.5" opacity="0.72">Close, tactile, warm key light.</text>
+    <text x="500" y="966" font-size="15.0" opacity="0.5">hartnett-counter.jpg &#183; 1000&#215;1000 &#183; asset slot</text>
   </g>
 </svg>
