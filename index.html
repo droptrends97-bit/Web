@@ -342,6 +342,31 @@ tailwind.config = {
     transition:opacity .8s var(--ease-out-expo), transform .8s var(--ease-out-expo);
   }
   #revealHint.gone{ opacity:0 !important; transform:translateY(6px); pointer-events:none; }
+
+  /* Paint mode — touch only.
+     Dragging a finger normally scrolls the page, which makes the reveal
+     almost unusable on a tablet. Tapping the pill locks scrolling to the
+     hero so you can rub freely; tapping Done gives scrolling back. */
+  #paintToggle{ display:none; }
+  @media (pointer:coarse){
+    #paintToggle{ display:inline-flex; }
+    #revealHint{ display:none; }
+  }
+  #top[data-paint="on"]{ touch-action:none; }
+  #top[data-paint="on"] .paint-ring{ opacity:1; }
+  .paint-ring{
+    position:absolute; inset:0; z-index:20; pointer-events:none; opacity:0;
+    box-shadow:inset 0 0 0 1px rgba(201,162,39,.5), inset 0 0 60px rgba(201,162,39,.07);
+    transition:opacity .5s var(--ease-out-expo);
+  }
+  .paint-ring::before, .paint-ring::after{
+    content:""; position:absolute; width:14px; height:14px; border:1px solid #C9A227;
+  }
+  .paint-ring::before{ top:10px; left:10px; border-right:0; border-bottom:0; }
+  .paint-ring::after{ bottom:10px; right:10px; border-left:0; border-top:0; }
+  #paintToggle[data-on="true"]{ background:#C9A227; border-color:#C9A227; color:#07160F; }
+  #paintNote{ transition:opacity .45s ease, transform .45s var(--ease-out-expo); }
+  #paintNote[hidden]{ display:block !important; opacity:0; transform:translateY(-4px); pointer-events:none; }
   @keyframes hintPulse{ 0%,100%{opacity:.55} 50%{opacity:1} }
   .hint-dot{ animation:hintPulse 2.4s ease-in-out infinite; }
 
@@ -542,6 +567,7 @@ tailwind.config = {
   <div id="heroGrade" aria-hidden="true"></div>
   <!-- Layer 2: the green treatment, painted into a canvas so it can be erased -->
   <canvas id="revealCanvas" class="pending" aria-hidden="true"></canvas>
+  <div class="paint-ring" aria-hidden="true"></div>
   <p class="sr-only">Behind this panel is a photograph of sliced dry-aged sirloin resting on the butcher's block. Moving a cursor or finger across the hero wipes the green away to reveal it.</p>
 
   <div class="relative z-10 pt-12 sm:pt-16" style="padding-inline:var(--edge)">
@@ -604,6 +630,21 @@ tailwind.config = {
       <span class="hint-dot inline-block w-1.5 h-1.5 rounded-full bg-brass"></span>
       <span id="revealHintText">Move your cursor to see what's on the block</span>
     </p>
+
+    <div class="mt-7 flex flex-wrap items-center gap-3">
+      <button id="paintToggle" type="button" data-on="false"
+        class="items-center gap-2.5 border border-brass/45 rounded-full pl-3.5 pr-4 py-2.5 font-mono text-[10px] tracking-widest2 uppercase text-brass transition-colors duration-300"
+        aria-pressed="false">
+        <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M9 11V5.5a1.5 1.5 0 0 1 3 0V11"/><path d="M12 11V4.5a1.5 1.5 0 0 1 3 0V11"/>
+          <path d="M15 11V6.5a1.5 1.5 0 0 1 3 0V13c0 4-2.7 7-6.5 7S5 17.5 5 14v-1.2a1.6 1.6 0 0 1 3.1-.6l.4 1.1"/>
+        </svg>
+        <span id="paintToggleText">Rub to reveal the block</span>
+      </button>
+      <p id="paintNote" hidden class="font-mono text-[10px] tracking-widest2 uppercase text-cream/40 max-w-[15rem] leading-relaxed">
+        Scrolling paused
+      </p>
+    </div>
   </div>
 
   <!-- dense fact bar across the fold -->
@@ -2335,7 +2376,7 @@ tailwind.config = {
     if (!ctx) return;
 
     const HEAL_PER_FRAME = 0.030;  // ~2.5s for a hole to close at 60fps
-    const BRUSH          = 165;    // px radius of the soft brush
+    const BRUSH          = 112;    // px radius of the soft brush
     const MAX_DPR        = 2;
 
     let dpr = 1, w = 0, h = 0;
@@ -2344,6 +2385,7 @@ tailwind.config = {
     let lastStrokeAt = 0, dirty = true;
     let touched = false;           // has the visitor interacted yet
     let running = false, visible = true;
+    let painting = false, paintIdle = null, paintFromY = 0;
 
     /* ---- paint the green treatment into an offscreen canvas ---- */
     function buildGreen() {
@@ -2482,9 +2524,12 @@ tailwind.config = {
     });
     hero.addEventListener('pointerleave', () => { last = null; });
 
-    // Passive, so the page still scrolls normally while the finger reveals.
+    // Touch. Outside paint mode this stays passive so the page scrolls as
+    // normal; inside it we cancel the gesture so the hero holds still and
+    // the finger can rub freely.
     function onTouch(e) {
       interacted();
+      if (painting) armPaintIdle();
       for (let i = 0; i < e.touches.length; i++) {
         const p = at(e.touches[i].clientX, e.touches[i].clientY);
         stroke(p.x, p.y);
@@ -2494,11 +2539,53 @@ tailwind.config = {
     hero.addEventListener('touchmove', onTouch, { passive: true });
     hero.addEventListener('touchend', () => { last = null; }, { passive: true });
 
+    // Attached only while painting: touch-action already stops the scroll,
+    // this additionally kills iOS overscroll bounce. Kept off the rest of
+    // the time so normal scrolling is never held up by a handler.
+    function blockScroll(e) { if (e.cancelable) e.preventDefault(); }
+
+    /* ---- paint mode ---- */
+    const toggle = $('#paintToggle');
+    const toggleText = $('#paintToggleText');
+    const note = $('#paintNote');
+
+    function armPaintIdle() {
+      clearTimeout(paintIdle);
+      paintIdle = setTimeout(() => setPaint(false), 15000);
+    }
+    function setPaint(on) {
+      if (painting === on) return;
+      painting = on;
+      hero.setAttribute('data-paint', on ? 'on' : 'off');
+      if (on) {
+        paintFromY = window.scrollY;
+        hero.addEventListener('touchmove', blockScroll, { passive: false });
+      } else {
+        hero.removeEventListener('touchmove', blockScroll, { passive: false });
+      }
+      if (toggle) {
+        toggle.dataset.on = String(on);
+        toggle.setAttribute('aria-pressed', String(on));
+        toggleText.textContent = on ? 'Done' : 'Rub to reveal the block';
+      }
+      if (note) note.hidden = !on;
+      clearTimeout(paintIdle);
+      if (on) armPaintIdle();
+    }
+    if (toggle) {
+      toggle.addEventListener('click', () => setPaint(!painting));
+    }
+    // leaving the hero always hands scrolling back
+    window.addEventListener('scroll', () => {
+      if (painting && Math.abs(window.scrollY - paintFromY) > 48) setPaint(false);
+    }, { passive: true });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape' && painting) setPaint(false); });
+
     // only animate while the hero is actually on screen
     if ('IntersectionObserver' in window) {
       new IntersectionObserver(entries => {
         visible = entries[0].isIntersecting;
-        if (visible) start(); else stop();
+        if (visible) { start(); } else { stop(); setPaint(false); }
       }, { threshold: 0.01 }).observe(hero);
     } else { start(); }
 
