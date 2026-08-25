@@ -239,6 +239,72 @@ tailwind.config = {
   /* ---- Toast --------------------------------------------------------- */
   #toast{ transition:transform .55s var(--ease-spring), opacity .4s ease; }
 
+
+  /* ---- Editorial layout primitives -------------------------------- */
+  /* Newspaper-style multi-column body copy */
+  .col-text{ column-count:1; column-gap:2.75rem; }
+  @media (min-width:768px){ .col-text{ column-count:2; } }
+  .col-text > p{ margin:0 0 1.05em; break-inside:avoid-column; }
+  .col-text > p:first-child::first-letter{
+    float:left; font-family:"Bodoni Moda",Georgia,serif; font-weight:900;
+    font-size:3.9em; line-height:.78; padding:.06em .1em 0 0; color:#7E1F1F;
+  }
+
+  /* Dark card floating inside the cream page (breaks the full-bleed band rhythm) */
+  .inset-dark{
+    background-color:#0B1F18;
+    background-image:
+      radial-gradient(ellipse 90% 70% at 20% 0%, rgba(30,74,59,.7), transparent 62%),
+      radial-gradient(circle at 88% 90%, rgba(126,31,31,.28), transparent 52%);
+  }
+
+  /* Engraved plate fill used behind illustrations */
+  .plate{
+    background-color:#0B1F18;
+    background-image:radial-gradient(ellipse at 32% 22%, #1E4A3B, transparent 62%);
+  }
+
+  /* Section index rail */
+  .rail-item{ transition:color .4s ease, opacity .4s ease; }
+  .rail-item[data-active="true"]{ color:#C9A227; opacity:1; }
+  .rail-item[data-active="true"] .rail-bar{ width:2rem; background:#C9A227; }
+  .rail-bar{ transition:width .5s var(--ease-out-expo), background-color .4s ease; }
+
+  /* Marginal note */
+  .marginalia{
+    font-family:"JetBrains Mono",monospace; font-size:.6875rem; line-height:1.7;
+    letter-spacing:.02em; color:rgba(11,31,24,.5);
+    border-left:1px solid rgba(126,31,31,.35); padding-left:1rem;
+  }
+
+  /* Seasonal calendar */
+  .cal-cell{ transition:background-color .3s ease, transform .3s var(--ease-spring); }
+  .cal-cell[data-in="full"]{ background:#7E1F1F; }
+  .cal-cell[data-in="some"]{ background:repeating-linear-gradient(45deg,#C9A227 0 2px,transparent 2px 5px); }
+  .cal-row:hover .cal-cell[data-in]{ transform:scaleY(1.45); }
+  .cal-row:hover .cal-name{ color:#7E1F1F; }
+
+  /* Vertical rotated label */
+  .vert{ writing-mode:vertical-rl; text-orientation:mixed; }
+
+  /* Counter journal entries */
+  .journal-entry{ transition:border-color .4s ease, background-color .4s ease; }
+  .journal-entry:hover{ border-color:rgba(126,31,31,.4); background:rgba(255,255,255,.45); }
+
+  /* Hairline rule with a label sitting on it */
+  .rule-label{
+    display:flex; align-items:center; gap:1.25rem;
+  }
+  .rule-label::after{
+    content:""; flex:1; height:1px; background:currentColor; opacity:.22;
+  }
+
+  /* Portrait monogram plate */
+  .monogram{ transition:transform .6s var(--ease-spring), border-color .4s ease; }
+  .person:hover .monogram{ transform:translateY(-6px) rotate(-2deg); border-color:rgba(126,31,31,.5); }
+  .person:hover .mono-initials{ color:#7E1F1F; }
+  .mono-initials{ transition:color .4s ease; }
+
   /* ---- Reduced motion ------------------------------------------------ */
   @media (prefers-reduced-motion: reduce){
     *, *::before, *::after{
@@ -248,6 +314,7 @@ tailwind.config = {
     [data-reveal]{ opacity:1 !important; transform:none !important; }
     .line-mask > span{ transform:none !important; }
     .grain{ display:none; }
+    .cal-row:hover .cal-cell[data-in]{ transform:none; }
   }
 </style>
 </head>
@@ -315,7 +382,6 @@ tailwind.config = {
     </symbol>
   </defs>
 </svg>
-
 <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:bg-brass focus:text-ink focus:px-5 focus:py-3 focus:font-mono focus:text-xs focus:tracking-widest focus:uppercase">Skip to content</a>
 
 <!-- Scroll progress -->
@@ -416,10 +482,20 @@ tailwind.config = {
   </div>
 </div>
 
+<!-- ============ SECTION RAIL ============ -->
+<nav id="rail" class="hidden 2xl:flex fixed left-6 top-1/2 -translate-y-1/2 z-40 flex-col gap-4" aria-label="Section index">
+  <a href="#top"      class="rail-item group flex items-center gap-3 text-cream/40 opacity-60" data-rail="top"><span class="rail-bar block h-px w-4 bg-current"></span><span class="font-mono text-[10px] tracking-widest">01</span></a>
+  <a href="#story"    class="rail-item group flex items-center gap-3 text-forest/40 opacity-60" data-rail="story"><span class="rail-bar block h-px w-4 bg-current"></span><span class="font-mono text-[10px] tracking-widest">02</span></a>
+  <a href="#people"   class="rail-item group flex items-center gap-3 text-forest/40 opacity-60" data-rail="people"><span class="rail-bar block h-px w-4 bg-current"></span><span class="font-mono text-[10px] tracking-widest">03</span></a>
+  <a href="#craft"    class="rail-item group flex items-center gap-3 text-forest/40 opacity-60" data-rail="craft"><span class="rail-bar block h-px w-4 bg-current"></span><span class="font-mono text-[10px] tracking-widest">04</span></a>
+  <a href="#cuts"     class="rail-item group flex items-center gap-3 text-forest/40 opacity-60" data-rail="cuts"><span class="rail-bar block h-px w-4 bg-current"></span><span class="font-mono text-[10px] tracking-widest">05</span></a>
+  <a href="#seasons"  class="rail-item group flex items-center gap-3 text-forest/40 opacity-60" data-rail="seasons"><span class="rail-bar block h-px w-4 bg-current"></span><span class="font-mono text-[10px] tracking-widest">06</span></a>
+  <a href="#visit"    class="rail-item group flex items-center gap-3 text-forest/40 opacity-60" data-rail="visit"><span class="rail-bar block h-px w-4 bg-current"></span><span class="font-mono text-[10px] tracking-widest">07</span></a>
+</nav>
+
 <main id="main">
 <!-- ============ HERO ============ -->
 <section id="top" class="relative tex-board overflow-hidden">
-  <!-- layered depth -->
   <div class="pointer-events-none absolute inset-0" aria-hidden="true">
     <div class="absolute -top-40 -left-40 w-[46rem] h-[46rem] rounded-full blur-3xl opacity-[.13]" style="background:radial-gradient(circle,#C9A227,transparent 62%)"></div>
     <div class="absolute -bottom-56 -right-32 w-[42rem] h-[42rem] rounded-full blur-3xl opacity-[.16]" style="background:radial-gradient(circle,#7E1F1F,transparent 65%)"></div>
@@ -431,288 +507,400 @@ tailwind.config = {
     </svg>
   </div>
 
-  <div class="relative grid lg:grid-cols-12 gap-x-10 gap-y-14 items-end pt-14 sm:pt-20 lg:pt-24 pb-0" style="padding-inline:var(--edge)">
-    <!-- copy -->
-    <div class="lg:col-span-7 xl:col-span-7" data-reveal>
-      <div class="inline-flex items-center gap-3 border border-brass/45 rounded-full pl-2 pr-4 py-1.5 mb-9">
-        <span class="grid place-items-center w-6 h-6 rounded-full bg-brass text-ink font-mono text-[10px] font-bold">62</span>
-        <span class="eyebrow text-brass">Family run since 1962</span>
+  <div class="relative pt-12 sm:pt-16" style="padding-inline:var(--edge)">
+    <div class="grid lg:grid-cols-12 gap-x-10">
+      <!-- rotated spine label -->
+      <div class="hidden lg:flex lg:col-span-1 justify-start pt-2" aria-hidden="true">
+        <span class="vert eyebrow text-brass/60">Midleton · Co. Cork</span>
       </div>
 
-      <h1 class="display-xl text-[clamp(2.6rem,7vw,6.5rem)] text-cream" id="heroTitle">
-        <span class="line-mask"><span style="--d:80ms">Cork's family</span></span>
-        <span class="line-mask"><span style="--d:200ms">butcher, <em class="not-italic outline-type">three</em></span></span>
-        <span class="line-mask"><span style="--d:320ms" class="font-normal italic text-gold">generations</span></span>
-        <span class="line-mask"><span style="--d:440ms">strong.</span></span>
-      </h1>
+      <div class="lg:col-span-8">
+        <div class="inline-flex items-center gap-3 border border-brass/45 rounded-full pl-2 pr-4 py-1.5 mb-7">
+          <span class="grid place-items-center w-6 h-6 rounded-full bg-brass text-ink font-mono text-[10px] font-bold">62</span>
+          <span class="eyebrow text-brass">Family run since 1962</span>
+        </div>
 
-      <p class="mt-8 max-w-xl text-cream/70 text-[1.0625rem] sm:text-lg leading-relaxed" data-reveal style="--d:520ms">
-        Beef from five farms within thirty miles. Pork and lamb from the same families we've worked with for decades. Every cut done by hand at the block on Main St.
-      </p>
-
-      <div class="mt-9 flex flex-wrap items-center gap-3 sm:gap-4" data-reveal style="--d:620ms">
-        <button class="btn btn-blood" data-open-order>
-          <svg class="w-4 h-4"><use href="#i-bag"/></svg> Order for collection
-        </button>
-        <a href="#cuts" class="btn btn-ghost">
-          See today's cuts <svg class="w-4 h-4"><use href="#i-arrow"/></svg>
-        </a>
+        <h1 class="display-xl text-[clamp(2.6rem,7vw,6.75rem)] text-cream" id="heroTitle">
+          <span class="line-mask"><span style="--d:80ms">Cork's family</span></span>
+          <span class="line-mask"><span style="--d:200ms">butcher, <em class="not-italic outline-type">three</em></span></span>
+          <span class="line-mask"><span style="--d:320ms" class="font-normal italic text-gold">generations</span></span>
+          <span class="line-mask"><span style="--d:440ms">strong.</span></span>
+        </h1>
       </div>
 
-      <!-- live status -->
-      <div class="mt-9 flex items-center gap-3 font-mono text-[11px] tracking-widest uppercase" data-reveal style="--d:700ms">
-        <span id="statusDot" class="pulse-dot w-2 h-2 rounded-full bg-emerald-400"></span>
-        <span id="statusText" class="text-cream/60">Checking shop hours…</span>
+      <!-- seal + intro, sitting alongside rather than below -->
+      <div class="lg:col-span-3 flex flex-col justify-end gap-7 pt-10 lg:pt-0 lg:pb-2" data-reveal="scale" style="--d:400ms">
+        <div class="relative w-32 h-32 sm:w-40 sm:h-40 self-start lg:self-end">
+          <svg viewBox="0 0 200 200" class="w-full h-full">
+            <defs><path id="sealPath" d="M100,100 m-72,0 a72,72 0 1,1 144,0 a72,72 0 1,1 -144,0"/></defs>
+            <circle cx="100" cy="100" r="88" fill="none" stroke="#C9A227" stroke-opacity=".28" stroke-width="1"/>
+            <circle cx="100" cy="100" r="56" fill="none" stroke="#C9A227" stroke-opacity=".45" stroke-width="1" stroke-dasharray="2 5"/>
+            <g class="seal-spin">
+              <text fill="#C9A227" font-family="JetBrains Mono, monospace" font-size="10.5">
+                <textPath href="#sealPath" startOffset="0" textLength="452" lengthAdjust="spacing">MIDLETON · CO. CORK · EST. MCMLXII · HAND CUT ·</textPath>
+              </text>
+            </g>
+            <g transform="translate(100,100)">
+              <text text-anchor="middle" y="-6" fill="#F6F1E4" font-family="Bodoni Moda, serif" font-weight="900" font-size="34">H&amp;S</text>
+              <text text-anchor="middle" y="16" fill="#C9A227" font-family="JetBrains Mono, monospace" font-size="8.5" letter-spacing="3">BUTCHERS</text>
+              <path d="M-26 26 H26" stroke="#C9A227" stroke-opacity=".5" stroke-width="1"/>
+            </g>
+          </svg>
+        </div>
+        <p class="text-cream/70 leading-relaxed lg:text-right text-[.95rem]">
+          Beef from five farms within thirty miles. Pork and lamb from the same families for decades. Every cut done by hand at the block on Main St.
+        </p>
       </div>
     </div>
 
-    <!-- seal + board card -->
-    <div class="lg:col-span-5 xl:col-span-5 relative flex flex-col items-start lg:items-end gap-8 pb-14" data-reveal="scale" style="--d:400ms">
-      <!-- rotating brass seal -->
-      <div class="relative w-40 h-40 sm:w-48 sm:h-48 shrink-0 self-end lg:self-auto">
-        <svg viewBox="0 0 200 200" class="w-full h-full">
-          <defs>
-            <path id="sealPath" d="M100,100 m-72,0 a72,72 0 1,1 144,0 a72,72 0 1,1 -144,0"/>
-          </defs>
-          <circle cx="100" cy="100" r="88" fill="none" stroke="#C9A227" stroke-opacity=".28" stroke-width="1"/>
-          <circle cx="100" cy="100" r="56" fill="none" stroke="#C9A227" stroke-opacity=".45" stroke-width="1" stroke-dasharray="2 5"/>
-          <g class="seal-spin">
-            <text fill="#C9A227" font-family="JetBrains Mono, monospace" font-size="10.5">
-              <textPath href="#sealPath" startOffset="0" textLength="452" lengthAdjust="spacing">MIDLETON · CO. CORK · EST. MCMLXII · HAND CUT ·</textPath>
-            </text>
-          </g>
-          <g transform="translate(100,100)">
-            <text text-anchor="middle" y="-6" fill="#F6F1E4" font-family="Bodoni Moda, serif" font-weight="900" font-size="34">H&amp;S</text>
-            <text text-anchor="middle" y="16" fill="#C9A227" font-family="JetBrains Mono, monospace" font-size="8.5" letter-spacing="3">BUTCHERS</text>
-            <path d="M-26 26 H26" stroke="#C9A227" stroke-opacity=".5" stroke-width="1"/>
-          </g>
-        </svg>
-      </div>
+    <!-- CTA row sits tight under the headline, not floating in space -->
+    <div class="mt-9 flex flex-wrap items-center gap-3" data-reveal style="--d:560ms">
+      <button class="btn btn-blood" data-open-order><svg class="w-4 h-4"><use href="#i-bag"/></svg> Order for collection</button>
+      <a href="#cuts" class="btn btn-ghost">See today's cuts <svg class="w-4 h-4"><use href="#i-arrow"/></svg></a>
+      <span class="flex items-center gap-3 font-mono text-[11px] tracking-widest uppercase pl-2">
+        <span id="statusDot" class="pulse-dot w-2 h-2 rounded-full bg-emerald-400"></span>
+        <span id="statusText" class="text-cream/60">Checking shop hours…</span>
+      </span>
+    </div>
+  </div>
 
-      <!-- specials board -->
-      <div class="w-full max-w-sm border border-cream/12 bg-black/25 backdrop-blur-sm">
+  <!-- dense fact bar across the fold -->
+  <div class="relative mt-12 border-y border-cream/12">
+    <dl class="grid grid-cols-2 lg:grid-cols-4 divide-x divide-y lg:divide-y-0 divide-cream/10">
+      <div class="px-5 sm:px-7 py-5">
+        <dt class="eyebrow text-cream/35">Established</dt>
+        <dd class="mt-1.5 font-display text-2xl sm:text-3xl text-cream">1962</dd>
+        <dd class="mt-1 font-mono text-[10px] text-cream/40">Patrick Hartnett, one block</dd>
+      </div>
+      <div class="px-5 sm:px-7 py-5">
+        <dt class="eyebrow text-cream/35">Sourced from</dt>
+        <dd class="mt-1.5 font-display text-2xl sm:text-3xl text-cream">5 farms</dd>
+        <dd class="mt-1 font-mono text-[10px] text-cream/40">All inside thirty miles</dd>
+      </div>
+      <div class="px-5 sm:px-7 py-5">
+        <dt class="eyebrow text-cream/35">Beef hung</dt>
+        <dd class="mt-1.5 font-display text-2xl sm:text-3xl text-cream">28 days<span class="text-brass">+</span></dd>
+        <dd class="mt-1 font-mono text-[10px] text-cream/40">On the bone, in our own chill</dd>
+      </div>
+      <div class="px-5 sm:px-7 py-5">
+        <dt class="eyebrow text-cream/35">Orders</dt>
+        <dd class="mt-1.5"><a href="tel:+353211234567" class="font-display text-2xl sm:text-3xl text-gold link-u">021 123 4567</a></dd>
+        <dd class="mt-1 font-mono text-[10px] text-cream/40">From 8am · collection same day</dd>
+      </div>
+    </dl>
+  </div>
+
+  <!-- supplier marquee -->
+  <div class="relative flex items-stretch divide-x divide-cream/10 border-b border-cream/12">
+    <div class="hidden sm:flex items-center gap-3 px-6 py-3 shrink-0">
+      <span class="eyebrow text-cream/35">Our farms</span>
+      <span class="relative block w-px h-4 bg-cream/25 overflow-hidden"><span class="cue-line absolute inset-x-0 top-0 h-2 bg-gold"></span></span>
+    </div>
+    <div class="flex-1 overflow-hidden py-3">
+      <div class="marquee" style="--dur:52s" aria-hidden="true">
+        <div class="flex shrink-0 items-center gap-8 pr-8 font-display text-[1.35rem] sm:text-[1.6rem] text-cream/25 whitespace-nowrap">
+          <span>Ballymore Farm</span><span class="text-brass/50 text-sm">✕</span>
+          <span>O'Brien's of Cloyne</span><span class="text-brass/50 text-sm">✕</span>
+          <span>Coolbawn Lamb</span><span class="text-brass/50 text-sm">✕</span>
+          <span>Glenview Pork</span><span class="text-brass/50 text-sm">✕</span>
+          <span>Ardra Hereford</span><span class="text-brass/50 text-sm">✕</span>
+        </div>
+        <div class="flex shrink-0 items-center gap-8 pr-8 font-display text-[1.35rem] sm:text-[1.6rem] text-cream/25 whitespace-nowrap">
+          <span>Ballymore Farm</span><span class="text-brass/50 text-sm">✕</span>
+          <span>O'Brien's of Cloyne</span><span class="text-brass/50 text-sm">✕</span>
+          <span>Coolbawn Lamb</span><span class="text-brass/50 text-sm">✕</span>
+          <span>Glenview Pork</span><span class="text-brass/50 text-sm">✕</span>
+          <span>Ardra Hereford</span><span class="text-brass/50 text-sm">✕</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p class="sr-only">Suppliers: Ballymore Farm, O'Brien's of Cloyne, Coolbawn Lamb, Glenview Pork, Ardra Hereford.</p>
+  <div class="h-16" aria-hidden="true"></div>
+</section>
+
+<!-- ============ STORY ============ -->
+<section id="story" class="relative tex-paper text-forest scroll-mt-20">
+  <div class="pb-16 sm:pb-20" style="padding-inline:var(--edge)">
+
+    <!-- board straddles the hero boundary instead of sitting inside a new band -->
+    <div class="flex justify-end">
+      <div class="-mt-16 w-full max-w-md border border-forest/20 bg-forest text-cream shadow-[0_24px_60px_-30px_rgba(0,0,0,.8)]" data-reveal="scale">
         <div class="flex items-center justify-between px-5 py-3 border-b border-cream/12">
-          <span class="eyebrow text-brass">At the counter</span>
+          <span class="eyebrow text-brass">At the counter today</span>
           <span class="font-mono text-[10px] text-cream/40" id="boardDate">—</span>
         </div>
         <ul class="divide-y divide-cream/8">
-          <li class="flex items-baseline justify-between gap-4 px-5 py-3.5 group cursor-default">
-            <span class="font-display text-lg text-cream group-hover:text-gold transition-colors duration-300">Dry-aged sirloin</span>
+          <li class="flex items-baseline justify-between gap-4 px-5 py-3 group">
+            <span class="font-display text-lg group-hover:text-gold transition-colors duration-300">Dry-aged sirloin</span>
             <span class="font-mono text-xs text-brass shrink-0">€22.50<span class="text-cream/35">/kg</span></span>
           </li>
-          <li class="flex items-baseline justify-between gap-4 px-5 py-3.5 group cursor-default">
-            <span class="font-display text-lg text-cream group-hover:text-gold transition-colors duration-300">Spiced beef</span>
+          <li class="flex items-baseline justify-between gap-4 px-5 py-3 group">
+            <span class="font-display text-lg group-hover:text-gold transition-colors duration-300">Spiced beef</span>
             <span class="font-mono text-xs text-brass shrink-0">€16.50<span class="text-cream/35">/kg</span></span>
           </li>
-          <li class="flex items-baseline justify-between gap-4 px-5 py-3.5 group cursor-default">
-            <span class="font-display text-lg text-cream group-hover:text-gold transition-colors duration-300">Hartnett's sausages</span>
+          <li class="flex items-baseline justify-between gap-4 px-5 py-3 group">
+            <span class="font-display text-lg group-hover:text-gold transition-colors duration-300">Hartnett's sausages</span>
             <span class="font-mono text-xs text-brass shrink-0">€6.20<span class="text-cream/35">/kg</span></span>
           </li>
         </ul>
       </div>
     </div>
-  </div>
 
-  <!-- hero base strip -->
-  <div class="relative border-t border-cream/10 mt-4">
-    <div class="flex items-stretch divide-x divide-cream/10">
-      <div class="hidden sm:flex items-center gap-3 px-6 py-4 shrink-0">
-        <span class="eyebrow text-cream/35">Scroll</span>
-        <span class="relative block w-px h-5 bg-cream/25 overflow-hidden"><span class="cue-line absolute inset-x-0 top-0 h-2 bg-gold"></span></span>
-      </div>
-      <div class="flex-1 overflow-hidden py-4">
-        <div class="marquee" style="--dur:52s" aria-hidden="true">
-          <div class="flex shrink-0 items-center gap-10 pr-10 font-display text-[1.6rem] sm:text-[2rem] text-cream/25 whitespace-nowrap">
-            <span>Ballymore Farm</span><span class="text-brass/50 text-base">✕</span>
-            <span>O'Brien's of Cloyne</span><span class="text-brass/50 text-base">✕</span>
-            <span>Coolbawn Lamb</span><span class="text-brass/50 text-base">✕</span>
-            <span>Glenview Pork</span><span class="text-brass/50 text-base">✕</span>
-            <span>Ardra Hereford</span><span class="text-brass/50 text-base">✕</span>
-          </div>
-          <div class="flex shrink-0 items-center gap-10 pr-10 font-display text-[1.6rem] sm:text-[2rem] text-cream/25 whitespace-nowrap">
-            <span>Ballymore Farm</span><span class="text-brass/50 text-base">✕</span>
-            <span>O'Brien's of Cloyne</span><span class="text-brass/50 text-base">✕</span>
-            <span>Coolbawn Lamb</span><span class="text-brass/50 text-base">✕</span>
-            <span>Glenview Pork</span><span class="text-brass/50 text-base">✕</span>
-            <span>Ardra Hereford</span><span class="text-brass/50 text-base">✕</span>
+    <!-- masthead rule -->
+    <div class="rule-label text-forest mt-10 mb-8" data-reveal>
+      <span class="eyebrow text-blood shrink-0">02 — Our Story</span>
+    </div>
+
+    <div class="grid lg:grid-cols-12 gap-x-10 gap-y-10 items-start">
+      <!-- headline offset into the grid, not centred in an empty half -->
+      <h2 class="lg:col-span-7 display-lg text-[clamp(2.4rem,6vw,4.75rem)]" data-reveal>
+        Still doing it the way <em class="font-normal italic text-blood">Patrick</em> did.
+      </h2>
+
+      <aside class="lg:col-span-4 lg:col-start-9 marginalia" data-reveal style="--d:120ms">
+        Patrick's original block is still in the shop — third one back, worn a full inch lower in the middle. Denis won't replace it.
+      </aside>
+
+      <!-- plate bleeds off the left edge -->
+      <figure class="lg:col-span-5 relative" data-reveal="left" style="margin-left:calc(var(--edge) * -1)">
+        <div class="relative overflow-hidden plate aspect-[5/4] sm:aspect-[4/3]">
+          <svg class="absolute inset-0 w-full h-full opacity-25" aria-hidden="true">
+            <defs><pattern id="hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(35)">
+              <path d="M0 0V7" stroke="#C9A227" stroke-width=".8"/>
+            </pattern></defs>
+            <rect width="100%" height="100%" fill="url(#hatch)"/>
+          </svg>
+          <svg viewBox="0 0 320 240" class="absolute inset-0 w-full h-full p-6 sm:p-10" fill="none" stroke="#E3C05B" stroke-opacity=".8" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="Engraved butcher's chart of a steer divided into seven primal cuts">
+            <path d="M62 92c8-22 34-30 62-31 34-1 78-2 108 4 16 3 26 10 30 20 5 12 3 30-4 42-6 11-18 16-32 18-30 4-84 5-118 3-24-2-40-8-46-20-5-10-4-25 0-36Z"/>
+            <path d="M262 85c9-4 20-6 28-2 7 3 10 10 9 18-1 9-6 16-14 19-7 3-16 2-23-2"/>
+            <path d="M289 79c3-8 10-13 16-11M292 122c4 6 11 9 16 7"/>
+            <circle cx="283" cy="98" r="2.2" fill="#E3C05B" stroke="none"/>
+            <path d="M86 146v52M104 148v50M226 148v50M246 146v52"/>
+            <path d="M82 198h9M100 198h9M222 198h9M242 198h9"/>
+            <path d="M62 100c-8 6-13 18-11 30 1 6 5 10 9 10"/>
+            <g stroke-dasharray="4 5" stroke-opacity=".55">
+              <path d="M112 62v82M152 58v86M192 58v86M228 62v80"/><path d="M112 104h116"/>
+            </g>
+            <g fill="#E3C05B" stroke="none" font-family="JetBrains Mono, monospace" font-size="9" fill-opacity=".75">
+              <text x="86" y="84">1</text><text x="128" y="84">2</text><text x="168" y="84">3</text>
+              <text x="206" y="84">4</text><text x="128" y="130">5</text><text x="168" y="130">6</text><text x="206" y="130">7</text>
+            </g>
+          </svg>
+          <div class="absolute inset-x-0 bottom-0 flex items-center justify-between gap-4 px-4 py-3 bg-gradient-to-t from-black/75 to-transparent">
+            <span class="eyebrow text-gold text-[10px]">Plate I — the seven primals</span>
+            <span class="font-mono text-[10px] text-cream/50">Est. 1962</span>
           </div>
         </div>
+      </figure>
+
+      <!-- newspaper columns -->
+      <div class="lg:col-span-7 col-text text-forest/75 leading-relaxed text-[.95rem]" data-reveal style="--d:100ms">
+        <p>Patrick Hartnett opened the shop in 1962 with a single block, a set of knives, and a handshake deal with a farmer two miles up the road. Sixty-two years later the block is older, the knives are sharper, and most of those handshake deals are still in place — just with the farmers' grandchildren.</p>
+        <p>His son Denis took over in 1988, the week after Patrick's hands gave out. He kept the suppliers, kept the prices written on brown paper, and added a chill out the back so the beef could hang properly instead of going out on the Friday it came in.</p>
+        <p>Ciara joined in 2019, third generation, and she is the one who finally got the orders written down somewhere other than the back of a receipt roll. She is also the reason the sausage recipe now has mace in it.</p>
+        <p>We work directly with five local farms, hang our beef for a minimum of 28 days, and cut everything to order. Nothing pre-packed. Nothing flown in. If we don't know where it came from, we don't sell it.</p>
+      </div>
+    </div>
+
+    <!-- pull quote inset, tight against the columns -->
+    <figure class="mt-12 grid lg:grid-cols-12 gap-x-10 items-center" data-reveal>
+      <blockquote class="lg:col-span-8 lg:col-start-3 relative border-y border-forest/20 py-8">
+        <p class="font-display text-[clamp(1.35rem,3vw,2.1rem)] leading-[1.28] text-forest text-center">
+          “If you can't tell a customer the name of the farm, you've no business selling them the meat.”
+        </p>
+        <figcaption class="mt-4 text-center eyebrow text-forest/45">Patrick Hartnett · 1962</figcaption>
+      </blockquote>
+    </figure>
+
+    <!-- stats as a thin ledger strip, not three big empty blocks -->
+    <dl class="mt-10 grid grid-cols-2 sm:grid-cols-4 border-t border-forest/20 divide-x divide-forest/12">
+      <div class="pt-5 px-4 first:pl-0" data-reveal>
+        <dd class="display-lg text-[clamp(1.9rem,4vw,2.75rem)] text-blood" data-count="3">0</dd>
+        <dt class="mt-1 eyebrow text-forest/45 text-[10px]">Generations</dt>
+      </div>
+      <div class="pt-5 px-4" data-reveal style="--d:90ms">
+        <dd class="display-lg text-[clamp(1.9rem,4vw,2.75rem)] text-blood" data-count="5">0</dd>
+        <dt class="mt-1 eyebrow text-forest/45 text-[10px]">Local farms</dt>
+      </div>
+      <div class="pt-5 px-4" data-reveal style="--d:180ms">
+        <dd class="display-lg text-[clamp(1.9rem,4vw,2.75rem)] text-blood" data-count="62">0</dd>
+        <dt class="mt-1 eyebrow text-forest/45 text-[10px]">Years on Main St.</dt>
+      </div>
+      <div class="pt-5 px-4" data-reveal style="--d:270ms">
+        <dd class="display-lg text-[clamp(1.9rem,4vw,2.75rem)] text-blood" data-count="41">0</dd>
+        <dt class="mt-1 eyebrow text-forest/45 text-[10px]">Years Denis has cut</dt>
+      </div>
+    </dl>
+  </div>
+</section>
+
+<!-- ============ PEOPLE ============ -->
+<section id="people" class="relative tex-paper text-forest scroll-mt-20 border-t border-forest/15">
+  <div class="py-14 sm:py-16" style="padding-inline:var(--edge)">
+    <div class="rule-label text-forest mb-9" data-reveal>
+      <span class="eyebrow text-blood shrink-0">03 — Behind the counter</span>
+    </div>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-10">
+      <article class="person flex gap-5" data-reveal>
+        <div class="monogram grid place-items-center w-20 h-24 shrink-0 border border-forest/20 plate relative overflow-hidden">
+          <svg class="absolute inset-0 w-full h-full opacity-30" aria-hidden="true"><rect width="100%" height="100%" fill="url(#hatch)"/></svg>
+          <span class="mono-initials relative font-display font-900 text-3xl text-gold">DH</span>
+        </div>
+        <div class="min-w-0">
+          <h3 class="font-display text-2xl leading-tight">Denis Hartnett</h3>
+          <p class="mt-1 eyebrow text-blood text-[10px]">Master butcher · 2nd generation</p>
+          <p class="mt-3 text-sm text-forest/65 leading-relaxed">Forty-one years at the block. Does the farm runs himself, breaks every carcass, and will talk you out of a fillet if he thinks the rib is better that week.</p>
+        </div>
+      </article>
+
+      <article class="person flex gap-5" data-reveal style="--d:110ms">
+        <div class="monogram grid place-items-center w-20 h-24 shrink-0 border border-forest/20 plate relative overflow-hidden">
+          <svg class="absolute inset-0 w-full h-full opacity-30" aria-hidden="true"><rect width="100%" height="100%" fill="url(#hatch)"/></svg>
+          <span class="mono-initials relative font-display font-900 text-3xl text-gold">CH</span>
+        </div>
+        <div class="min-w-0">
+          <h3 class="font-display text-2xl leading-tight">Ciara Hartnett</h3>
+          <p class="mt-1 eyebrow text-blood text-[10px]">Butcher · 3rd generation</p>
+          <p class="mt-3 text-sm text-forest/65 leading-relaxed">Joined in 2019 and learning the forequarter now. Runs the curing, the sausage batches and — mercifully — the order book.</p>
+        </div>
+      </article>
+
+      <article class="person flex gap-5" data-reveal style="--d:220ms">
+        <div class="monogram grid place-items-center w-20 h-24 shrink-0 border border-forest/20 plate relative overflow-hidden">
+          <svg class="absolute inset-0 w-full h-full opacity-30" aria-hidden="true"><rect width="100%" height="100%" fill="url(#hatch)"/></svg>
+          <span class="mono-initials relative font-display font-900 text-3xl text-gold">MW</span>
+        </div>
+        <div class="min-w-0">
+          <h3 class="font-display text-2xl leading-tight">Michael Walsh</h3>
+          <p class="mt-1 eyebrow text-blood text-[10px]">Counter &amp; collections · 12 years</p>
+          <p class="mt-3 text-sm text-forest/65 leading-relaxed">Takes the phone orders, knows what everyone had last week, and is the reason the Saturday queue moves at all.</p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ WHAT WE DON'T DO (inset dark card, not a full band) ============ -->
+<section class="relative tex-paper text-forest">
+  <div class="pb-16" style="padding-inline:var(--edge)">
+    <div class="inset-dark text-cream border border-forest/30 shadow-[0_30px_70px_-40px_rgba(0,0,0,.9)] overflow-hidden" data-reveal>
+      <div class="grid lg:grid-cols-12">
+        <div class="lg:col-span-4 p-8 sm:p-10 border-b lg:border-b-0 lg:border-r border-cream/12">
+          <span class="eyebrow text-brass">The short version</span>
+          <h2 class="display-lg mt-4 text-[clamp(1.9rem,4vw,3rem)]">Four things<br>we <em class="font-normal italic text-gold">won't</em> do.</h2>
+          <p class="mt-5 text-sm text-cream/55 leading-relaxed">Most of what makes a butcher good is a list of shortcuts they've refused to take.</p>
+        </div>
+        <ul class="lg:col-span-8 grid sm:grid-cols-2">
+          <li class="p-7 sm:p-8 border-b sm:border-r border-cream/12 group">
+            <span class="font-mono text-[10px] text-blood/80 group-hover:text-gold transition-colors duration-300">01</span>
+            <h3 class="mt-2 font-display text-xl sm:text-2xl group-hover:text-gold transition-colors duration-300">No pre-packed trays</h3>
+            <p class="mt-2 text-sm text-cream/55 leading-relaxed">Nothing sits under film waiting for you. It's cut when you ask for it, to the thickness you ask for.</p>
+          </li>
+          <li class="p-7 sm:p-8 border-b border-cream/12 group">
+            <span class="font-mono text-[10px] text-blood/80 group-hover:text-gold transition-colors duration-300">02</span>
+            <h3 class="mt-2 font-display text-xl sm:text-2xl group-hover:text-gold transition-colors duration-300">No imported beef</h3>
+            <p class="mt-2 text-sm text-cream/55 leading-relaxed">Five farms, all within thirty miles. We can tell you the herd and usually the field.</p>
+          </li>
+          <li class="p-7 sm:p-8 sm:border-r border-cream/12 border-b sm:border-b-0 group">
+            <span class="font-mono text-[10px] text-blood/80 group-hover:text-gold transition-colors duration-300">03</span>
+            <h3 class="mt-2 font-display text-xl sm:text-2xl group-hover:text-gold transition-colors duration-300">No water in the bacon</h3>
+            <p class="mt-2 text-sm text-cream/55 leading-relaxed">Dry-cured on the premises. It browns in the pan instead of boiling itself grey.</p>
+          </li>
+          <li class="p-7 sm:p-8 group">
+            <span class="font-mono text-[10px] text-blood/80 group-hover:text-gold transition-colors duration-300">04</span>
+            <h3 class="mt-2 font-display text-xl sm:text-2xl group-hover:text-gold transition-colors duration-300">No labels we can't explain</h3>
+            <p class="mt-2 text-sm text-cream/55 leading-relaxed">If a sticker claims something, one of us can tell you exactly what it means. Otherwise it's off.</p>
+          </li>
+        </ul>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ============ STORY ============ -->
-<section id="story" class="relative tex-paper text-forest scroll-mt-20">
-  <div class="py-24 sm:py-32 lg:py-40" style="padding-inline:var(--edge)">
-    <div class="grid lg:grid-cols-12 gap-x-12 gap-y-16">
-
-      <div class="lg:col-span-5 lg:sticky lg:top-32 lg:self-start" data-reveal="left">
-        <span class="eyebrow text-blood">Our Story</span>
-        <h2 class="display-lg mt-5 text-[clamp(2.6rem,7vw,5.25rem)]">
-          Still doing it<br>the way <em class="font-normal italic text-blood">Patrick</em><br>did.
-        </h2>
-        <div class="hairline my-9 max-w-xs" style="background:linear-gradient(90deg,rgba(11,31,24,.3),transparent)"></div>
-        <p class="max-w-md text-forest/70 leading-relaxed">
-          Patrick Hartnett opened the shop in 1962 with a single block, a set of knives, and a handshake deal with a farmer two miles up the road. Sixty-two years later the block is older, the knives are sharper, and most of those handshake deals are still in place — just with the farmers' grandchildren.
-        </p>
-        <p class="mt-5 max-w-md text-forest/70 leading-relaxed">
-          We work directly with five local farms, hang our beef for a minimum of 28 days, and cut everything to order. Nothing pre-packed. Nothing flown in. If we don't know where it came from, we don't sell it.
-        </p>
-        <a href="#craft" class="btn btn-ink mt-9">How we work <svg class="w-4 h-4"><use href="#i-arrow"/></svg></a>
-      </div>
-
-      <div class="lg:col-span-7 lg:pl-6">
-        <!-- engraved plate -->
-        <figure class="relative" data-reveal="scale">
-          <div class="relative overflow-hidden bg-forest aspect-[4/5] sm:aspect-[5/4] lg:aspect-[4/5]">
-            <div class="absolute inset-0 opacity-90" style="background:radial-gradient(ellipse at 30% 25%,#1E4A3B,transparent 60%),radial-gradient(ellipse at 75% 80%,rgba(126,31,31,.55),transparent 55%),#0B1F18"></div>
-            <svg class="absolute inset-0 w-full h-full opacity-25" aria-hidden="true">
-              <defs><pattern id="hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(35)">
-                <path d="M0 0V7" stroke="#C9A227" stroke-width=".8"/>
-              </pattern></defs>
-              <rect width="100%" height="100%" fill="url(#hatch)"/>
-            </svg>
-            <!-- big engraved steer -->
-            <svg viewBox="0 0 320 240" class="absolute inset-0 w-full h-full p-10 sm:p-16" fill="none" stroke="#E3C05B" stroke-opacity=".8" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="Engraved butcher's chart of a steer, divided into primal cuts">
-              <!-- body -->
-              <path d="M62 92c8-22 34-30 62-31 34-1 78-2 108 4 16 3 26 10 30 20 5 12 3 30-4 42-6 11-18 16-32 18-30 4-84 5-118 3-24-2-40-8-46-20-5-10-4-25 0-36Z"/>
-              <!-- head -->
-              <path d="M262 85c9-4 20-6 28-2 7 3 10 10 9 18-1 9-6 16-14 19-7 3-16 2-23-2"/>
-              <path d="M289 79c3-8 10-13 16-11M292 122c4 6 11 9 16 7"/>
-              <circle cx="283" cy="98" r="2.2" fill="#E3C05B" stroke="none"/>
-              <!-- legs -->
-              <path d="M86 146v52M104 148v50M226 148v50M246 146v52"/>
-              <path d="M82 198h9M100 198h9M222 198h9M242 198h9"/>
-              <!-- tail -->
-              <path d="M62 100c-8 6-13 18-11 30 1 6 5 10 9 10"/>
-              <!-- primal dashed lines -->
-              <g stroke-dasharray="4 5" stroke-opacity=".55">
-                <path d="M112 62v82M152 58v86M192 58v86M228 62v80"/>
-                <path d="M112 104h116"/>
-              </g>
-              <!-- numbers -->
-              <g fill="#E3C05B" stroke="none" font-family="JetBrains Mono, monospace" font-size="9" fill-opacity=".75">
-                <text x="86" y="84">1</text><text x="128" y="84">2</text><text x="168" y="84">3</text>
-                <text x="206" y="84">4</text><text x="128" y="130">5</text><text x="168" y="130">6</text><text x="206" y="130">7</text>
-              </g>
-            </svg>
-            <div class="absolute inset-x-0 bottom-0 flex items-center justify-between gap-4 px-5 py-4 bg-gradient-to-t from-black/70 to-transparent">
-              <span class="eyebrow text-gold">Hartnett &amp; Sons</span>
-              <span class="font-mono text-[10px] tracking-widest text-cream/55">Est. 1962 · Midleton</span>
-            </div>
-          </div>
-          <figcaption class="mt-3 font-mono text-[10px] tracking-widest uppercase text-forest/40">Plate I — the seven primals, as taught to Denis by his father</figcaption>
-        </figure>
-
-        <!-- pull quote -->
-        <blockquote class="relative mt-16 pl-8 sm:pl-12" data-reveal>
-          <svg class="absolute left-0 top-1 w-6 h-6 text-blood/40"><use href="#i-quote"/></svg>
-          <p class="font-display text-[clamp(1.5rem,3.2vw,2.25rem)] leading-[1.25] text-forest">
-            “If you can't tell a customer the name of the farm, you've no business selling them the meat.”
-          </p>
-          <footer class="mt-4 font-mono text-[11px] tracking-widest2 uppercase text-forest/45">— Patrick Hartnett, 1962</footer>
-        </blockquote>
-
-        <!-- stats -->
-        <dl class="mt-16 grid grid-cols-3 border-t border-forest/15">
-          <div class="pt-7 pr-4 border-r border-forest/15" data-reveal style="--d:0ms">
-            <dd class="display-lg text-[clamp(2.5rem,6vw,4rem)] text-blood" data-count="3">0</dd>
-            <dt class="mt-2 eyebrow text-forest/50">Generations</dt>
-          </div>
-          <div class="pt-7 px-4 border-r border-forest/15" data-reveal style="--d:120ms">
-            <dd class="display-lg text-[clamp(2.5rem,6vw,4rem)] text-blood" data-count="5">0</dd>
-            <dt class="mt-2 eyebrow text-forest/50">Local farms</dt>
-          </div>
-          <div class="pt-7 pl-4" data-reveal style="--d:240ms">
-            <dd class="display-lg text-[clamp(2.5rem,6vw,4rem)] text-blood" data-count="62">0</dd>
-            <dt class="mt-2 eyebrow text-forest/50">Years on Main St.</dt>
-          </div>
-        </dl>
-      </div>
+<!-- ============ CRAFT (tight 2x2, not a long sticky list) ============ -->
+<section id="craft" class="relative tex-paper text-forest scroll-mt-20 border-t border-forest/15">
+  <div class="py-14 sm:py-16" style="padding-inline:var(--edge)">
+    <div class="rule-label text-forest mb-8" data-reveal>
+      <span class="eyebrow text-blood shrink-0">04 — Farm to block</span>
     </div>
-  </div>
-</section>
 
-<!-- ============ CRAFT / PROCESS ============ -->
-<section id="craft" class="relative tex-board scroll-mt-20 overflow-hidden">
-  <div class="pointer-events-none absolute -right-40 top-1/4 w-[38rem] h-[38rem] rounded-full blur-3xl opacity-[.1]" style="background:radial-gradient(circle,#C9A227,transparent 62%)" aria-hidden="true"></div>
+    <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-10" data-reveal>
+      <h2 class="display-lg text-[clamp(2.1rem,5vw,3.75rem)] max-w-2xl">
+        Four steps between the field and your <em class="font-normal italic text-blood">kitchen.</em>
+      </h2>
+      <p class="max-w-xs text-sm text-forest/60 leading-relaxed lg:text-right lg:pb-2">
+        No middlemen, no central packing plant. We can name every person involved in each one.
+      </p>
+    </div>
 
-  <div class="relative py-24 sm:py-32 lg:py-40" style="padding-inline:var(--edge)">
-    <div class="grid lg:grid-cols-12 gap-x-12 gap-y-14">
-      <header class="lg:col-span-4 lg:sticky lg:top-32 lg:self-start" data-reveal="left">
-        <span class="eyebrow text-brass">The Craft</span>
-        <h2 class="display-lg mt-5 text-[clamp(2.5rem,6.5vw,4.75rem)] text-cream">
-          Farm to<br><em class="font-normal italic text-gold">block</em>, in<br>four steps.
-        </h2>
-        <p class="mt-7 max-w-sm text-cream/60 leading-relaxed">
-          No middlemen, no central packing plant. Four steps between the field and your kitchen — and we can name every person involved in each one.
-        </p>
-      </header>
-
-      <ol class="lg:col-span-8 relative" id="processList">
-        <!-- progress rail -->
-        <div class="absolute left-[1.4rem] sm:left-[1.75rem] top-4 bottom-8 w-px bg-cream/12" aria-hidden="true">
-          <div id="processFill" class="w-full bg-gradient-to-b from-brass to-gold origin-top" style="height:0%"></div>
+    <ol class="grid sm:grid-cols-2 border-t border-l border-forest/15" id="processList">
+      <li class="relative p-7 sm:p-9 border-r border-b border-forest/15 group hover:bg-white/45 transition-colors duration-500" data-reveal>
+        <div class="flex items-baseline gap-4">
+          <span class="font-display font-900 text-4xl text-blood/25 group-hover:text-blood/60 transition-colors duration-500">01</span>
+          <h3 class="font-display text-[clamp(1.3rem,2.4vw,1.8rem)] leading-tight">Five farms, thirty miles</h3>
         </div>
-
-        <li class="relative pl-16 sm:pl-20 pb-14" data-reveal>
-          <span class="absolute left-0 top-0 grid place-items-center w-11 h-11 sm:w-14 sm:h-14 rounded-full border border-brass/40 bg-forest font-mono text-xs text-brass">01</span>
-          <h3 class="font-display text-[clamp(1.6rem,3.4vw,2.35rem)] text-cream leading-tight">Five farms, thirty miles</h3>
-          <p class="mt-3 max-w-lg text-cream/60 leading-relaxed">Ballymore, Ardra, Coolbawn, Glenview and O'Brien's of Cloyne. Denis drives out to each of them himself. Every animal we sell was raised inside a thirty-mile ring around the shop.</p>
-        </li>
-        <li class="relative pl-16 sm:pl-20 pb-14" data-reveal>
-          <span class="absolute left-0 top-0 grid place-items-center w-11 h-11 sm:w-14 sm:h-14 rounded-full border border-brass/40 bg-forest font-mono text-xs text-brass">02</span>
-          <h3 class="font-display text-[clamp(1.6rem,3.4vw,2.35rem)] text-cream leading-tight">Twenty-eight days hanging</h3>
-          <p class="mt-3 max-w-lg text-cream/60 leading-relaxed">Beef goes on the hook in our own chill and stays there a minimum of four weeks. It loses weight and gains flavour — which is exactly the trade the supermarkets won't make.</p>
-        </li>
-        <li class="relative pl-16 sm:pl-20 pb-14" data-reveal>
-          <span class="absolute left-0 top-0 grid place-items-center w-11 h-11 sm:w-14 sm:h-14 rounded-full border border-brass/40 bg-forest font-mono text-xs text-brass">03</span>
-          <h3 class="font-display text-[clamp(1.6rem,3.4vw,2.35rem)] text-cream leading-tight">Broken down by hand</h3>
-          <p class="mt-3 max-w-lg text-cream/60 leading-relaxed">Whole carcass, one block, three sets of hands. Seaming out a forequarter properly takes practice you can't buy — Denis learned it from his father, and Ciara is learning it now.</p>
-        </li>
-        <li class="relative pl-16 sm:pl-20" data-reveal>
-          <span class="absolute left-0 top-0 grid place-items-center w-11 h-11 sm:w-14 sm:h-14 rounded-full border border-brass/40 bg-forest font-mono text-xs text-brass">04</span>
-          <h3 class="font-display text-[clamp(1.6rem,3.4vw,2.35rem)] text-cream leading-tight">Cut to your order</h3>
-          <p class="mt-3 max-w-lg text-cream/60 leading-relaxed">Nothing sits pre-wrapped in a tray. Tell us the thickness, the trim, how many it's feeding and when you're eating it — we'll cut it that morning and have it wrapped for collection.</p>
-        </li>
-      </ol>
-    </div>
+        <p class="mt-3 text-sm text-forest/65 leading-relaxed">Ballymore, Ardra, Coolbawn, Glenview and O'Brien's of Cloyne. Denis drives out to each of them himself. Every animal we sell was raised inside a thirty-mile ring around the shop.</p>
+        <p class="mt-4 font-mono text-[10px] tracking-widest uppercase text-forest/35">Roughly 40 min in the van, worst case</p>
+      </li>
+      <li class="relative p-7 sm:p-9 border-r border-b border-forest/15 group hover:bg-white/45 transition-colors duration-500" data-reveal style="--d:100ms">
+        <div class="flex items-baseline gap-4">
+          <span class="font-display font-900 text-4xl text-blood/25 group-hover:text-blood/60 transition-colors duration-500">02</span>
+          <h3 class="font-display text-[clamp(1.3rem,2.4vw,1.8rem)] leading-tight">Twenty-eight days hanging</h3>
+        </div>
+        <p class="mt-3 text-sm text-forest/65 leading-relaxed">Beef goes on the hook in our own chill and stays there a minimum of four weeks. It loses weight and gains flavour — which is exactly the trade the supermarkets won't make.</p>
+        <p class="mt-4 font-mono text-[10px] tracking-widest uppercase text-forest/35">Loses about 12% of its weight</p>
+      </li>
+      <li class="relative p-7 sm:p-9 border-r border-b border-forest/15 group hover:bg-white/45 transition-colors duration-500" data-reveal style="--d:200ms">
+        <div class="flex items-baseline gap-4">
+          <span class="font-display font-900 text-4xl text-blood/25 group-hover:text-blood/60 transition-colors duration-500">03</span>
+          <h3 class="font-display text-[clamp(1.3rem,2.4vw,1.8rem)] leading-tight">Broken down by hand</h3>
+        </div>
+        <p class="mt-3 text-sm text-forest/65 leading-relaxed">Whole carcass, one block, three sets of hands. Seaming out a forequarter properly takes practice you can't buy — Denis learned it from his father, and Ciara is learning it now.</p>
+        <p class="mt-4 font-mono text-[10px] tracking-widest uppercase text-forest/35">Two and a half hours a side</p>
+      </li>
+      <li class="relative p-7 sm:p-9 border-r border-b border-forest/15 group hover:bg-white/45 transition-colors duration-500" data-reveal style="--d:300ms">
+        <div class="flex items-baseline gap-4">
+          <span class="font-display font-900 text-4xl text-blood/25 group-hover:text-blood/60 transition-colors duration-500">04</span>
+          <h3 class="font-display text-[clamp(1.3rem,2.4vw,1.8rem)] leading-tight">Cut to your order</h3>
+        </div>
+        <p class="mt-3 text-sm text-forest/65 leading-relaxed">Nothing sits pre-wrapped in a tray. Tell us the thickness, the trim, how many it's feeding and when you're eating it — we'll cut it that morning and have it wrapped for collection.</p>
+        <p class="mt-4 font-mono text-[10px] tracking-widest uppercase text-forest/35">Order by 4pm the day before</p>
+      </li>
+    </ol>
   </div>
 </section>
 
 <!-- ============ TODAY'S CUTS ============ -->
-<section id="cuts" class="relative tex-paper text-forest scroll-mt-20">
-  <div class="py-24 sm:py-32 lg:py-36" style="padding-inline:var(--edge)">
-
-    <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8 mb-12" data-reveal>
-      <div>
-        <span class="eyebrow text-blood">Today's Cuts</span>
-        <h2 class="display-lg mt-5 text-[clamp(2.6rem,7.5vw,6rem)]">
-          What's fresh<br>this <em class="font-normal italic text-blood">week.</em>
-        </h2>
-      </div>
-      <p class="max-w-xs text-forest/60 text-sm leading-relaxed lg:text-right lg:pb-3">
-        Prices are per kilo and change with the season. Tap any cut for how it eats and how to ask for it.
-      </p>
+<section id="cuts" class="relative tex-paper text-forest scroll-mt-20 border-t border-forest/15">
+  <div class="py-14 sm:py-16" style="padding-inline:var(--edge)">
+    <div class="rule-label text-forest mb-8" data-reveal>
+      <span class="eyebrow text-blood shrink-0">05 — Today's cuts</span>
     </div>
 
-    <!-- filters -->
-    <div class="flex flex-wrap items-center gap-2 sm:gap-3 mb-2" data-reveal>
-      <div class="flex flex-wrap gap-2" role="tablist" aria-label="Filter cuts by type">
-        <button class="tab !border-forest/20 !text-forest/60 hover:!text-forest data-[on=true]:!bg-forest data-[on=true]:!text-cream data-[on=true]:!border-forest font-mono text-[11px] tracking-widest uppercase" role="tab" aria-selected="true" data-on="true" data-filter="all">All cuts <span class="opacity-50">08</span></button>
-        <button class="tab !border-forest/20 !text-forest/60 hover:!text-forest data-[on=true]:!bg-forest data-[on=true]:!text-cream data-[on=true]:!border-forest font-mono text-[11px] tracking-widest uppercase" role="tab" aria-selected="false" data-on="false" data-filter="beef">Beef <span class="opacity-50">03</span></button>
-        <button class="tab !border-forest/20 !text-forest/60 hover:!text-forest data-[on=true]:!bg-forest data-[on=true]:!text-cream data-[on=true]:!border-forest font-mono text-[11px] tracking-widest uppercase" role="tab" aria-selected="false" data-on="false" data-filter="pork">Pork <span class="opacity-50">03</span></button>
-        <button class="tab !border-forest/20 !text-forest/60 hover:!text-forest data-[on=true]:!bg-forest data-[on=true]:!text-cream data-[on=true]:!border-forest font-mono text-[11px] tracking-widest uppercase" role="tab" aria-selected="false" data-on="false" data-filter="lamb">Lamb <span class="opacity-50">01</span></button>
-        <button class="tab !border-forest/20 !text-forest/60 hover:!text-forest data-[on=true]:!bg-forest data-[on=true]:!text-cream data-[on=true]:!border-forest font-mono text-[11px] tracking-widest uppercase" role="tab" aria-selected="false" data-on="false" data-filter="poultry">Poultry <span class="opacity-50">01</span></button>
-      </div>
-      <span id="filterCount" class="ml-auto font-mono text-[10px] tracking-widest uppercase text-forest/40" aria-live="polite">Showing 8 of 8</span>
-    </div>
+    <div class="grid lg:grid-cols-12 gap-x-10 gap-y-10 items-start">
 
-    <!-- ledger -->
-    <div class="border-y border-forest/20" id="ledger">
+      <!-- ledger occupies the bulk -->
+      <div class="lg:col-span-8 xl:col-span-9 order-2 lg:order-1">
+        <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-5 mb-7" data-reveal>
+          <h2 class="display-lg text-[clamp(2.1rem,5vw,3.5rem)]">What's fresh<br>this <em class="font-normal italic text-blood">week.</em></h2>
+          <p class="max-w-[15rem] text-sm text-forest/55 leading-relaxed sm:text-right sm:pb-2">Per kilo, changing with the season. Tap a cut for how it eats and how to ask for it.</p>
+        </div>
 
-      <article class="ledger-row group grid grid-cols-[auto_1fr_auto] sm:grid-cols-[3rem_5rem_1fr_auto_auto] items-center gap-x-4 sm:gap-x-6 gap-y-2 px-2 sm:px-4 py-6 border-b border-forest/12 last:border-b-0"
+        <div class="flex flex-wrap items-center gap-2 mb-1" data-reveal>
+          <div class="flex flex-wrap gap-2" role="tablist" aria-label="Filter cuts by type">
+            <button class="tab !border-forest/20 !text-forest/60 hover:!text-forest data-[on=true]:!bg-forest data-[on=true]:!text-cream data-[on=true]:!border-forest font-mono text-[11px] tracking-widest uppercase" role="tab" aria-selected="true" data-on="true" data-filter="all">All <span class="opacity-50">10</span></button>
+            <button class="tab !border-forest/20 !text-forest/60 hover:!text-forest data-[on=true]:!bg-forest data-[on=true]:!text-cream data-[on=true]:!border-forest font-mono text-[11px] tracking-widest uppercase" role="tab" aria-selected="false" data-on="false" data-filter="beef">Beef <span class="opacity-50">04</span></button>
+            <button class="tab !border-forest/20 !text-forest/60 hover:!text-forest data-[on=true]:!bg-forest data-[on=true]:!text-cream data-[on=true]:!border-forest font-mono text-[11px] tracking-widest uppercase" role="tab" aria-selected="false" data-on="false" data-filter="pork">Pork <span class="opacity-50">04</span></button>
+            <button class="tab !border-forest/20 !text-forest/60 hover:!text-forest data-[on=true]:!bg-forest data-[on=true]:!text-cream data-[on=true]:!border-forest font-mono text-[11px] tracking-widest uppercase" role="tab" aria-selected="false" data-on="false" data-filter="lamb">Lamb <span class="opacity-50">01</span></button>
+            <button class="tab !border-forest/20 !text-forest/60 hover:!text-forest data-[on=true]:!bg-forest data-[on=true]:!text-cream data-[on=true]:!border-forest font-mono text-[11px] tracking-widest uppercase" role="tab" aria-selected="false" data-on="false" data-filter="poultry">Poultry <span class="opacity-50">01</span></button>
+          </div>
+          <span id="filterCount" class="ml-auto font-mono text-[10px] tracking-widest uppercase text-forest/40" aria-live="polite">Showing 10 of 10</span>
+        </div>
+
+        <div class="border-y border-forest/20" id="ledger">
+<article class="ledger-row group grid grid-cols-[auto_1fr_auto] sm:grid-cols-[3rem_5rem_1fr_auto_auto] items-center gap-x-4 sm:gap-x-6 gap-y-2 px-2 sm:px-4 py-6 border-b border-forest/12 last:border-b-0"
         data-cat="beef" data-id="sirloin" data-name="Dry-Aged Sirloin" data-price="22.50" data-icon="cut-sirloin"
         data-desc="28-day hung, from Ballymore Farm"
         data-origin="Ballymore Farm, Castlelyons — Hereford cross, grass-fed"
@@ -880,221 +1068,345 @@ tailwind.config = {
         </div>
       </article>
 
-    </div>
+      <article class="ledger-row group grid grid-cols-[auto_1fr_auto] sm:grid-cols-[3rem_5rem_1fr_auto_auto] items-center gap-x-4 sm:gap-x-6 gap-y-2 px-2 sm:px-4 py-6 border-b border-forest/12 last:border-b-0"
+        data-cat="beef" data-id="corned" data-name="Corned Silverside" data-price="14.20" data-icon="cut-cure"
+        data-desc="Brined nine days, for boiling"
+        data-origin="Silverside from Ardra Hereford, brined on site"
+        data-eats="Salty, soft and pink through. The nine-day brine gets right to the middle, so it slices without falling apart."
+        data-ask="A kilo and a half feeds six with cabbage and plenty left for Tuesday. Simmer ninety minutes, never boil it hard.">
+        <span class="row-idx font-mono text-[11px] text-forest/35 transition-colors duration-500 hidden sm:block">09</span>
+        <span class="icon-box grid place-items-center w-14 h-14 sm:w-16 sm:h-16 border border-forest/15 bg-forest/[.04] shrink-0 transition-colors duration-500">
+          <svg class="cut-art w-11 h-11 sm:w-12 sm:h-12 text-blood"><use href="#cut-cure"/></svg>
+        </span>
+        <div class="min-w-0">
+          <h3 class="font-display text-[1.45rem] sm:text-[1.85rem] leading-tight">Corned Silverside</h3>
+          <p class="mt-0.5 text-sm text-forest/55">Brined nine days, for boiling</p>
+        </div>
+        <p class="row-price font-mono text-sm sm:text-base text-blood whitespace-nowrap sm:text-right transition-colors duration-500">€14.20<span class="text-forest/40 text-xs">/kg</span></p>
+        <div class="col-span-3 sm:col-span-1 flex items-center gap-2 justify-end">
+          <button class="detail-btn font-mono text-[10px] tracking-widest uppercase text-forest/50 hover:text-blood transition-colors duration-300 link-u px-1 py-2">Details</button>
+          <button class="add-btn btn btn-ink !py-2.5 !px-4 !text-[10px]"><svg class="w-3.5 h-3.5"><use href="#i-plus"/></svg> Add</button>
+        </div>
+      </article>
 
-    <p id="noResults" class="hidden py-16 text-center font-mono text-xs tracking-widest uppercase text-forest/40">Nothing in that category today — try another.</p>
+      <article class="ledger-row group grid grid-cols-[auto_1fr_auto] sm:grid-cols-[3rem_5rem_1fr_auto_auto] items-center gap-x-4 sm:gap-x-6 gap-y-2 px-2 sm:px-4 py-6 border-b border-forest/12 last:border-b-0"
+        data-cat="pork" data-id="ribs" data-name="Bacon Ribs" data-price="4.90" data-icon="cut-rib"
+        data-desc="Dry-cured, for a pot of coddle"
+        data-origin="Glenview Pork, dry-cured in our own brine"
+        data-eats="Cheap, salty and full of collagen. An hour in the pot and the meat slides off; the liquor underneath is half the point."
+        data-ask="Two kilos does a big pot. Steep them overnight in cold water first if you're watching the salt.">
+        <span class="row-idx font-mono text-[11px] text-forest/35 transition-colors duration-500 hidden sm:block">10</span>
+        <span class="icon-box grid place-items-center w-14 h-14 sm:w-16 sm:h-16 border border-forest/15 bg-forest/[.04] shrink-0 transition-colors duration-500">
+          <svg class="cut-art w-11 h-11 sm:w-12 sm:h-12 text-blood"><use href="#cut-rib"/></svg>
+        </span>
+        <div class="min-w-0">
+          <h3 class="font-display text-[1.45rem] sm:text-[1.85rem] leading-tight">Bacon Ribs</h3>
+          <p class="mt-0.5 text-sm text-forest/55">Dry-cured, for a pot of coddle</p>
+        </div>
+        <p class="row-price font-mono text-sm sm:text-base text-blood whitespace-nowrap sm:text-right transition-colors duration-500">€4.90<span class="text-forest/40 text-xs">/kg</span></p>
+        <div class="col-span-3 sm:col-span-1 flex items-center gap-2 justify-end">
+          <button class="detail-btn font-mono text-[10px] tracking-widest uppercase text-forest/50 hover:text-blood transition-colors duration-300 link-u px-1 py-2">Details</button>
+          <button class="add-btn btn btn-ink !py-2.5 !px-4 !text-[10px]"><svg class="w-3.5 h-3.5"><use href="#i-plus"/></svg> Add</button>
+        </div>
+      </article>
+        </div>
 
-    <div class="mt-8 flex flex-col sm:flex-row sm:items-center justify-between gap-5">
-      <p class="text-sm text-forest/50 max-w-md">Selection rotates with the seasons. Call ahead for bulk orders, whole lambs, or anything you don't see here.</p>
-      <button class="btn btn-blood self-start sm:self-auto" data-open-order>
-        <svg class="w-4 h-4"><use href="#i-bag"/></svg> Review your order
-      </button>
+        <p id="noResults" class="hidden py-14 text-center font-mono text-xs tracking-widest uppercase text-forest/40">Nothing in that category today — try another.</p>
+
+        <div class="mt-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <p class="text-sm text-forest/50 max-w-md">Selection rotates with the seasons. Call ahead for bulk orders, whole lambs, or anything you don't see here.</p>
+          <button class="btn btn-blood self-start sm:self-auto shrink-0" data-open-order>
+            <svg class="w-4 h-4"><use href="#i-bag"/></svg> Review your order
+          </button>
+        </div>
+      </div>
+
+      <!-- sidebar: counter journal + call-ahead list -->
+      <aside class="lg:col-span-4 xl:col-span-3 order-1 lg:order-2 lg:sticky lg:top-28 space-y-6" data-reveal style="--d:120ms">
+        <div class="border border-forest/20 bg-white/40">
+          <div class="px-5 py-3.5 border-b border-forest/15 flex items-center justify-between">
+            <span class="eyebrow text-blood">From the counter</span>
+            <span class="w-1.5 h-1.5 rounded-full bg-blood pulse-dot"></span>
+          </div>
+          <ol class="divide-y divide-forest/10" id="journal">
+            <li class="journal-entry px-5 py-4 border-l-2 border-transparent">
+              <p class="font-mono text-[10px] tracking-widest uppercase text-forest/40" data-journal-day="0">—</p>
+              <p class="mt-1.5 text-sm text-forest/70 leading-relaxed">Sausage batch done before eight. Ballymore heifer coming Thursday — she'll hang until the 22nd.</p>
+            </li>
+            <li class="journal-entry px-5 py-4 border-l-2 border-transparent">
+              <p class="font-mono text-[10px] tracking-widest uppercase text-forest/40" data-journal-day="-2">—</p>
+              <p class="mt-1.5 text-sm text-forest/70 leading-relaxed">Spiced beef went into the cure this morning. Ready in ten days, book it now if it's for a Sunday.</p>
+            </li>
+            <li class="journal-entry px-5 py-4 border-l-2 border-transparent">
+              <p class="font-mono text-[10px] tracking-widest uppercase text-forest/40" data-journal-day="-5">—</p>
+              <p class="mt-1.5 text-sm text-forest/70 leading-relaxed">Last of the spring lamb from Coolbawn. Hoggett from here on — better for slow cooking anyway.</p>
+            </li>
+          </ol>
+        </div>
+
+        <div class="border border-forest/20 p-5">
+          <span class="eyebrow text-blood">Call ahead for</span>
+          <ul class="mt-4 space-y-2.5 text-sm text-forest/70">
+            <li class="flex items-baseline justify-between gap-3 border-b border-forest/10 pb-2.5"><span>Whole or half lamb</span><span class="font-mono text-[10px] text-forest/40 shrink-0">1 wk</span></li>
+            <li class="flex items-baseline justify-between gap-3 border-b border-forest/10 pb-2.5"><span>Quarter beef, boxed</span><span class="font-mono text-[10px] text-forest/40 shrink-0">3 wks</span></li>
+            <li class="flex items-baseline justify-between gap-3 border-b border-forest/10 pb-2.5"><span>Spiced beef</span><span class="font-mono text-[10px] text-forest/40 shrink-0">10 days</span></li>
+            <li class="flex items-baseline justify-between gap-3 border-b border-forest/10 pb-2.5"><span>Turkey &amp; goose</span><span class="font-mono text-[10px] text-forest/40 shrink-0">From 1 Nov</span></li>
+            <li class="flex items-baseline justify-between gap-3"><span>Crown roast, tied</span><span class="font-mono text-[10px] text-forest/40 shrink-0">2 days</span></li>
+          </ul>
+          <a href="tel:+353211234567" class="btn btn-ink w-full justify-center mt-5 !text-[10px]"><svg class="w-3.5 h-3.5"><use href="#i-phone"/></svg> 021 123 4567</a>
+        </div>
+      </aside>
     </div>
   </div>
 </section>
 
-<!-- ============ VOICES ============ -->
-<section class="relative tex-board overflow-hidden">
-  <div class="py-20 sm:py-28" style="padding-inline:var(--edge)">
-    <div class="flex items-end justify-between gap-6 mb-10" data-reveal>
-      <div>
-        <span class="eyebrow text-brass">From the queue</span>
-        <h2 class="display-lg mt-4 text-[clamp(2rem,5vw,3.5rem)] text-cream">What people<br>say on Saturdays.</h2>
+<!-- ============ SEASONAL CALENDAR (dense data panel) ============ -->
+<section id="seasons" class="relative tex-paper text-forest scroll-mt-20 border-t border-forest/15">
+  <div class="py-14 sm:py-16" style="padding-inline:var(--edge)">
+    <div class="rule-label text-forest mb-8" data-reveal>
+      <span class="eyebrow text-blood shrink-0">06 — What's good when</span>
+    </div>
+
+    <div class="inset-dark text-cream border border-forest/30 overflow-hidden" data-reveal>
+      <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-5 p-7 sm:p-9 border-b border-cream/12">
+        <h2 class="display-lg text-[clamp(1.9rem,4vw,3rem)]">The year at<br>the <em class="font-normal italic text-gold">block.</em></h2>
+        <div class="flex flex-wrap items-center gap-6 lg:pb-2">
+          <span class="flex items-center gap-2.5 font-mono text-[10px] tracking-widest uppercase text-cream/50"><span class="w-6 h-2.5 bg-blood"></span> In season</span>
+          <span class="flex items-center gap-2.5 font-mono text-[10px] tracking-widest uppercase text-cream/50"><span class="w-6 h-2.5" style="background:repeating-linear-gradient(45deg,#C9A227 0 2px,transparent 2px 5px)"></span> To order</span>
+        </div>
       </div>
-      <div class="hidden sm:flex gap-2 shrink-0">
-        <button id="prevSlide" class="grid place-items-center w-12 h-12 border border-cream/20 text-cream/70 hover:border-gold hover:text-gold transition-colors duration-300" aria-label="Previous quote">
-          <svg class="w-5 h-5 rotate-180"><use href="#i-arrow"/></svg>
-        </button>
-        <button id="nextSlide" class="grid place-items-center w-12 h-12 border border-cream/20 text-cream/70 hover:border-gold hover:text-gold transition-colors duration-300" aria-label="Next quote">
-          <svg class="w-5 h-5"><use href="#i-arrow"/></svg>
-        </button>
+
+      <p class="lg:hidden px-7 sm:px-9 pt-4 font-mono text-[10px] tracking-widest uppercase text-cream/35">Swipe the table to see the full year →</p>
+      <div class="overflow-x-auto">
+        <table class="w-full min-w-[46rem] border-collapse">
+          <caption class="sr-only">Seasonal availability by month</caption>
+          <thead>
+            <tr class="border-b border-cream/12">
+              <th scope="col" class="text-left font-normal eyebrow text-cream/35 px-7 sm:px-9 py-3 w-56">Cut</th>
+              <th scope="col" class="font-normal font-mono text-[10px] text-cream/35 py-3">J</th>
+              <th scope="col" class="font-normal font-mono text-[10px] text-cream/35 py-3">F</th>
+              <th scope="col" class="font-normal font-mono text-[10px] text-cream/35 py-3">M</th>
+              <th scope="col" class="font-normal font-mono text-[10px] text-cream/35 py-3">A</th>
+              <th scope="col" class="font-normal font-mono text-[10px] text-cream/35 py-3">M</th>
+              <th scope="col" class="font-normal font-mono text-[10px] text-cream/35 py-3">J</th>
+              <th scope="col" class="font-normal font-mono text-[10px] text-cream/35 py-3">J</th>
+              <th scope="col" class="font-normal font-mono text-[10px] text-cream/35 py-3">A</th>
+              <th scope="col" class="font-normal font-mono text-[10px] text-cream/35 py-3">S</th>
+              <th scope="col" class="font-normal font-mono text-[10px] text-cream/35 py-3">O</th>
+              <th scope="col" class="font-normal font-mono text-[10px] text-cream/35 py-3">N</th>
+              <th scope="col" class="font-normal font-mono text-[10px] text-cream/35 py-3 pr-7 sm:pr-9">D</th>
+            </tr>
+          </thead>
+          <tbody id="calBody" class="divide-y divide-cream/8"></tbody>
+        </table>
+      </div>
+
+      <p class="px-7 sm:px-9 py-5 border-t border-cream/12 text-sm text-cream/50 leading-relaxed">
+        Dry-aged beef runs all year — the rest follows the farms. Anything marked <em class="not-italic text-gold">to order</em> we'll get in with a few days' notice.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ VISIT ============ -->
+<section id="visit" class="relative tex-paper text-forest scroll-mt-20 border-t border-forest/15">
+  <div class="py-14 sm:py-16" style="padding-inline:var(--edge)">
+    <div class="rule-label text-forest mb-8" data-reveal>
+      <span class="eyebrow text-blood shrink-0">07 — Visit the shop</span>
+    </div>
+
+    <div class="grid lg:grid-cols-12 gap-x-8 gap-y-8 items-stretch">
+
+      <!-- address + phone -->
+      <div class="lg:col-span-5 flex flex-col justify-between border border-forest/20 bg-white/40 p-7 sm:p-9" data-reveal="left">
+        <div>
+          <h2 class="display-lg text-[clamp(2rem,4.5vw,3.25rem)]">Come in, or<br>call <em class="font-normal italic text-blood">ahead.</em></h2>
+          <address class="mt-6 not-italic leading-relaxed text-forest/70">
+            14 Main St, Midleton,<br>Co. Cork · P25 X264
+          </address>
+          <p class="mt-4 text-sm text-forest/55 leading-relaxed">Two doors up from the Courthouse, opposite the credit union. Free parking on the square after 10am.</p>
+        </div>
+        <div class="mt-8">
+          <a href="tel:+353211234567" class="group block">
+            <span class="display-lg block text-[clamp(1.9rem,5vw,3.25rem)] text-blood transition-transform duration-500 group-hover:-translate-y-1" style="transition-timing-function:var(--ease-spring)">021 123 4567</span>
+            <span class="mt-1.5 flex items-center gap-2 font-mono text-[10px] tracking-widest uppercase text-forest/45 group-hover:text-blood transition-colors duration-300">
+              <svg class="w-3.5 h-3.5"><use href="#i-phone"/></svg> Orders from 8am · collection same day
+            </span>
+          </a>
+          <div class="mt-6 flex flex-wrap gap-3">
+            <button class="btn btn-blood" data-open-order><svg class="w-4 h-4"><use href="#i-bag"/></svg> Order ahead</button>
+            <a href="https://maps.google.com/?q=Main+Street+Midleton+Co+Cork" target="_blank" rel="noopener" class="btn btn-ink"><svg class="w-4 h-4"><use href="#i-pin"/></svg> Directions</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- map -->
+      <div class="lg:col-span-4 relative overflow-hidden border border-forest/20 bg-forest min-h-[16rem]" data-reveal="scale">
+        <svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid meet" class="absolute inset-0 w-full h-full" role="img" aria-label="Stylised map of Main Street, Midleton, showing the shop at number 14">
+          <rect width="400" height="300" fill="#0B1F18"/>
+          <g stroke="#F6F1E4" stroke-opacity=".12" stroke-width="1">
+            <path d="M0 70h400M0 220h400M70 0v300M180 0v300M300 0v300"/>
+          </g>
+          <path d="M0 150h400" stroke="#C9A227" stroke-opacity=".55" stroke-width="16"/>
+          <path d="M0 150h400" stroke="#0B1F18" stroke-opacity=".45" stroke-width="1.5" stroke-dasharray="10 12"/>
+          <g fill="#F6F1E4" fill-opacity=".07">
+            <rect x="20" y="26" width="42" height="34"/><rect x="86" y="18" width="80" height="42"/>
+            <rect x="196" y="28" width="52" height="32"/><rect x="266" y="16" width="60" height="44"/>
+            <rect x="342" y="26" width="44" height="34"/>
+            <rect x="24" y="232" width="60" height="40"/><rect x="104" y="236" width="46" height="36"/>
+            <rect x="212" y="230" width="70" height="42"/><rect x="304" y="236" width="66" height="36"/>
+          </g>
+          <g transform="translate(180,150)">
+            <circle r="30" fill="#7E1F1F" fill-opacity=".18"/>
+            <circle r="14" fill="#7E1F1F" stroke="#E3C05B" stroke-width="1.5"/>
+            <text y="5" text-anchor="middle" fill="#F6F1E4" font-family="JetBrains Mono, monospace" font-size="11" font-weight="700">14</text>
+          </g>
+          <text x="200" y="182" text-anchor="middle" fill="#C9A227" fill-opacity=".85" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="4">MAIN STREET</text>
+          <text x="16" y="288" fill="#F6F1E4" fill-opacity=".35" font-family="JetBrains Mono, monospace" font-size="8" letter-spacing="2.5">MIDLETON · CO. CORK</text>
+          <g stroke="#F6F1E4" stroke-opacity=".3" stroke-width="1" fill="none"><path d="M370 262v18M363 269l7-7 7 7"/></g>
+          <text x="377" y="286" fill="#F6F1E4" fill-opacity=".3" font-family="JetBrains Mono, monospace" font-size="8">N</text>
+        </svg>
+      </div>
+
+      <!-- hours -->
+      <div class="lg:col-span-3 border border-forest/20 bg-white/40 flex flex-col" data-reveal>
+        <div class="flex items-center justify-between gap-3 px-5 py-3.5 border-b border-forest/15">
+          <span class="eyebrow text-blood flex items-center gap-2"><svg class="w-3.5 h-3.5"><use href="#i-clock"/></svg> Hours</span>
+          <span id="hoursBadge" class="inline-flex items-center gap-2 font-mono text-[10px] tracking-widest uppercase px-2.5 py-1 rounded-full bg-forest/8 text-forest/60">
+            <span id="hoursDot" class="w-1.5 h-1.5 rounded-full bg-forest/40"></span><span id="hoursLabel">—</span>
+          </span>
+        </div>
+        <table class="w-full text-left flex-1">
+          <caption class="sr-only">Weekly opening hours</caption>
+          <tbody class="divide-y divide-forest/10" id="hoursBody">
+            <tr class="hours-row" data-day="1"><th scope="row" class="px-5 py-2.5 font-normal font-display text-base">Monday</th><td class="px-5 py-2.5 text-right font-mono text-[11px] text-forest/65">08—18</td></tr>
+            <tr class="hours-row" data-day="2"><th scope="row" class="px-5 py-2.5 font-normal font-display text-base">Tuesday</th><td class="px-5 py-2.5 text-right font-mono text-[11px] text-forest/65">08—18</td></tr>
+            <tr class="hours-row" data-day="3"><th scope="row" class="px-5 py-2.5 font-normal font-display text-base">Wednesday</th><td class="px-5 py-2.5 text-right font-mono text-[11px] text-forest/65">08—18</td></tr>
+            <tr class="hours-row" data-day="4"><th scope="row" class="px-5 py-2.5 font-normal font-display text-base">Thursday</th><td class="px-5 py-2.5 text-right font-mono text-[11px] text-forest/65">08—18</td></tr>
+            <tr class="hours-row" data-day="5"><th scope="row" class="px-5 py-2.5 font-normal font-display text-base">Friday</th><td class="px-5 py-2.5 text-right font-mono text-[11px] text-forest/65">08—18</td></tr>
+            <tr class="hours-row" data-day="6"><th scope="row" class="px-5 py-2.5 font-normal font-display text-base">Saturday</th><td class="px-5 py-2.5 text-right font-mono text-[11px] text-forest/65">08—17</td></tr>
+            <tr class="hours-row" data-day="0"><th scope="row" class="px-5 py-2.5 font-normal font-display text-base text-forest/45">Sunday</th><td class="px-5 py-2.5 text-right font-mono text-[11px] text-forest/40">Closed</td></tr>
+          </tbody>
+        </table>
+        <p class="px-5 py-3.5 border-t border-forest/15 font-mono text-[10px] leading-relaxed text-forest/40">Closed bank holidays. Christmas Eve 8—13.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ QUOTE WALL ============ -->
+<section class="relative tex-board overflow-hidden">
+  <div class="py-14 sm:py-16" style="padding-inline:var(--edge)">
+    <div class="flex flex-wrap items-end justify-between gap-5 mb-9" data-reveal>
+      <h2 class="display-lg text-[clamp(1.8rem,4vw,2.75rem)] text-cream">What people say<br>on a <em class="font-normal italic text-gold">Saturday.</em></h2>
+      <div class="flex gap-2">
+        <button id="prevSlide" class="grid place-items-center w-11 h-11 border border-cream/20 text-cream/70 hover:border-gold hover:text-gold transition-colors duration-300" aria-label="Previous quote"><svg class="w-5 h-5 rotate-180"><use href="#i-arrow"/></svg></button>
+        <button id="nextSlide" class="grid place-items-center w-11 h-11 border border-cream/20 text-cream/70 hover:border-gold hover:text-gold transition-colors duration-300" aria-label="Next quote"><svg class="w-5 h-5"><use href="#i-arrow"/></svg></button>
       </div>
     </div>
 
     <div class="relative overflow-hidden border border-cream/12 bg-black/20 cursor-grab active:cursor-grabbing" id="sliderViewport" aria-roledescription="carousel" aria-label="Customer quotes">
       <div class="slides" id="slides">
-        <div class="slide p-8 sm:p-14" role="group" aria-roledescription="slide" aria-label="1 of 4">
-          <svg class="w-7 h-7 text-brass/50 mb-6"><use href="#i-quote"/></svg>
-          <p class="font-display text-[clamp(1.3rem,3.1vw,2.1rem)] leading-[1.3] text-cream max-w-3xl">I've been getting the Sunday roast here since I was sent down with a note and a pound. Denis still asks after my mother.</p>
-          <p class="mt-7 eyebrow text-cream/40">Máire O'Sullivan · Midleton</p>
+        <div class="slide p-7 sm:p-11" role="group" aria-roledescription="slide" aria-label="1 of 4">
+          <svg class="w-6 h-6 text-brass/50 mb-5"><use href="#i-quote"/></svg>
+          <p class="font-display text-[clamp(1.2rem,2.7vw,1.9rem)] leading-[1.32] text-cream max-w-4xl">I've been getting the Sunday roast here since I was sent down with a note and a pound. Denis still asks after my mother.</p>
+          <p class="mt-6 eyebrow text-cream/40">Máire O'Sullivan · Midleton</p>
         </div>
-        <div class="slide p-8 sm:p-14" role="group" aria-roledescription="slide" aria-label="2 of 4">
-          <svg class="w-7 h-7 text-brass/50 mb-6"><use href="#i-quote"/></svg>
-          <p class="font-display text-[clamp(1.3rem,3.1vw,2.1rem)] leading-[1.3] text-cream max-w-3xl">We put their sirloin on the menu and named the farm beside it. Three years on, it's the only steak we've ever served.</p>
-          <p class="mt-7 eyebrow text-cream/40">Head chef · The Ballymaloe Road</p>
+        <div class="slide p-7 sm:p-11" role="group" aria-roledescription="slide" aria-label="2 of 4">
+          <svg class="w-6 h-6 text-brass/50 mb-5"><use href="#i-quote"/></svg>
+          <p class="font-display text-[clamp(1.2rem,2.7vw,1.9rem)] leading-[1.32] text-cream max-w-4xl">We put their sirloin on the menu and named the farm beside it. Three years on, it's the only steak we've ever served.</p>
+          <p class="mt-6 eyebrow text-cream/40">Head chef · The Ballymaloe Road</p>
         </div>
-        <div class="slide p-8 sm:p-14" role="group" aria-roledescription="slide" aria-label="3 of 4">
-          <svg class="w-7 h-7 text-brass/50 mb-6"><use href="#i-quote"/></svg>
-          <p class="font-display text-[clamp(1.3rem,3.1vw,2.1rem)] leading-[1.3] text-cream max-w-3xl">Ordered the spiced beef ten days out for Stephen's Day. Ciara rang me the morning it was ready. You don't get that in a supermarket.</p>
-          <p class="mt-7 eyebrow text-cream/40">Tom Fitzgerald · Cloyne</p>
+        <div class="slide p-7 sm:p-11" role="group" aria-roledescription="slide" aria-label="3 of 4">
+          <svg class="w-6 h-6 text-brass/50 mb-5"><use href="#i-quote"/></svg>
+          <p class="font-display text-[clamp(1.2rem,2.7vw,1.9rem)] leading-[1.32] text-cream max-w-4xl">Ordered the spiced beef ten days out for Stephen's Day. Ciara rang me the morning it was ready. You don't get that in a supermarket.</p>
+          <p class="mt-6 eyebrow text-cream/40">Tom Fitzgerald · Cloyne</p>
         </div>
-        <div class="slide p-8 sm:p-14" role="group" aria-roledescription="slide" aria-label="4 of 4">
-          <svg class="w-7 h-7 text-brass/50 mb-6"><use href="#i-quote"/></svg>
-          <p class="font-display text-[clamp(1.3rem,3.1vw,2.1rem)] leading-[1.3] text-cream max-w-3xl">I asked for the shoulder boned and rolled at half four on a Friday. It was done by the time I'd paid, and he wouldn't take extra for it.</p>
-          <p class="mt-7 eyebrow text-cream/40">Aoife Brennan · Youghal</p>
+        <div class="slide p-7 sm:p-11" role="group" aria-roledescription="slide" aria-label="4 of 4">
+          <svg class="w-6 h-6 text-brass/50 mb-5"><use href="#i-quote"/></svg>
+          <p class="font-display text-[clamp(1.2rem,2.7vw,1.9rem)] leading-[1.32] text-cream max-w-4xl">I asked for the shoulder boned and rolled at half four on a Friday. It was done by the time I'd paid, and he wouldn't take extra for it.</p>
+          <p class="mt-6 eyebrow text-cream/40">Aoife Brennan · Youghal</p>
         </div>
       </div>
     </div>
-
-    <div class="mt-6 flex items-center gap-3" id="dots" role="group" aria-label="Choose quote"></div>
+    <div class="mt-5 flex items-center gap-3" id="dots" role="group" aria-label="Choose quote"></div>
   </div>
 </section>
 
-<!-- ============ VISIT ============ -->
-<section id="visit" class="relative tex-paper text-forest scroll-mt-20">
-  <div class="py-24 sm:py-32 lg:py-36" style="padding-inline:var(--edge)">
-    <div class="grid lg:grid-cols-12 gap-x-12 gap-y-14">
-
-      <div class="lg:col-span-6" data-reveal="left">
-        <span class="eyebrow text-blood">Visit the shop</span>
-        <h2 class="display-lg mt-5 text-[clamp(2.6rem,7vw,5.5rem)]">Come in, or<br>call <em class="font-normal italic text-blood">ahead.</em></h2>
-
-        <address class="mt-9 not-italic text-lg leading-relaxed text-forest/70">
-          14 Main St,<br>Midleton,<br>Co. Cork · P25 X264
-        </address>
-
-        <a href="tel:+353211234567" class="group inline-block mt-9">
-          <span class="display-lg block text-[clamp(2.4rem,7vw,4.5rem)] text-blood transition-transform duration-500 group-hover:-translate-y-1" style="transition-timing-function:var(--ease-spring)">021 123 4567</span>
-          <span class="mt-2 flex items-center gap-2 font-mono text-[11px] tracking-widest uppercase text-forest/45 group-hover:text-blood transition-colors duration-300">
-            <svg class="w-3.5 h-3.5"><use href="#i-phone"/></svg> Orders taken from 8am · collection same day
-          </span>
-        </a>
-
-        <div class="mt-10 flex flex-wrap gap-3">
-          <button class="btn btn-blood" data-open-order><svg class="w-4 h-4"><use href="#i-bag"/></svg> Order ahead</button>
-          <a href="https://maps.google.com/?q=Main+Street+Midleton+Co+Cork" target="_blank" rel="noopener" class="btn btn-ink"><svg class="w-4 h-4"><use href="#i-pin"/></svg> Get directions</a>
-        </div>
+<!-- ============ FAQ ============ -->
+<section class="relative tex-paper text-forest">
+  <div class="py-14 sm:py-16" style="padding-inline:var(--edge)">
+    <div class="grid lg:grid-cols-12 gap-x-10 gap-y-8 items-start">
+      <div class="lg:col-span-3" data-reveal="left">
+        <div class="rule-label text-forest mb-5"><span class="eyebrow text-blood shrink-0">08 — Before you order</span></div>
+        <h2 class="display-lg text-[clamp(1.8rem,4vw,2.75rem)]">Questions<br>we get <em class="font-normal italic text-blood">daily.</em></h2>
       </div>
-
-      <div class="lg:col-span-6 lg:pl-6 space-y-6">
-        <!-- stylised street plate -->
-        <div class="relative overflow-hidden border border-forest/15 aspect-[16/9] bg-forest" data-reveal="scale">
-          <svg viewBox="0 0 400 225" class="absolute inset-0 w-full h-full" role="img" aria-label="Stylised map of Main Street, Midleton, showing the shop at number 14">
-            <rect width="400" height="225" fill="#0B1F18"/>
-            <g stroke="#F6F1E4" stroke-opacity=".12" stroke-width="1">
-              <path d="M0 60h400M0 165h400M70 0v225M180 0v225M300 0v225"/>
-            </g>
-            <path d="M0 112h400" stroke="#C9A227" stroke-opacity=".55" stroke-width="14"/>
-            <path d="M0 112h400" stroke="#0B1F18" stroke-opacity=".45" stroke-width="1.5" stroke-dasharray="10 12"/>
-            <g fill="#F6F1E4" fill-opacity=".07">
-              <rect x="20" y="24" width="42" height="30"/><rect x="86" y="18" width="80" height="36"/>
-              <rect x="196" y="26" width="52" height="28"/><rect x="266" y="16" width="60" height="38"/>
-              <rect x="342" y="24" width="44" height="30"/>
-              <rect x="24" y="172" width="60" height="34"/><rect x="104" y="176" width="46" height="30"/>
-              <rect x="212" y="170" width="70" height="36"/><rect x="304" y="176" width="66" height="30"/>
-            </g>
-            <!-- shop marker -->
-            <g transform="translate(180,112)">
-              <circle r="26" fill="#7E1F1F" fill-opacity=".18"/>
-              <circle r="13" fill="#7E1F1F" stroke="#E3C05B" stroke-width="1.5"/>
-              <text y="4.5" text-anchor="middle" fill="#F6F1E4" font-family="JetBrains Mono, monospace" font-size="10" font-weight="700">14</text>
-            </g>
-            <text x="200" y="140" text-anchor="middle" fill="#C9A227" fill-opacity=".85" font-family="JetBrains Mono, monospace" font-size="8" letter-spacing="4">MAIN STREET</text>
-            <text x="14" y="215" fill="#F6F1E4" fill-opacity=".35" font-family="JetBrains Mono, monospace" font-size="7" letter-spacing="2.5">MIDLETON · CO. CORK</text>
-            <g stroke="#F6F1E4" stroke-opacity=".3" stroke-width="1" fill="none">
-              <path d="M372 196v16M366 202l6-6 6 6"/>
-            </g>
-            <text x="378" y="212" fill="#F6F1E4" fill-opacity=".3" font-family="JetBrains Mono, monospace" font-size="7">N</text>
-          </svg>
-        </div>
-
-        <!-- hours -->
-        <div class="border border-forest/15 bg-white/40" data-reveal>
-          <div class="flex items-center justify-between gap-4 px-5 sm:px-6 py-4 border-b border-forest/15">
-            <span class="eyebrow text-blood flex items-center gap-2"><svg class="w-3.5 h-3.5"><use href="#i-clock"/></svg> Opening hours</span>
-            <span id="hoursBadge" class="inline-flex items-center gap-2 font-mono text-[10px] tracking-widest uppercase px-3 py-1.5 rounded-full bg-forest/8 text-forest/60">
-              <span id="hoursDot" class="w-1.5 h-1.5 rounded-full bg-forest/40"></span><span id="hoursLabel">—</span>
-            </span>
-          </div>
-          <table class="w-full text-left">
-            <caption class="sr-only">Weekly opening hours</caption>
-            <tbody class="divide-y divide-forest/10" id="hoursBody">
-              <tr class="hours-row" data-day="1"><th scope="row" class="px-5 sm:px-6 py-3.5 font-normal font-display text-lg">Monday</th><td class="px-5 sm:px-6 py-3.5 text-right font-mono text-xs text-forest/65">08:00 — 18:00</td></tr>
-              <tr class="hours-row" data-day="2"><th scope="row" class="px-5 sm:px-6 py-3.5 font-normal font-display text-lg">Tuesday</th><td class="px-5 sm:px-6 py-3.5 text-right font-mono text-xs text-forest/65">08:00 — 18:00</td></tr>
-              <tr class="hours-row" data-day="3"><th scope="row" class="px-5 sm:px-6 py-3.5 font-normal font-display text-lg">Wednesday</th><td class="px-5 sm:px-6 py-3.5 text-right font-mono text-xs text-forest/65">08:00 — 18:00</td></tr>
-              <tr class="hours-row" data-day="4"><th scope="row" class="px-5 sm:px-6 py-3.5 font-normal font-display text-lg">Thursday</th><td class="px-5 sm:px-6 py-3.5 text-right font-mono text-xs text-forest/65">08:00 — 18:00</td></tr>
-              <tr class="hours-row" data-day="5"><th scope="row" class="px-5 sm:px-6 py-3.5 font-normal font-display text-lg">Friday</th><td class="px-5 sm:px-6 py-3.5 text-right font-mono text-xs text-forest/65">08:00 — 18:00</td></tr>
-              <tr class="hours-row" data-day="6"><th scope="row" class="px-5 sm:px-6 py-3.5 font-normal font-display text-lg">Saturday</th><td class="px-5 sm:px-6 py-3.5 text-right font-mono text-xs text-forest/65">08:00 — 17:00</td></tr>
-              <tr class="hours-row" data-day="0"><th scope="row" class="px-5 sm:px-6 py-3.5 font-normal font-display text-lg text-forest/45">Sunday</th><td class="px-5 sm:px-6 py-3.5 text-right font-mono text-xs text-forest/40">Closed</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <!-- FAQ -->
-    <div class="mt-24 grid lg:grid-cols-12 gap-x-12 gap-y-10">
-      <h2 class="lg:col-span-4 display-lg text-[clamp(2rem,5vw,3.25rem)]" data-reveal="left">Before you<br><em class="font-normal italic text-blood">order.</em></h2>
-      <div class="lg:col-span-8 border-t border-forest/20" id="faq">
+      <div class="lg:col-span-9 border-t border-forest/20" id="faq">
         <div class="acc-item border-b border-forest/15" data-open="false">
-          <h3>
-            <button class="w-full flex items-center justify-between gap-6 py-6 text-left group" aria-expanded="false">
-              <span class="font-display text-[1.35rem] sm:text-[1.6rem] leading-tight group-hover:text-blood transition-colors duration-300">How far ahead should I order?</span>
-              <svg class="acc-plus w-5 h-5 shrink-0 text-blood"><use href="#i-plus"/></svg>
-            </button>
-          </h3>
-          <div class="acc-body"><div><p class="pb-6 pr-10 text-forest/65 leading-relaxed max-w-2xl">A day is plenty for anything on the board. Spiced beef needs ten, a whole lamb needs a week, and Christmas turkeys are booked from the first of November. If it's a Saturday roast, ring before four on Friday.</p></div></div>
+          <h3><button class="w-full flex items-center justify-between gap-6 py-5 text-left group" aria-expanded="false">
+            <span class="font-display text-[1.25rem] sm:text-[1.5rem] leading-tight group-hover:text-blood transition-colors duration-300">How far ahead should I order?</span>
+            <svg class="acc-plus w-5 h-5 shrink-0 text-blood"><use href="#i-plus"/></svg></button></h3>
+          <div class="acc-body"><div><p class="pb-5 pr-10 text-forest/65 leading-relaxed max-w-2xl">A day is plenty for anything on the board. Spiced beef needs ten, a whole lamb needs a week, and Christmas turkeys are booked from the first of November. If it's a Saturday roast, ring before four on Friday.</p></div></div>
         </div>
         <div class="acc-item border-b border-forest/15" data-open="false">
-          <h3>
-            <button class="w-full flex items-center justify-between gap-6 py-6 text-left group" aria-expanded="false">
-              <span class="font-display text-[1.35rem] sm:text-[1.6rem] leading-tight group-hover:text-blood transition-colors duration-300">Do you deliver?</span>
-              <svg class="acc-plus w-5 h-5 shrink-0 text-blood"><use href="#i-plus"/></svg>
-            </button>
-          </h3>
-          <div class="acc-body"><div><p class="pb-6 pr-10 text-forest/65 leading-relaxed max-w-2xl">Not yet. Everything is collection from the shop — we'd rather hand it to you and tell you what to do with it. Orders over €80 within Midleton town can be dropped by arrangement; ask Ciara at the counter.</p></div></div>
+          <h3><button class="w-full flex items-center justify-between gap-6 py-5 text-left group" aria-expanded="false">
+            <span class="font-display text-[1.25rem] sm:text-[1.5rem] leading-tight group-hover:text-blood transition-colors duration-300">Do you deliver?</span>
+            <svg class="acc-plus w-5 h-5 shrink-0 text-blood"><use href="#i-plus"/></svg></button></h3>
+          <div class="acc-body"><div><p class="pb-5 pr-10 text-forest/65 leading-relaxed max-w-2xl">Not yet. Everything is collection from the shop — we'd rather hand it to you and tell you what to do with it. Orders over €80 within Midleton town can be dropped by arrangement; ask Michael at the counter.</p></div></div>
         </div>
         <div class="acc-item border-b border-forest/15" data-open="false">
-          <h3>
-            <button class="w-full flex items-center justify-between gap-6 py-6 text-left group" aria-expanded="false">
-              <span class="font-display text-[1.35rem] sm:text-[1.6rem] leading-tight group-hover:text-blood transition-colors duration-300">Can I buy a whole or half animal?</span>
-              <svg class="acc-plus w-5 h-5 shrink-0 text-blood"><use href="#i-plus"/></svg>
-            </button>
-          </h3>
-          <div class="acc-body"><div><p class="pb-6 pr-10 text-forest/65 leading-relaxed max-w-2xl">Yes — half lambs and quarter beef are the usual. We'll hang it, break it down to your spec, label every pack and give you a list of what's in each one. Reckon on three weeks' notice and a freezer you've cleared out first.</p></div></div>
+          <h3><button class="w-full flex items-center justify-between gap-6 py-5 text-left group" aria-expanded="false">
+            <span class="font-display text-[1.25rem] sm:text-[1.5rem] leading-tight group-hover:text-blood transition-colors duration-300">Can I buy a whole or half animal?</span>
+            <svg class="acc-plus w-5 h-5 shrink-0 text-blood"><use href="#i-plus"/></svg></button></h3>
+          <div class="acc-body"><div><p class="pb-5 pr-10 text-forest/65 leading-relaxed max-w-2xl">Yes — half lambs and quarter beef are the usual. We'll hang it, break it down to your spec, label every pack and give you a list of what's in each one. Reckon on three weeks' notice and a freezer you've cleared out first.</p></div></div>
         </div>
         <div class="acc-item border-b border-forest/15" data-open="false">
-          <h3>
-            <button class="w-full flex items-center justify-between gap-6 py-6 text-left group" aria-expanded="false">
-              <span class="font-display text-[1.35rem] sm:text-[1.6rem] leading-tight group-hover:text-blood transition-colors duration-300">Is this an online shop?</span>
-              <svg class="acc-plus w-5 h-5 shrink-0 text-blood"><use href="#i-plus"/></svg>
-            </button>
-          </h3>
-          <div class="acc-body"><div><p class="pb-6 pr-10 text-forest/65 leading-relaxed max-w-2xl">It's an order book, not a checkout. Build your list here, pick a collection slot, and it lands at the counter — you pay when you collect, once we've weighed it and you've had a look at it.</p></div></div>
+          <h3><button class="w-full flex items-center justify-between gap-6 py-5 text-left group" aria-expanded="false">
+            <span class="font-display text-[1.25rem] sm:text-[1.5rem] leading-tight group-hover:text-blood transition-colors duration-300">What does "dry-aged" actually mean here?</span>
+            <svg class="acc-plus w-5 h-5 shrink-0 text-blood"><use href="#i-plus"/></svg></button></h3>
+          <div class="acc-body"><div><p class="pb-5 pr-10 text-forest/65 leading-relaxed max-w-2xl">On the bone, uncovered, in our own chill for at least 28 days. It loses around 12% of its weight in water and grows a hard crust we trim off and bin. That waste is why it costs more — and why it tastes of something.</p></div></div>
+        </div>
+        <div class="acc-item border-b border-forest/15" data-open="false">
+          <h3><button class="w-full flex items-center justify-between gap-6 py-5 text-left group" aria-expanded="false">
+            <span class="font-display text-[1.25rem] sm:text-[1.5rem] leading-tight group-hover:text-blood transition-colors duration-300">Is this an online shop?</span>
+            <svg class="acc-plus w-5 h-5 shrink-0 text-blood"><use href="#i-plus"/></svg></button></h3>
+          <div class="acc-body"><div><p class="pb-5 pr-10 text-forest/65 leading-relaxed max-w-2xl">It's an order book, not a checkout. Build your list here, pick a collection slot, and it lands at the counter — you pay when you collect, once we've weighed it and you've had a look at it.</p></div></div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ============ CTA + FOOTER ============ -->
+<!-- ============ FOOTER ============ -->
 <footer class="relative tex-board overflow-hidden">
   <div class="pointer-events-none absolute -left-40 -bottom-40 w-[40rem] h-[40rem] rounded-full blur-3xl opacity-[.14]" style="background:radial-gradient(circle,#7E1F1F,transparent 62%)" aria-hidden="true"></div>
 
-  <div class="relative pt-24 sm:pt-32 pb-12" style="padding-inline:var(--edge)">
-    <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-10 pb-16 border-b border-cream/12" data-reveal>
-      <h2 class="display-xl text-[clamp(2.8rem,9vw,7.5rem)] text-cream">
+  <div class="relative pt-16 sm:pt-20 pb-10" style="padding-inline:var(--edge)">
+    <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8 pb-12 border-b border-cream/12" data-reveal>
+      <h2 class="display-xl text-[clamp(2.4rem,7.5vw,6rem)] text-cream">
         Ask us for<br><em class="font-normal italic text-gold">the good bit.</em>
       </h2>
-      <div class="flex flex-wrap gap-3 shrink-0 lg:pb-4">
+      <div class="flex flex-wrap gap-3 shrink-0 lg:pb-3">
         <button class="btn btn-blood" data-open-order><svg class="w-4 h-4"><use href="#i-bag"/></svg> Start an order</button>
         <a href="tel:+353211234567" class="btn btn-ghost"><svg class="w-4 h-4"><use href="#i-phone"/></svg> 021 123 4567</a>
       </div>
     </div>
 
-    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-10 py-14">
-      <div>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-5 gap-8 py-11">
+      <div class="lg:col-span-2">
         <p class="font-display font-700 text-2xl text-gold">Hartnett <span class="italic font-normal">&amp;</span> Sons</p>
-        <p class="mt-3 eyebrow text-cream/40">Family butchers · Midleton</p>
-        <p class="mt-5 text-sm text-cream/50 leading-relaxed max-w-xs">Three generations at the block on Main St. Nothing pre-packed, nothing flown in.</p>
+        <p class="mt-2 eyebrow text-cream/40">Family butchers · Midleton</p>
+        <p class="mt-4 text-sm text-cream/50 leading-relaxed max-w-sm">Three generations at the block on Main St. Nothing pre-packed, nothing flown in, nothing we can't tell you the farm for.</p>
+        <p class="mt-5 font-mono text-[10px] tracking-widest uppercase text-cream/30">Vet approval IE 4021 EC · Craft butcher</p>
       </div>
       <nav aria-label="Footer">
         <p class="eyebrow text-brass mb-4">Shop</p>
         <ul class="space-y-2.5 text-sm text-cream/60">
           <li><a href="#story" class="link-u hover:text-gold transition-colors duration-300">Our story</a></li>
-          <li><a href="#craft" class="link-u hover:text-gold transition-colors duration-300">The craft</a></li>
+          <li><a href="#people" class="link-u hover:text-gold transition-colors duration-300">Behind the counter</a></li>
+          <li><a href="#craft" class="link-u hover:text-gold transition-colors duration-300">Farm to block</a></li>
           <li><a href="#cuts" class="link-u hover:text-gold transition-colors duration-300">Today's cuts</a></li>
-          <li><a href="#visit" class="link-u hover:text-gold transition-colors duration-300">Visit us</a></li>
+          <li><a href="#seasons" class="link-u hover:text-gold transition-colors duration-300">What's good when</a></li>
         </ul>
       </nav>
       <div>
@@ -1103,6 +1415,7 @@ tailwind.config = {
           14 Main St<br>Midleton, Co. Cork<br>P25 X264
         </address>
         <a href="tel:+353211234567" class="mt-3 inline-block font-mono text-sm text-gold link-u">021 123 4567</a>
+        <p class="mt-3 text-sm text-cream/50">orders@hartnettandsons.ie</p>
       </div>
       <div>
         <p class="eyebrow text-brass mb-4">Counter hours</p>
@@ -1111,22 +1424,21 @@ tailwind.config = {
           <li class="flex justify-between gap-4"><span>Saturday</span><span>08:00 — 17:00</span></li>
           <li class="flex justify-between gap-4"><span>Sunday</span><span class="text-cream/30">Closed</span></li>
         </ul>
+        <p class="mt-4 text-[11px] leading-relaxed text-cream/35">Phone orders taken from 8am. Same-day collection if you ring before noon.</p>
       </div>
     </div>
 
-    <!-- oversized wordmark -->
-    <div class="overflow-hidden py-4" aria-hidden="true">
-      <p class="display-xl text-center text-[clamp(3rem,15.5vw,14rem)] outline-type leading-none select-none">HARTNETT &amp; SONS</p>
+    <div class="overflow-hidden py-3" aria-hidden="true">
+      <p class="display-xl text-center text-[clamp(1.7rem,8.5vw,8.5rem)] outline-type leading-none select-none whitespace-nowrap">HARTNETT &amp; SONS</p>
     </div>
 
-    <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-10 border-t border-cream/12">
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-3 pt-8 border-t border-cream/12">
       <p class="font-mono text-[10px] tracking-widest uppercase text-cream/35">© <span id="year">2026</span> Hartnett &amp; Sons · Est. 1962</p>
       <p class="font-mono text-[10px] tracking-widest uppercase text-cream/35">Concept example built by East Coast Digital</p>
     </div>
   </div>
 </footer>
 </main>
-
 <!-- ============ CUT DETAIL MODAL ============ -->
 <div id="cutScrim" class="scrim fixed inset-0 z-[80] bg-ink/70 backdrop-blur-sm grid place-items-center p-4 sm:p-6" hidden>
   <div id="cutModal" class="panel w-full max-w-2xl max-h-[88vh] overflow-y-auto tex-paper text-forest border border-forest/20 shadow-2xl translate-y-6 opacity-0" role="dialog" aria-modal="true" aria-labelledby="cutTitle">
@@ -1368,7 +1680,7 @@ tailwind.config = {
   --------------------------------------------------------------- */
   const processList = $('#processList'), processFill = $('#processFill');
   function updateRail() {
-    if (!processList) return;
+    if (!processList || !processFill) return;
     const r = processList.getBoundingClientRect();
     const vh = window.innerHeight;
     const p = (vh * 0.72 - r.top) / r.height;
@@ -1886,6 +2198,81 @@ tailwind.config = {
     if (orderDrawerOpen()) { setDrawer(false); return; }
     if (!mobileNav.classList.contains('invisible')) { setNav(false); navToggle.focus(); }
   });
+
+
+  /* ---------------------------------------------------------------
+     19. Seasonal calendar
+  --------------------------------------------------------------- */
+  // months are 0-indexed; "full" = in season, "some" = available to order
+  const SEASONS = [
+    { name: 'Dry-aged beef',   note: 'On the bone, all year',   full: [0,1,2,3,4,5,6,7,8,9,10,11], some: [] },
+    { name: 'Spring lamb',     note: 'Coolbawn, salt-marsh',    full: [2,3,4,5,6,7],               some: [8,9] },
+    { name: 'Hoggett',         note: 'Older lamb, for stewing', full: [8,9,10,11,0,1],             some: [2] },
+    { name: 'Spiced beef',     note: 'Ten days in the cure',    full: [10,11,0],                   some: [1,2,3,4,5,6,7,8,9] },
+    { name: 'Corned silverside', note: 'Brined nine days',      full: [2,3],                       some: [0,1,4,5,6,7,8,9,10,11] },
+    { name: 'Free-range pork', note: 'Glenview, outdoor-reared',full: [0,1,2,3,4,5,6,7,8,9,10,11], some: [] },
+    { name: 'Turkey & goose',  note: 'Booked from 1 November',  full: [11],                        some: [10] },
+    { name: 'Bacon ribs',      note: 'For coddle and pots',     full: [9,10,11,0,1,2],             some: [3,4,5,6,7,8] }
+  ];
+  const calBody = $('#calBody');
+  if (calBody) {
+    const thisMonth = new Date().getMonth();
+    SEASONS.forEach(row => {
+      const tr = document.createElement('tr');
+      tr.className = 'cal-row group';
+      let cells = '';
+      for (let m = 0; m < 12; m++) {
+        const state = row.full.indexOf(m) > -1 ? 'full' : (row.some.indexOf(m) > -1 ? 'some' : '');
+        const now = m === thisMonth ? ' ring-1 ring-inset ring-gold/40' : '';
+        cells += '<td class="py-3 px-1' + (m === 11 ? ' pr-7 sm:pr-9' : '') + '">' +
+                 '<div class="cal-cell h-3.5 w-full min-w-[1.1rem] rounded-[1px]' + now + '"' +
+                 (state ? ' data-in="' + state + '"' : ' style="background:rgba(246,241,228,.07)"') + '></div></td>';
+      }
+      tr.innerHTML =
+        '<th scope="row" class="text-left px-7 sm:px-9 py-3">' +
+          '<span class="cal-name block font-display text-lg text-cream transition-colors duration-300">' + row.name + '</span>' +
+          '<span class="block font-mono text-[10px] text-cream/35 mt-0.5">' + row.note + '</span>' +
+        '</th>' + cells;
+      calBody.appendChild(tr);
+    });
+  }
+
+  /* ---------------------------------------------------------------
+     20. Counter journal — dates relative to today
+  --------------------------------------------------------------- */
+  $$('[data-journal-day]').forEach(el => {
+    const offset = parseInt(el.dataset.journalDay, 10);
+    const d = new Date();
+    d.setDate(d.getDate() + offset);
+    const label = offset === 0 ? 'Today' : d.toLocaleDateString('en-IE', { weekday: 'long' });
+    el.textContent = label + ' · ' + d.toLocaleDateString('en-IE', { day: 'numeric', month: 'short' });
+  });
+
+  /* ---------------------------------------------------------------
+     21. Section rail scroll-spy
+  --------------------------------------------------------------- */
+  const railItems = $$('#rail .rail-item');
+  if (railItems.length && 'IntersectionObserver' in window) {
+    const sections = railItems
+      .map(a => ({ item: a, el: document.getElementById(a.dataset.rail) }))
+      .filter(s => s.el);
+    const rio = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (!e.isIntersecting) return;
+        const hit = sections.filter(s => s.el === e.target)[0];
+        if (!hit) return;
+        railItems.forEach(i => i.setAttribute('data-active', 'false'));
+        hit.item.setAttribute('data-active', 'true');
+        // rail sits over dark hero vs cream body — recolour to stay legible
+        const onDark = hit.el.id === 'top';
+        railItems.forEach(i => {
+          i.classList.toggle('text-cream/40', onDark);
+          i.classList.toggle('text-forest/40', !onDark);
+        });
+      });
+    }, { rootMargin: '-45% 0px -45% 0px' });
+    sections.forEach(s => rio.observe(s.el));
+  }
 
   /* ---------------------------------------------------------------
      18. Boot
