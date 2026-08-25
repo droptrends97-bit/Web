@@ -538,9 +538,22 @@
       </div>
 
       <div class="lg:col-span-8">
-        <div class="inline-flex items-center gap-3 border border-brass/45 rounded-full pl-2 pr-4 py-1.5 mb-7">
-          <span class="grid place-items-center w-6 h-6 rounded-full bg-brass text-ink font-mono text-[10px] font-bold">62</span>
-          <span class="eyebrow text-brass">Family run since 1962</span>
+        <div class="flex flex-wrap items-center gap-3 mb-7">
+          <div class="inline-flex items-center gap-3 border border-brass/45 rounded-full pl-2 pr-4 py-1.5">
+            <span class="grid place-items-center w-6 h-6 rounded-full bg-brass text-ink font-mono text-[10px] font-bold">62</span>
+            <span class="eyebrow text-brass">Family run since 1962</span>
+          </div>
+
+          <button id="paintToggle" type="button" data-on="false"
+            class="items-center gap-2.5 border border-brass/45 rounded-full pl-3.5 pr-4 py-2 font-mono text-[10px] tracking-widest2 uppercase text-brass transition-colors duration-300"
+            aria-pressed="false">
+            <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M9 11V5.5a1.5 1.5 0 0 1 3 0V11"/><path d="M12 11V4.5a1.5 1.5 0 0 1 3 0V11"/>
+              <path d="M15 11V6.5a1.5 1.5 0 0 1 3 0V13c0 4-2.7 7-6.5 7S5 17.5 5 14v-1.2a1.6 1.6 0 0 1 3.1-.6l.4 1.1"/>
+            </svg>
+            <span id="paintToggleText">Rub to reveal</span>
+          </button>
+          <p id="paintNote" hidden class="font-mono text-[10px] tracking-widest2 uppercase text-cream/40">Scrolling paused</p>
         </div>
 
         <h1 class="display-xl text-[clamp(2.6rem,7vw,6.75rem)] text-cream" id="heroTitle">
@@ -591,20 +604,6 @@
       <span id="revealHintText">Move your cursor to see what's on the block</span>
     </p>
 
-    <div class="mt-7 flex flex-wrap items-center gap-3">
-      <button id="paintToggle" type="button" data-on="false"
-        class="items-center gap-2.5 border border-brass/45 rounded-full pl-3.5 pr-4 py-2.5 font-mono text-[10px] tracking-widest2 uppercase text-brass transition-colors duration-300"
-        aria-pressed="false">
-        <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M9 11V5.5a1.5 1.5 0 0 1 3 0V11"/><path d="M12 11V4.5a1.5 1.5 0 0 1 3 0V11"/>
-          <path d="M15 11V6.5a1.5 1.5 0 0 1 3 0V13c0 4-2.7 7-6.5 7S5 17.5 5 14v-1.2a1.6 1.6 0 0 1 3.1-.6l.4 1.1"/>
-        </svg>
-        <span id="paintToggleText">Rub to reveal the block</span>
-      </button>
-      <p id="paintNote" hidden class="font-mono text-[10px] tracking-widest2 uppercase text-cream/40 max-w-[15rem] leading-relaxed">
-        Scrolling paused
-      </p>
-    </div>
   </div>
 
   <!-- dense fact bar across the fold -->
@@ -2336,7 +2335,7 @@
     if (!ctx) return;
 
     const HEAL_PER_FRAME = 0.030;  // ~2.5s for a hole to close at 60fps
-    const BRUSH          = 112;    // px radius of the soft brush
+    const BRUSH          = 66;     // px radius of the soft brush
     const MAX_DPR        = 2;
 
     let dpr = 1, w = 0, h = 0;
@@ -2345,7 +2344,7 @@
     let lastStrokeAt = 0, dirty = true;
     let touched = false;           // has the visitor interacted yet
     let running = false, visible = true;
-    let painting = false, paintIdle = null, paintFromY = 0;
+    let painting = false, paintIdle = null, paintFromY = 0, paintReady = false;
 
     /* ---- paint the green treatment into an offscreen canvas ---- */
     function buildGreen() {
@@ -2404,9 +2403,11 @@
 
     function erase(x, y, r, strength) {
       const grd = ctx.createRadialGradient(x, y, 0, x, y, r);
+      // tight core with a quick falloff, so a stroke lifts a narrow line
+      // rather than a wide halo
       grd.addColorStop(0,    'rgba(0,0,0,' + strength + ')');
-      grd.addColorStop(0.45, 'rgba(0,0,0,' + (strength * 0.86) + ')');
-      grd.addColorStop(0.75, 'rgba(0,0,0,' + (strength * 0.42) + ')');
+      grd.addColorStop(0.38, 'rgba(0,0,0,' + (strength * 0.72) + ')');
+      grd.addColorStop(0.70, 'rgba(0,0,0,' + (strength * 0.24) + ')');
       grd.addColorStop(1,    'rgba(0,0,0,0)');
       ctx.globalCompositeOperation = 'destination-out';
       ctx.fillStyle = grd;
@@ -2419,7 +2420,7 @@
       if (last) {
         const dx = x - last.x, dy = y - last.y;
         const dist = Math.hypot(dx, dy);
-        const steps = Math.min(Math.floor(dist / (BRUSH * 0.28)), 24);
+        const steps = Math.min(Math.floor(dist / (BRUSH * 0.30)), 48);
         for (let i = 1; i <= steps; i++) {
           erase(last.x + dx * (i / steps), last.y + dy * (i / steps), BRUSH, 0.92);
         }
@@ -2518,15 +2519,21 @@
       painting = on;
       hero.setAttribute('data-paint', on ? 'on' : 'off');
       if (on) {
-        paintFromY = window.scrollY;
+        // Bring the hero back to the top before freezing, so engaging the
+        // control can never strand you partway down it with no way back up.
+        paintReady = false;
+        try { window.scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' }); }
+        catch (err) { window.scrollTo(0, 0); }
+        setTimeout(() => { paintFromY = window.scrollY; paintReady = true; }, reduced ? 0 : 600);
         hero.addEventListener('touchmove', blockScroll, { passive: false });
       } else {
+        paintReady = false;
         hero.removeEventListener('touchmove', blockScroll, { passive: false });
       }
       if (toggle) {
         toggle.dataset.on = String(on);
         toggle.setAttribute('aria-pressed', String(on));
-        toggleText.textContent = on ? 'Done' : 'Rub to reveal the block';
+        toggleText.textContent = on ? 'Done' : 'Rub to reveal';
       }
       if (note) note.hidden = !on;
       clearTimeout(paintIdle);
@@ -2537,7 +2544,7 @@
     }
     // leaving the hero always hands scrolling back
     window.addEventListener('scroll', () => {
-      if (painting && Math.abs(window.scrollY - paintFromY) > 48) setPaint(false);
+      if (painting && paintReady && Math.abs(window.scrollY - paintFromY) > 48) setPaint(false);
     }, { passive: true });
     document.addEventListener('keydown', e => { if (e.key === 'Escape' && painting) setPaint(false); });
 
