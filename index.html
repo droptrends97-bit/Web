@@ -172,6 +172,7 @@ tailwind.config = {
     transform:scaleY(0); transform-origin:bottom;
     transition:transform .55s var(--ease-out-expo);
   }
+  .ledger-row{ isolation:isolate; }
   .ledger-row:hover::before, .ledger-row:focus-within::before{ transform:scaleY(1); transform-origin:top; }
   .ledger-row:hover, .ledger-row:focus-within{ color:#F6F1E4; }
   .ledger-row:hover .cut-art, .ledger-row:focus-within .cut-art{ transform:scale(1.12) rotate(-4deg); color:#E3C05B; }
@@ -180,9 +181,6 @@ tailwind.config = {
   .ledger-row:hover h3 + p, .ledger-row:focus-within h3 + p{ color:rgba(246,241,228,.6); }
   .ledger-row:hover .row-price, .ledger-row:focus-within .row-price{ color:#E3C05B; }
   .ledger-row:hover .row-price span, .ledger-row:focus-within .row-price span{ color:rgba(246,241,228,.4); }
-  .ledger-row:hover .icon-box, .ledger-row:focus-within .icon-box{
-    border-color:rgba(246,241,228,.22); background:rgba(246,241,228,.05);
-  }
   .ledger-row:hover .detail-btn, .ledger-row:focus-within .detail-btn{ color:rgba(246,241,228,.6); }
   .ledger-row:hover .detail-btn:hover{ color:#E3C05B; }
   .ledger-row:hover .add-btn, .ledger-row:focus-within .add-btn{ border-color:rgba(201,162,39,.55); color:#E3C05B; }
@@ -390,6 +388,85 @@ tailwind.config = {
   @keyframes hintPulse{ 0%,100%{opacity:.55} 50%{opacity:1} }
   .hint-dot{ animation:hintPulse 2.4s ease-in-out infinite; }
 
+
+  /* ---- Shape and elevation ------------------------------------------
+     One radius scale and one shadow scale, so every card, tile and panel
+     on the page is cut from the same cloth. Shadows are layered rather
+     than a single blur: a tight contact shadow reads as the object
+     touching the page, the wider ones as it lifting off it. */
+  :root{
+    --r-xs: 10px;   /* icon tiles, chips */
+    --r-sm: 14px;   /* buttons, inputs */
+    --r-md: 18px;   /* cards */
+    --r-lg: 26px;   /* large panels, photographs, modals */
+
+    --e-1: 0 1px 2px rgba(11,31,24,.05), 0 6px 14px -6px rgba(11,31,24,.16);
+    --e-2: 0 1px 3px rgba(11,31,24,.07), 0 10px 24px -10px rgba(11,31,24,.22),
+           0 28px 56px -28px rgba(11,31,24,.26);
+    --e-3: 0 2px 6px rgba(11,31,24,.10), 0 18px 40px -14px rgba(11,31,24,.28),
+           0 48px 90px -42px rgba(11,31,24,.36);
+    /* on the dark sections a green-tinted shadow disappears, so go black */
+    --e-dark: 0 2px 8px rgba(0,0,0,.45), 0 22px 48px -18px rgba(0,0,0,.62),
+              0 54px 100px -52px rgba(0,0,0,.72);
+
+    /* cards sit lighter than the textured cream ground so they separate */
+    --card: #FDFAF1;
+  }
+
+  /* Surfaces on the cream page */
+  .card{
+    background:var(--card);
+    border:1px solid rgba(11,31,24,.09);
+    border-radius:var(--r-md);
+    box-shadow:var(--e-2);
+  }
+  .card-lg{ border-radius:var(--r-lg); }
+  /* Surfaces on the dark sections */
+  .card-dark{
+    border-radius:var(--r-lg);
+    box-shadow:var(--e-dark);
+    border:1px solid rgba(246,241,228,.13);
+  }
+  /* Photographs and engraved plates */
+  .media{ border-radius:var(--r-lg); overflow:hidden; box-shadow:var(--e-3); }
+
+  .btn{ border-radius:var(--r-sm); }
+  .btn-blood, .btn-ink{ box-shadow:var(--e-1); }
+  .btn-blood:hover{ box-shadow:0 14px 34px -14px rgba(156,42,42,.9), var(--e-1); }
+  #cutModal{ box-shadow:var(--e-3); }
+  #orderDrawer{ box-shadow:var(--e-3); }
+  #toast{ box-shadow:var(--e-dark); }
+  .monogram{ box-shadow:var(--e-2); }
+  .icon-box{ border-radius:var(--r-xs); }
+  .monogram{ border-radius:var(--r-md); }
+
+  /* Interactive cards lift on hover */
+  .lift{ transition:transform .5s var(--ease-out-expo), box-shadow .5s var(--ease-out-expo); }
+  .lift:hover, .lift:focus-within{ transform:translateY(-4px); box-shadow:var(--e-3); }
+
+  /* --- Ledger rows become discrete cards ---------------------------- */
+  .ledger-row{
+    background:var(--card);
+    border:1px solid rgba(11,31,24,.09);
+    border-radius:var(--r-md);
+    box-shadow:var(--e-2);
+    transition:color .5s var(--ease-out-expo), transform .5s var(--ease-out-expo),
+               box-shadow .5s var(--ease-out-expo);
+  }
+  .ledger-row::before{ border-radius:inherit; }
+  .ledger-row:hover, .ledger-row:focus-within{
+    transform:translateY(-4px);
+    box-shadow:0 3px 8px rgba(11,31,24,.14), 0 22px 44px -14px rgba(11,31,24,.34),
+               0 54px 100px -46px rgba(11,31,24,.40);
+  }
+  .ledger-row:hover .icon-box, .ledger-row:focus-within .icon-box{
+    border-color:rgba(246,241,228,.22); background:rgba(246,241,228,.06);
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .lift:hover, .ledger-row:hover{ transform:none; }
+  }
+
   /* ---- Reduced motion ------------------------------------------------ */
   @media (prefers-reduced-motion: reduce){
     *, *::before, *::after{
@@ -520,7 +597,7 @@ tailwind.config = {
         <span class="hidden sm:inline">Order ahead</span>
         <span id="bagCount" class="ml-1 grid place-items-center min-w-[1.35rem] h-[1.35rem] px-1 rounded-full bg-gold text-ink text-[10px] font-bold scale-0 transition-transform duration-500" style="transition-timing-function:var(--ease-spring)" aria-hidden="true">0</span>
       </button>
-      <button id="navToggle" class="lg:hidden grid place-items-center w-11 h-11 border border-cream/20 text-cream/80 hover:border-gold hover:text-gold transition-colors duration-300" aria-expanded="false" aria-controls="mobileNav" aria-label="Open menu">
+      <button id="navToggle" class="lg:hidden grid place-items-center w-11 h-11 border border-cream/20 rounded-[var(--r-xs)] text-cream/80 hover:border-gold hover:text-gold transition-colors duration-300" aria-expanded="false" aria-controls="mobileNav" aria-label="Open menu">
         <span class="relative block w-5 h-3">
           <span class="nav-bar absolute left-0 top-0 h-px w-full bg-current transition-transform duration-500" style="transition-timing-function:var(--ease-out-expo)"></span>
           <span class="nav-bar absolute left-0 top-1/2 h-px w-full bg-current transition-opacity duration-300"></span>
@@ -537,7 +614,7 @@ tailwind.config = {
   <div class="relative h-full flex flex-col" style="padding-inline:var(--edge)">
     <div class="flex items-center justify-between py-5">
       <span class="font-display font-700 text-gold text-2xl">Hartnett <span class="italic font-normal">&amp;</span> Sons</span>
-      <button id="navClose" class="grid place-items-center w-11 h-11 border border-cream/20 text-cream hover:border-gold hover:text-gold transition-colors" aria-label="Close menu">
+      <button id="navClose" class="grid place-items-center w-11 h-11 border border-cream/20 rounded-[var(--r-xs)] text-cream hover:border-gold hover:text-gold transition-colors" aria-label="Close menu">
         <svg class="w-5 h-5"><use href="#i-close"/></svg>
       </button>
     </div>
@@ -670,8 +747,8 @@ tailwind.config = {
   </div>
 
   <!-- dense fact bar across the fold -->
-  <div class="relative z-10 mt-12 border-y border-cream/12">
-    <dl class="grid grid-cols-2 lg:grid-cols-4 divide-x divide-y lg:divide-y-0 divide-cream/10">
+  <div class="relative z-10 mt-12" style="padding-inline:var(--edge)">
+    <dl class="card-dark grid grid-cols-2 lg:grid-cols-4 divide-x divide-y lg:divide-y-0 divide-cream/10 overflow-hidden bg-black/25 backdrop-blur-[2px]">
       <div class="px-5 sm:px-7 py-5">
         <dt class="eyebrow text-cream/35">Established</dt>
         <dd class="mt-1.5 font-display text-2xl sm:text-3xl text-cream">1962</dd>
@@ -696,7 +773,7 @@ tailwind.config = {
   </div>
 
   <!-- supplier marquee -->
-  <div class="relative z-10 flex items-stretch divide-x divide-cream/10 border-b border-cream/12">
+  <div class="relative z-10 mt-4 flex items-stretch divide-x divide-cream/10 border-y border-cream/12">
     <div class="hidden sm:flex items-center gap-3 px-6 py-3 shrink-0">
       <span class="eyebrow text-cream/35">Our farms</span>
       <span class="relative block w-px h-4 bg-cream/25 overflow-hidden"><span class="cue-line absolute inset-x-0 top-0 h-2 bg-gold"></span></span>
@@ -730,7 +807,7 @@ tailwind.config = {
 
     <!-- board straddles the hero boundary instead of sitting inside a new band -->
     <div class="flex justify-end">
-      <div class="-mt-16 w-full max-w-md border border-forest/20 bg-forest text-cream shadow-[0_24px_60px_-30px_rgba(0,0,0,.8)]" data-reveal="scale">
+      <div class="card-dark lift -mt-16 w-full max-w-md bg-forest text-cream overflow-hidden" data-reveal="scale">
         <div class="flex items-center justify-between px-5 py-3 border-b border-cream/12">
           <span class="eyebrow text-brass">At the counter today</span>
           <span class="font-mono text-[10px] text-cream/40" id="boardDate">—</span>
@@ -769,7 +846,7 @@ tailwind.config = {
 
       <!-- plate bleeds off the left edge -->
       <figure class="lg:col-span-5 relative" data-reveal="left" style="margin-left:calc(var(--edge) * -1)">
-        <div class="relative overflow-hidden plate aspect-[5/4] sm:aspect-[4/3]">
+        <div class="media relative plate aspect-[5/4] sm:aspect-[4/3]">
           <svg class="absolute inset-0 w-full h-full opacity-25" aria-hidden="true">
             <defs><pattern id="hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(35)">
               <path d="M0 0V7" stroke="#C9A227" stroke-width=".8"/>
@@ -890,7 +967,7 @@ tailwind.config = {
 <!-- ============ WHAT WE DON'T DO (inset dark card, not a full band) ============ -->
 <section class="relative tex-paper text-forest">
   <div class="pb-16" style="padding-inline:var(--edge)">
-    <div class="inset-dark text-cream border border-forest/30 shadow-[0_30px_70px_-40px_rgba(0,0,0,.9)] overflow-hidden" data-reveal>
+    <div class="card-dark inset-dark text-cream overflow-hidden" data-reveal>
       <div class="grid lg:grid-cols-12">
         <div class="lg:col-span-4 p-8 sm:p-10 border-b lg:border-b-0 lg:border-r border-cream/12">
           <span class="eyebrow text-brass">The short version</span>
@@ -940,8 +1017,8 @@ tailwind.config = {
       </p>
     </div>
 
-    <ol class="grid sm:grid-cols-2 border-t border-l border-forest/15" id="processList">
-      <li class="relative p-7 sm:p-9 border-r border-b border-forest/15 group hover:bg-white/45 transition-colors duration-500" data-reveal>
+    <ol class="grid sm:grid-cols-2 gap-4 sm:gap-5" id="processList">
+      <li class="card lift relative p-7 sm:p-9 group" data-reveal>
         <div class="flex items-baseline gap-4">
           <span class="font-display font-900 text-4xl text-blood/25 group-hover:text-blood/60 transition-colors duration-500">01</span>
           <h3 class="font-display text-[clamp(1.3rem,2.4vw,1.8rem)] leading-tight">Five farms, thirty miles</h3>
@@ -949,7 +1026,7 @@ tailwind.config = {
         <p class="mt-3 text-sm text-forest/65 leading-relaxed">Ballymore, Ardra, Coolbawn, Glenview and O'Brien's of Cloyne. Denis drives out to each of them himself. Every animal we sell was raised inside a thirty-mile ring around the shop.</p>
         <p class="mt-4 font-mono text-[10px] tracking-widest uppercase text-forest/35">Roughly 40 min in the van, worst case</p>
       </li>
-      <li class="relative p-7 sm:p-9 border-r border-b border-forest/15 group hover:bg-white/45 transition-colors duration-500" data-reveal style="--d:100ms">
+      <li class="card lift relative p-7 sm:p-9 group" data-reveal style="--d:100ms">
         <div class="flex items-baseline gap-4">
           <span class="font-display font-900 text-4xl text-blood/25 group-hover:text-blood/60 transition-colors duration-500">02</span>
           <h3 class="font-display text-[clamp(1.3rem,2.4vw,1.8rem)] leading-tight">Twenty-eight days hanging</h3>
@@ -957,7 +1034,7 @@ tailwind.config = {
         <p class="mt-3 text-sm text-forest/65 leading-relaxed">Beef goes on the hook in our own chill and stays there a minimum of four weeks. It loses weight and gains flavour — which is exactly the trade the supermarkets won't make.</p>
         <p class="mt-4 font-mono text-[10px] tracking-widest uppercase text-forest/35">Loses about 12% of its weight</p>
       </li>
-      <li class="relative p-7 sm:p-9 border-r border-b border-forest/15 group hover:bg-white/45 transition-colors duration-500" data-reveal style="--d:200ms">
+      <li class="card lift relative p-7 sm:p-9 group" data-reveal style="--d:200ms">
         <div class="flex items-baseline gap-4">
           <span class="font-display font-900 text-4xl text-blood/25 group-hover:text-blood/60 transition-colors duration-500">03</span>
           <h3 class="font-display text-[clamp(1.3rem,2.4vw,1.8rem)] leading-tight">Broken down by hand</h3>
@@ -965,7 +1042,7 @@ tailwind.config = {
         <p class="mt-3 text-sm text-forest/65 leading-relaxed">Whole carcass, one block, three sets of hands. Seaming out a forequarter properly takes practice you can't buy — Denis learned it from his father, and Ciara is learning it now.</p>
         <p class="mt-4 font-mono text-[10px] tracking-widest uppercase text-forest/35">Two and a half hours a side</p>
       </li>
-      <li class="relative p-7 sm:p-9 border-r border-b border-forest/15 group hover:bg-white/45 transition-colors duration-500" data-reveal style="--d:300ms">
+      <li class="card lift relative p-7 sm:p-9 group" data-reveal style="--d:300ms">
         <div class="flex items-baseline gap-4">
           <span class="font-display font-900 text-4xl text-blood/25 group-hover:text-blood/60 transition-colors duration-500">04</span>
           <h3 class="font-display text-[clamp(1.3rem,2.4vw,1.8rem)] leading-tight">Cut to your order</h3>
@@ -1004,8 +1081,8 @@ tailwind.config = {
           <span id="filterCount" class="ml-auto font-mono text-[10px] tracking-widest uppercase text-forest/40" aria-live="polite">Showing 10 of 10</span>
         </div>
 
-        <div class="border-y border-forest/20" id="ledger">
-<article class="ledger-row group grid grid-cols-[auto_1fr_auto] sm:grid-cols-[3rem_5rem_1fr_auto_auto] items-center gap-x-4 sm:gap-x-6 gap-y-2 px-2 sm:px-4 py-6 border-b border-forest/12 last:border-b-0"
+        <div class="flex flex-col gap-3 sm:gap-4" id="ledger">
+<article class="ledger-row group grid grid-cols-[auto_1fr_auto] sm:grid-cols-[3rem_5rem_1fr_auto_auto] items-center gap-x-4 sm:gap-x-6 gap-y-2 px-2 sm:px-4 py-6"
         data-cat="beef" data-id="sirloin" data-name="Dry-Aged Sirloin" data-price="22.50" data-icon="cut-sirloin"
         data-desc="28-day hung, from Ballymore Farm"
         data-origin="Ballymore Farm, Castlelyons — Hereford cross, grass-fed"
@@ -1026,7 +1103,7 @@ tailwind.config = {
         </div>
       </article>
 
-      <article class="ledger-row group grid grid-cols-[auto_1fr_auto] sm:grid-cols-[3rem_5rem_1fr_auto_auto] items-center gap-x-4 sm:gap-x-6 gap-y-2 px-2 sm:px-4 py-6 border-b border-forest/12 last:border-b-0"
+      <article class="ledger-row group grid grid-cols-[auto_1fr_auto] sm:grid-cols-[3rem_5rem_1fr_auto_auto] items-center gap-x-4 sm:gap-x-6 gap-y-2 px-2 sm:px-4 py-6"
         data-cat="beef" data-id="rib" data-name="Rib of Beef" data-price="24.00" data-icon="cut-rib"
         data-desc="On the bone, aged 35 days"
         data-origin="Ardra Hereford, Rathcormac — single suckler herd"
@@ -1047,7 +1124,7 @@ tailwind.config = {
         </div>
       </article>
 
-      <article class="ledger-row group grid grid-cols-[auto_1fr_auto] sm:grid-cols-[3rem_5rem_1fr_auto_auto] items-center gap-x-4 sm:gap-x-6 gap-y-2 px-2 sm:px-4 py-6 border-b border-forest/12 last:border-b-0"
+      <article class="ledger-row group grid grid-cols-[auto_1fr_auto] sm:grid-cols-[3rem_5rem_1fr_auto_auto] items-center gap-x-4 sm:gap-x-6 gap-y-2 px-2 sm:px-4 py-6"
         data-cat="beef" data-id="spiced" data-name="Spiced Beef" data-price="16.50" data-icon="cut-cure"
         data-desc="Our own cure, ready in 10 days"
         data-eats="A Cork institution and the one thing we won't rush. Ten days in saltpetre, allspice, juniper and treacle, turned by hand every morning."
@@ -1068,7 +1145,7 @@ tailwind.config = {
         </div>
       </article>
 
-      <article class="ledger-row group grid grid-cols-[auto_1fr_auto] sm:grid-cols-[3rem_5rem_1fr_auto_auto] items-center gap-x-4 sm:gap-x-6 gap-y-2 px-2 sm:px-4 py-6 border-b border-forest/12 last:border-b-0"
+      <article class="ledger-row group grid grid-cols-[auto_1fr_auto] sm:grid-cols-[3rem_5rem_1fr_auto_auto] items-center gap-x-4 sm:gap-x-6 gap-y-2 px-2 sm:px-4 py-6"
         data-cat="pork" data-id="shoulder" data-name="Rolled Pork Shoulder" data-price="11.90" data-icon="cut-pork"
         data-desc="Free-range, stuffed to order"
         data-origin="Glenview Pork, Ballynoe — outdoor-reared Saddleback"
@@ -1089,7 +1166,7 @@ tailwind.config = {
         </div>
       </article>
 
-      <article class="ledger-row group grid grid-cols-[auto_1fr_auto] sm:grid-cols-[3rem_5rem_1fr_auto_auto] items-center gap-x-4 sm:gap-x-6 gap-y-2 px-2 sm:px-4 py-6 border-b border-forest/12 last:border-b-0"
+      <article class="ledger-row group grid grid-cols-[auto_1fr_auto] sm:grid-cols-[3rem_5rem_1fr_auto_auto] items-center gap-x-4 sm:gap-x-6 gap-y-2 px-2 sm:px-4 py-6"
         data-cat="pork" data-id="sausages" data-name="Hartnett's Sausages" data-price="6.20" data-icon="cut-sausage"
         data-desc="Our recipe, made fresh on Tuesdays"
         data-origin="Glenview Pork shoulder, natural casings, made on site"
@@ -1110,7 +1187,7 @@ tailwind.config = {
         </div>
       </article>
 
-      <article class="ledger-row group grid grid-cols-[auto_1fr_auto] sm:grid-cols-[3rem_5rem_1fr_auto_auto] items-center gap-x-4 sm:gap-x-6 gap-y-2 px-2 sm:px-4 py-6 border-b border-forest/12 last:border-b-0"
+      <article class="ledger-row group grid grid-cols-[auto_1fr_auto] sm:grid-cols-[3rem_5rem_1fr_auto_auto] items-center gap-x-4 sm:gap-x-6 gap-y-2 px-2 sm:px-4 py-6"
         data-cat="pork" data-id="pudding" data-name="Black Pudding" data-price="5.80" data-icon="cut-pudding"
         data-desc="Made Thursdays, our own blend"
         data-origin="Made on site — pinhead oats, our own spice mix"
@@ -1131,7 +1208,7 @@ tailwind.config = {
         </div>
       </article>
 
-      <article class="ledger-row group grid grid-cols-[auto_1fr_auto] sm:grid-cols-[3rem_5rem_1fr_auto_auto] items-center gap-x-4 sm:gap-x-6 gap-y-2 px-2 sm:px-4 py-6 border-b border-forest/12 last:border-b-0"
+      <article class="ledger-row group grid grid-cols-[auto_1fr_auto] sm:grid-cols-[3rem_5rem_1fr_auto_auto] items-center gap-x-4 sm:gap-x-6 gap-y-2 px-2 sm:px-4 py-6"
         data-cat="lamb" data-id="chops" data-name="Lamb Chops" data-price="18.90" data-icon="cut-lamb"
         data-desc="Spring lamb, hand-trimmed"
         data-origin="Coolbawn Lamb, Ballycotton — salt-marsh grazed"
@@ -1152,7 +1229,7 @@ tailwind.config = {
         </div>
       </article>
 
-      <article class="ledger-row group grid grid-cols-[auto_1fr_auto] sm:grid-cols-[3rem_5rem_1fr_auto_auto] items-center gap-x-4 sm:gap-x-6 gap-y-2 px-2 sm:px-4 py-6 border-b border-forest/12 last:border-b-0"
+      <article class="ledger-row group grid grid-cols-[auto_1fr_auto] sm:grid-cols-[3rem_5rem_1fr_auto_auto] items-center gap-x-4 sm:gap-x-6 gap-y-2 px-2 sm:px-4 py-6"
         data-cat="poultry" data-id="chicken" data-name="Free-Range Chicken" data-price="7.40" data-icon="cut-chicken"
         data-desc="Whole birds, O'Brien's of Cloyne"
         data-origin="O'Brien's of Cloyne — slow-grown, 81 days, outdoor"
@@ -1173,7 +1250,7 @@ tailwind.config = {
         </div>
       </article>
 
-      <article class="ledger-row group grid grid-cols-[auto_1fr_auto] sm:grid-cols-[3rem_5rem_1fr_auto_auto] items-center gap-x-4 sm:gap-x-6 gap-y-2 px-2 sm:px-4 py-6 border-b border-forest/12 last:border-b-0"
+      <article class="ledger-row group grid grid-cols-[auto_1fr_auto] sm:grid-cols-[3rem_5rem_1fr_auto_auto] items-center gap-x-4 sm:gap-x-6 gap-y-2 px-2 sm:px-4 py-6"
         data-cat="beef" data-id="corned" data-name="Corned Silverside" data-price="14.20" data-icon="cut-cure"
         data-desc="Brined nine days, for boiling"
         data-origin="Silverside from Ardra Hereford, brined on site"
@@ -1194,7 +1271,7 @@ tailwind.config = {
         </div>
       </article>
 
-      <article class="ledger-row group grid grid-cols-[auto_1fr_auto] sm:grid-cols-[3rem_5rem_1fr_auto_auto] items-center gap-x-4 sm:gap-x-6 gap-y-2 px-2 sm:px-4 py-6 border-b border-forest/12 last:border-b-0"
+      <article class="ledger-row group grid grid-cols-[auto_1fr_auto] sm:grid-cols-[3rem_5rem_1fr_auto_auto] items-center gap-x-4 sm:gap-x-6 gap-y-2 px-2 sm:px-4 py-6"
         data-cat="pork" data-id="ribs" data-name="Bacon Ribs" data-price="4.90" data-icon="cut-rib"
         data-desc="Dry-cured, for a pot of coddle"
         data-origin="Glenview Pork, dry-cured in our own brine"
@@ -1228,7 +1305,7 @@ tailwind.config = {
 
       <!-- sidebar: counter journal + call-ahead list -->
       <aside class="lg:col-span-4 xl:col-span-3 order-1 lg:order-2 lg:sticky lg:top-28 space-y-6" data-reveal style="--d:120ms">
-        <div class="border border-forest/20 bg-white/40">
+        <div class="card lift overflow-hidden">
           <div class="px-5 py-3.5 border-b border-forest/15 flex items-center justify-between">
             <span class="eyebrow text-blood">From the counter</span>
             <span class="w-1.5 h-1.5 rounded-full bg-blood pulse-dot"></span>
@@ -1249,7 +1326,7 @@ tailwind.config = {
           </ol>
         </div>
 
-        <div class="border border-forest/20 p-5">
+        <div class="card lift p-5">
           <span class="eyebrow text-blood">Call ahead for</span>
           <ul class="mt-4 space-y-2.5 text-sm text-forest/70">
             <li class="flex items-baseline justify-between gap-3 border-b border-forest/10 pb-2.5"><span>Whole or half lamb</span><span class="font-mono text-[10px] text-forest/40 shrink-0">1 wk</span></li>
@@ -1272,7 +1349,7 @@ tailwind.config = {
       <span class="eyebrow text-blood shrink-0">06 — What's good when</span>
     </div>
 
-    <div class="inset-dark text-cream border border-forest/30 overflow-hidden" data-reveal>
+    <div class="card-dark inset-dark text-cream overflow-hidden" data-reveal>
       <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-5 p-7 sm:p-9 border-b border-cream/12">
         <h2 class="display-lg text-[clamp(1.9rem,4vw,3rem)]">The year at<br>the <em class="font-normal italic text-gold">block.</em></h2>
         <div class="flex flex-wrap items-center gap-6 lg:pb-2">
@@ -1323,7 +1400,7 @@ tailwind.config = {
     <div class="grid lg:grid-cols-12 gap-x-8 gap-y-8 items-stretch">
 
       <!-- address + phone -->
-      <div class="lg:col-span-5 flex flex-col justify-between border border-forest/20 bg-white/40 p-7 sm:p-9" data-reveal="left">
+      <div class="card lift lg:col-span-5 flex flex-col justify-between p-7 sm:p-9" data-reveal="left">
         <div>
           <h2 class="display-lg text-[clamp(2rem,4.5vw,3.25rem)]">Come in, or<br>call <em class="font-normal italic text-blood">ahead.</em></h2>
           <address class="mt-6 not-italic leading-relaxed text-forest/70">
@@ -1346,7 +1423,7 @@ tailwind.config = {
       </div>
 
       <!-- map -->
-      <div class="lg:col-span-4 relative overflow-hidden border border-forest/20 bg-forest min-h-[16rem]" data-reveal="scale">
+      <div class="media lg:col-span-4 relative bg-forest min-h-[16rem]" data-reveal="scale">
         <svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid meet" class="absolute inset-0 w-full h-full" role="img" aria-label="Stylised map of Main Street, Midleton, showing the shop at number 14">
           <rect width="400" height="300" fill="#0B1F18"/>
           <g stroke="#F6F1E4" stroke-opacity=".12" stroke-width="1">
@@ -1374,7 +1451,7 @@ tailwind.config = {
       </div>
 
       <!-- hours -->
-      <div class="lg:col-span-3 border border-forest/20 bg-white/40 flex flex-col" data-reveal>
+      <div class="card lift lg:col-span-3 flex flex-col overflow-hidden" data-reveal>
         <div class="flex items-center justify-between gap-3 px-5 py-3.5 border-b border-forest/15">
           <span class="eyebrow text-blood flex items-center gap-2"><svg class="w-3.5 h-3.5"><use href="#i-clock"/></svg> Hours</span>
           <span id="hoursBadge" class="inline-flex items-center gap-2 font-mono text-[10px] tracking-widest uppercase px-2.5 py-1 rounded-full bg-forest/8 text-forest/60">
@@ -1405,12 +1482,12 @@ tailwind.config = {
     <div class="flex flex-wrap items-end justify-between gap-5 mb-9" data-reveal>
       <h2 class="display-lg text-[clamp(1.8rem,4vw,2.75rem)] text-cream">What people say<br>on a <em class="font-normal italic text-gold">Saturday.</em></h2>
       <div class="flex gap-2">
-        <button id="prevSlide" class="grid place-items-center w-11 h-11 border border-cream/20 text-cream/70 hover:border-gold hover:text-gold transition-colors duration-300" aria-label="Previous quote"><svg class="w-5 h-5 rotate-180"><use href="#i-arrow"/></svg></button>
-        <button id="nextSlide" class="grid place-items-center w-11 h-11 border border-cream/20 text-cream/70 hover:border-gold hover:text-gold transition-colors duration-300" aria-label="Next quote"><svg class="w-5 h-5"><use href="#i-arrow"/></svg></button>
+        <button id="prevSlide" class="grid place-items-center w-11 h-11 border border-cream/20 rounded-[var(--r-xs)] text-cream/70 hover:border-gold hover:text-gold transition-colors duration-300" aria-label="Previous quote"><svg class="w-5 h-5 rotate-180"><use href="#i-arrow"/></svg></button>
+        <button id="nextSlide" class="grid place-items-center w-11 h-11 border border-cream/20 rounded-[var(--r-xs)] text-cream/70 hover:border-gold hover:text-gold transition-colors duration-300" aria-label="Next quote"><svg class="w-5 h-5"><use href="#i-arrow"/></svg></button>
       </div>
     </div>
 
-    <div class="relative overflow-hidden border border-cream/12 bg-black/20 cursor-grab active:cursor-grabbing" id="sliderViewport" aria-roledescription="carousel" aria-label="Customer quotes">
+    <div class="card-dark relative overflow-hidden bg-black/20 cursor-grab active:cursor-grabbing" id="sliderViewport" aria-roledescription="carousel" aria-label="Customer quotes">
       <div class="slides" id="slides">
         <div class="slide p-7 sm:p-11" role="group" aria-roledescription="slide" aria-label="1 of 4">
           <svg class="w-6 h-6 text-brass/50 mb-5"><use href="#i-quote"/></svg>
@@ -1446,32 +1523,32 @@ tailwind.config = {
         <div class="rule-label text-forest mb-5"><span class="eyebrow text-blood shrink-0">08 — Before you order</span></div>
         <h2 class="display-lg text-[clamp(1.8rem,4vw,2.75rem)]">Questions<br>we get <em class="font-normal italic text-blood">daily.</em></h2>
       </div>
-      <div class="lg:col-span-9 border-t border-forest/20" id="faq">
-        <div class="acc-item border-b border-forest/15" data-open="false">
+      <div class="lg:col-span-9 flex flex-col gap-3" id="faq">
+        <div class="acc-item card lift px-5 sm:px-6" data-open="false">
           <h3><button class="w-full flex items-center justify-between gap-6 py-5 text-left group" aria-expanded="false">
             <span class="font-display text-[1.25rem] sm:text-[1.5rem] leading-tight group-hover:text-blood transition-colors duration-300">How far ahead should I order?</span>
             <svg class="acc-plus w-5 h-5 shrink-0 text-blood"><use href="#i-plus"/></svg></button></h3>
           <div class="acc-body"><div><p class="pb-5 pr-10 text-forest/65 leading-relaxed max-w-2xl">A day is plenty for anything on the board. Spiced beef needs ten, a whole lamb needs a week, and Christmas turkeys are booked from the first of November. If it's a Saturday roast, ring before four on Friday.</p></div></div>
         </div>
-        <div class="acc-item border-b border-forest/15" data-open="false">
+        <div class="acc-item card lift px-5 sm:px-6" data-open="false">
           <h3><button class="w-full flex items-center justify-between gap-6 py-5 text-left group" aria-expanded="false">
             <span class="font-display text-[1.25rem] sm:text-[1.5rem] leading-tight group-hover:text-blood transition-colors duration-300">Do you deliver?</span>
             <svg class="acc-plus w-5 h-5 shrink-0 text-blood"><use href="#i-plus"/></svg></button></h3>
           <div class="acc-body"><div><p class="pb-5 pr-10 text-forest/65 leading-relaxed max-w-2xl">Not yet. Everything is collection from the shop — we'd rather hand it to you and tell you what to do with it. Orders over €80 within Midleton town can be dropped by arrangement; ask Michael at the counter.</p></div></div>
         </div>
-        <div class="acc-item border-b border-forest/15" data-open="false">
+        <div class="acc-item card lift px-5 sm:px-6" data-open="false">
           <h3><button class="w-full flex items-center justify-between gap-6 py-5 text-left group" aria-expanded="false">
             <span class="font-display text-[1.25rem] sm:text-[1.5rem] leading-tight group-hover:text-blood transition-colors duration-300">Can I buy a whole or half animal?</span>
             <svg class="acc-plus w-5 h-5 shrink-0 text-blood"><use href="#i-plus"/></svg></button></h3>
           <div class="acc-body"><div><p class="pb-5 pr-10 text-forest/65 leading-relaxed max-w-2xl">Yes — half lambs and quarter beef are the usual. We'll hang it, break it down to your spec, label every pack and give you a list of what's in each one. Reckon on three weeks' notice and a freezer you've cleared out first.</p></div></div>
         </div>
-        <div class="acc-item border-b border-forest/15" data-open="false">
+        <div class="acc-item card lift px-5 sm:px-6" data-open="false">
           <h3><button class="w-full flex items-center justify-between gap-6 py-5 text-left group" aria-expanded="false">
             <span class="font-display text-[1.25rem] sm:text-[1.5rem] leading-tight group-hover:text-blood transition-colors duration-300">What does "dry-aged" actually mean here?</span>
             <svg class="acc-plus w-5 h-5 shrink-0 text-blood"><use href="#i-plus"/></svg></button></h3>
           <div class="acc-body"><div><p class="pb-5 pr-10 text-forest/65 leading-relaxed max-w-2xl">On the bone, uncovered, in our own chill for at least 28 days. It loses around 12% of its weight in water and grows a hard crust we trim off and bin. That waste is why it costs more — and why it tastes of something.</p></div></div>
         </div>
-        <div class="acc-item border-b border-forest/15" data-open="false">
+        <div class="acc-item card lift px-5 sm:px-6" data-open="false">
           <h3><button class="w-full flex items-center justify-between gap-6 py-5 text-left group" aria-expanded="false">
             <span class="font-display text-[1.25rem] sm:text-[1.5rem] leading-tight group-hover:text-blood transition-colors duration-300">Is this an online shop?</span>
             <svg class="acc-plus w-5 h-5 shrink-0 text-blood"><use href="#i-plus"/></svg></button></h3>
@@ -1546,10 +1623,10 @@ tailwind.config = {
 </main>
 <!-- ============ CUT DETAIL MODAL ============ -->
 <div id="cutScrim" class="scrim fixed inset-0 z-[80] bg-ink/70 backdrop-blur-sm grid place-items-center p-4 sm:p-6" hidden>
-  <div id="cutModal" class="panel w-full max-w-2xl max-h-[88vh] overflow-y-auto tex-paper text-forest border border-forest/20 shadow-2xl translate-y-6 opacity-0" role="dialog" aria-modal="true" aria-labelledby="cutTitle">
+  <div id="cutModal" class="panel w-full max-w-2xl max-h-[88vh] overflow-y-auto tex-paper text-forest border border-forest/20 rounded-[var(--r-lg)] translate-y-6 opacity-0" role="dialog" aria-modal="true" aria-labelledby="cutTitle">
     <div class="flex items-start justify-between gap-6 p-6 sm:p-8 border-b border-forest/15">
       <div class="flex items-center gap-5 min-w-0">
-        <span class="grid place-items-center w-16 h-16 sm:w-20 sm:h-20 border border-forest/15 bg-forest/[.04] shrink-0">
+        <span class="icon-box grid place-items-center w-16 h-16 sm:w-20 sm:h-20 border border-forest/15 bg-forest/[.04] shrink-0">
           <svg id="cutIcon" class="w-12 h-12 sm:w-14 sm:h-14 text-blood"><use href="#cut-sirloin"/></svg>
         </span>
         <div class="min-w-0">
@@ -1558,7 +1635,7 @@ tailwind.config = {
           <p id="cutPrice" class="mt-2 font-mono text-sm text-forest/60">€22.50 / kg</p>
         </div>
       </div>
-      <button id="cutClose" class="grid place-items-center w-10 h-10 border border-forest/20 text-forest/60 hover:bg-forest hover:text-cream hover:border-forest transition-colors duration-300 shrink-0" aria-label="Close">
+      <button id="cutClose" class="grid place-items-center w-10 h-10 border border-forest/20 rounded-[var(--r-xs)] text-forest/60 hover:bg-forest hover:text-cream hover:border-forest transition-colors duration-300 shrink-0" aria-label="Close">
         <svg class="w-4 h-4"><use href="#i-close"/></svg>
       </button>
     </div>
@@ -1579,7 +1656,7 @@ tailwind.config = {
     </div>
 
     <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 p-6 sm:p-8 pt-0">
-      <div class="flex items-center justify-between sm:justify-start gap-1 border border-forest/20 p-1">
+      <div class="flex items-center justify-between sm:justify-start gap-1 border border-forest/20 rounded-[var(--r-sm)] p-1">
         <button class="step-btn grid place-items-center w-10 h-10 text-forest/70 hover:bg-forest hover:text-cream" data-modal-step="-1" aria-label="Decrease weight"><svg class="w-4 h-4"><use href="#i-minus"/></svg></button>
         <span id="modalQty" class="min-w-[5rem] text-center font-mono text-sm" aria-live="polite">1.0 kg</span>
         <button class="step-btn grid place-items-center w-10 h-10 text-forest/70 hover:bg-forest hover:text-cream" data-modal-step="1" aria-label="Increase weight"><svg class="w-4 h-4"><use href="#i-plus"/></svg></button>
@@ -1591,13 +1668,13 @@ tailwind.config = {
 
 <!-- ============ ORDER DRAWER ============ -->
 <div id="orderScrim" class="scrim fixed inset-0 z-[85] bg-ink/70 backdrop-blur-sm" hidden></div>
-<aside id="orderDrawer" class="panel fixed top-0 right-0 z-[86] h-[100dvh] w-full sm:max-w-[27rem] tex-paper text-forest border-l border-forest/20 translate-x-full flex flex-col shadow-2xl" role="dialog" aria-modal="true" aria-labelledby="orderTitle" aria-hidden="true">
+<aside id="orderDrawer" class="panel fixed top-0 right-0 z-[86] h-[100dvh] w-full sm:max-w-[27rem] tex-paper text-forest border-l border-forest/20 sm:rounded-l-[var(--r-lg)] overflow-hidden translate-x-full flex flex-col" role="dialog" aria-modal="true" aria-labelledby="orderTitle" aria-hidden="true">
   <div class="flex items-center justify-between gap-4 px-6 py-5 border-b border-forest/15 shrink-0">
     <div>
       <p class="eyebrow text-blood">Collection order</p>
       <h2 id="orderTitle" class="font-display text-2xl mt-1">Your list</h2>
     </div>
-    <button id="orderClose" class="grid place-items-center w-10 h-10 border border-forest/20 text-forest/60 hover:bg-forest hover:text-cream hover:border-forest transition-colors duration-300" aria-label="Close order">
+    <button id="orderClose" class="grid place-items-center w-10 h-10 border border-forest/20 rounded-[var(--r-xs)] text-forest/60 hover:bg-forest hover:text-cream hover:border-forest transition-colors duration-300" aria-label="Close order">
       <svg class="w-4 h-4"><use href="#i-close"/></svg>
     </button>
   </div>
@@ -1619,25 +1696,25 @@ tailwind.config = {
 
       <div class="dropdown relative" data-dropdown="day">
         <label id="dayLabel" class="block font-mono text-[10px] tracking-widest uppercase text-forest/45 mb-2">Day</label>
-        <button type="button" class="dd-trigger w-full flex items-center justify-between gap-3 border border-forest/25 bg-white/50 px-4 py-3 text-left hover:border-forest transition-colors duration-300" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="dayLabel ddDayValue">
+        <button type="button" class="dd-trigger w-full flex items-center justify-between gap-3 border border-forest/25 bg-white/60 rounded-[var(--r-sm)] px-4 py-3 text-left hover:border-forest transition-colors duration-300" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="dayLabel ddDayValue">
           <span id="ddDayValue" class="text-sm">Choose a day</span>
           <svg class="dd-chev w-4 h-4 text-forest/50 transition-transform duration-400"><use href="#i-chev"/></svg>
         </button>
-        <ul class="dd-list absolute z-20 left-0 right-0 mt-1 max-h-56 overflow-y-auto border border-forest/25 bg-cream shadow-xl hidden" role="listbox" tabindex="-1" aria-labelledby="dayLabel"></ul>
+        <ul class="dd-list absolute z-20 left-0 right-0 mt-2 max-h-56 overflow-y-auto border border-forest/25 bg-cream rounded-[var(--r-sm)] shadow-[var(--e-2)] hidden" role="listbox" tabindex="-1" aria-labelledby="dayLabel"></ul>
       </div>
 
       <div class="dropdown relative" data-dropdown="time">
         <label id="timeLabel" class="block font-mono text-[10px] tracking-widest uppercase text-forest/45 mb-2">Time</label>
-        <button type="button" class="dd-trigger w-full flex items-center justify-between gap-3 border border-forest/25 bg-white/50 px-4 py-3 text-left hover:border-forest transition-colors duration-300" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="timeLabel ddTimeValue">
+        <button type="button" class="dd-trigger w-full flex items-center justify-between gap-3 border border-forest/25 bg-white/60 rounded-[var(--r-sm)] px-4 py-3 text-left hover:border-forest transition-colors duration-300" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="timeLabel ddTimeValue">
           <span id="ddTimeValue" class="text-sm">Choose a time</span>
           <svg class="dd-chev w-4 h-4 text-forest/50 transition-transform duration-400"><use href="#i-chev"/></svg>
         </button>
-        <ul class="dd-list absolute z-20 left-0 right-0 mt-1 max-h-56 overflow-y-auto border border-forest/25 bg-cream shadow-xl hidden" role="listbox" tabindex="-1" aria-labelledby="timeLabel"></ul>
+        <ul class="dd-list absolute z-20 left-0 right-0 mt-2 max-h-56 overflow-y-auto border border-forest/25 bg-cream rounded-[var(--r-sm)] shadow-[var(--e-2)] hidden" role="listbox" tabindex="-1" aria-labelledby="timeLabel"></ul>
       </div>
 
       <div>
         <label for="orderNotes" class="block font-mono text-[10px] tracking-widest uppercase text-forest/45 mb-2">Notes for the counter</label>
-        <textarea id="orderNotes" rows="3" placeholder="Thickness, trim, how many it's feeding…" class="w-full border border-forest/25 bg-white/50 px-4 py-3 text-sm placeholder:text-forest/35 focus:border-forest outline-none transition-colors duration-300 resize-none"></textarea>
+        <textarea id="orderNotes" rows="3" placeholder="Thickness, trim, how many it's feeding…" class="w-full border border-forest/25 bg-white/60 rounded-[var(--r-sm)] px-4 py-3 text-sm placeholder:text-forest/35 focus:border-forest outline-none transition-colors duration-300 resize-none"></textarea>
       </div>
     </div>
   </div>
@@ -1663,7 +1740,7 @@ tailwind.config = {
 </aside>
 
 <!-- ============ TOAST ============ -->
-<div id="toast" class="fixed bottom-24 sm:bottom-6 left-1/2 -translate-x-1/2 translate-y-24 opacity-0 z-[90] flex items-center gap-3 bg-forest text-cream border border-brass/40 px-5 py-3.5 shadow-2xl pointer-events-none" role="status" aria-live="polite">
+<div id="toast" class="fixed bottom-24 sm:bottom-6 left-1/2 -translate-x-1/2 translate-y-24 opacity-0 z-[90] flex items-center gap-3 bg-forest text-cream border border-brass/40 rounded-[var(--r-sm)] px-5 py-3.5 pointer-events-none" role="status" aria-live="polite">
   <svg class="w-4 h-4 text-gold shrink-0"><use href="#i-check"/></svg>
   <span id="toastText" class="font-mono text-[11px] tracking-widest uppercase"></span>
 </div>
@@ -1985,7 +2062,7 @@ tailwind.config = {
       const li = document.createElement('li');
       li.className = 'flex gap-4 px-6 py-5';
       li.innerHTML =
-        '<span class="grid place-items-center w-12 h-12 border border-forest/15 bg-forest/[.04] shrink-0">' +
+        '<span class="icon-box grid place-items-center w-12 h-12 border border-forest/15 bg-forest/[.04] shrink-0">' +
           '<svg class="w-8 h-8 text-blood"><use href="#' + item.icon + '"/></svg></span>' +
         '<div class="flex-1 min-w-0">' +
           '<div class="flex items-start justify-between gap-3">' +
@@ -1995,7 +2072,7 @@ tailwind.config = {
           '</div>' +
           '<p class="mt-0.5 font-mono text-[11px] text-forest/45">' + euro(item.price) + '/kg</p>' +
           '<div class="mt-3 flex items-center justify-between gap-3">' +
-            '<div class="flex items-center gap-1 border border-forest/20">' +
+            '<div class="flex items-center gap-1 border border-forest/20 rounded-[var(--r-xs)]">' +
               '<button class="step-btn qty-down grid place-items-center w-8 h-8 text-forest/70 hover:bg-forest hover:text-cream" aria-label="Less ' + item.name + '"><svg class="w-3.5 h-3.5"><use href="#i-minus"/></svg></button>' +
               '<span class="min-w-[3.75rem] text-center font-mono text-xs">' + item.qty.toFixed(1) + ' kg</span>' +
               '<button class="step-btn qty-up grid place-items-center w-8 h-8 text-forest/70 hover:bg-forest hover:text-cream" aria-label="More ' + item.name + '"><svg class="w-3.5 h-3.5"><use href="#i-plus"/></svg></button>' +
