@@ -70,13 +70,27 @@ tailwind.config = {
     position:fixed; inset:0; z-index:0; pointer-events:none;
     background:#F6F1E4;
   }
-  /* z-index 0 and early in the document: the sections are positioned and
-     come later, so they paint over it. */
-  #orbCanvas{
-    position:fixed; inset:0; width:100%; height:100%;
-    z-index:0; pointer-events:none;
+  /* The trail is positioned in the document, not fixed to the viewport, so
+     the browser scrolls it with the content. A fixed layer redrawn from JS
+     can never keep up with compositor-driven scrolling — that is what made
+     it judder. Nothing here is repainted while scrolling; the path is only
+     ever extended. */
+  #orbTrail{
+    position:absolute; left:0; z-index:0; pointer-events:none;
+    overflow:visible;
   }
-  @media (prefers-reduced-motion: reduce){ #orbCanvas{ display:none; } }
+  @media (prefers-reduced-motion: reduce){ #orbTrail{ display:none; } }
+
+  /* The line passes behind everything, but dark type over a dark line is
+     unreadable. A cream halo lets each glyph punch through it. Containers
+     with a solid background already hide the line, so they opt out. */
+  .tex-paper :where(h1,h2,h3,h4,p,dt,dd,li,address,blockquote,figcaption,span,a,th,td,button){
+    text-shadow:0 0 4px #F6F1E4, 0 0 8px #F6F1E4, 0 0 14px rgba(246,241,228,.9);
+  }
+  .tex-paper :where(.card,.card-dark,.inset-dark,.ledger-row,.media,.monogram,.acc-item)
+    :where(h1,h2,h3,h4,p,dt,dd,li,address,blockquote,figcaption,span,a,th,td,button){
+    text-shadow:none;
+  }
 
   /* ---- Film grain --------------------------------------------------- */
   .grain{
@@ -501,7 +515,10 @@ tailwind.config = {
 
 <div class="grain" aria-hidden="true"></div>
 <div id="pageGround" aria-hidden="true"></div>
-<canvas id="orbCanvas" aria-hidden="true"></canvas>
+<svg id="orbTrail" aria-hidden="true" width="100%">
+  <path id="orbPath" fill="none" stroke="#14342A" stroke-width="15" stroke-linecap="round" stroke-linejoin="round"></path>
+  <circle id="orbHead" r="34" fill="#14342A"></circle>
+</svg>
 
 <!-- ============ SVG SPRITE ============ -->
 <svg width="0" height="0" class="absolute" aria-hidden="true" focusable="false">
@@ -2848,38 +2865,31 @@ tailwind.config = {
   /* ---------------------------------------------------------------
      23. The scroll orb
 
-     A hard green disc that travels down the page behind everything,
-     drawing a solid trail as it goes.
+     A hard green disc travelling down the page behind everything,
+     drawing a permanent trail.
 
-     The route is a fixed curve in PAGE coordinates: x weaves from an
-     authored waypoint list, y is simply how far down the document you
-     are. That makes the trail deterministic and permanent — it is the
-     same line every time, and it never fades or retracts. The orb head
-     is pinned to one height on screen, so it tracks the scroll exactly
-     rather than easing behind it.
+     The trail is an SVG positioned in the document rather than a fixed
+     overlay, so the browser scrolls it with the content and it cannot
+     drift against the page. Scrolling costs no work at all: the path is
+     never redrawn, only extended as you reach further down, and the
+     head is moved with a transform.
 
-     It is drawn on a fixed canvas but positioned in page space, offset
-     by scrollY each frame: a canvas tall enough for the whole document
-     would be around fifty megapixels.
+     The route is a fixed curve in page coordinates — x weaves from
+     authored waypoints, y is how far down the document you are — so the
+     line is identical on every visit and never retracts.
   --------------------------------------------------------------- */
   (function scrollOrb() {
-    const canvas = $('#orbCanvas');
-    const hero   = $('#top');
-    if (!canvas || !hero || reduced) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
+    const svg  = $('#orbTrail');
+    const path = $('#orbPath');
+    const head = $('#orbHead');
+    const hero = $('#top');
+    if (!svg || !path || !head || !hero || reduced) return;
 
-    const COLOR    = '#14342A';  // the hero green
-    const ORB_R    = 34;         // css px
-    const TRAIL_W  = 15;         // css px
-    const HOLD     = 0.52;       // the orb rides at this height on screen
-    const STEP     = 7;          // page px between sampled points
-    const MAX_DPR  = 2;
-    const TAU      = Math.PI * 2;
+    const HOLD = 0.52;   // the head rides at this height on screen
+    const STEP = 18;     // page px between sampled points
 
-    // x as a fraction of viewport width, against how far down the page we
-    // are (0 = the bottom edge of the hero, 1 = the end of the document).
-    // Authored rather than generated, so no leg repeats.
+    // x as a fraction of viewport width against depth down the page.
+    // Authored, so no leg repeats.
     const PATH = [
       { p: 0.00, x:  0.46 },
       { p: 0.05, x:  0.78 },
@@ -2899,106 +2909,91 @@ tailwind.config = {
       { p: 1.00, x:  0.56 }
     ];
 
-    let dpr = 1, w = 0, h = 0;
-    let start = 0, span = 1;     // page y where the trail begins, and its length
-    let curve = [];              // {x, y} in page coordinates
-    let reached = 0;             // deepest point drawn so far — never rewinds
-    let raf = 0, running = false;
+    let top = 0, span = 1, vh = 0;
+    let pts = [];
+    let drawn = 0;        // how many points are in the path already
+    let d = '';
+    let reach = 0;        // deepest point reached — never rewinds
+    let raf = 0, queued = false;
 
-    function catmull(a, b, c, d, t) {
+    function catmull(a, b, c, e, t) {
       const t2 = t * t, t3 = t2 * t;
       return 0.5 * ((2 * b) + (-a + c) * t +
-                    (2 * a - 5 * b + 4 * c - d) * t2 +
-                    (-a + 3 * b - 3 * c + d) * t3);
+                    (2 * a - 5 * b + 4 * c - e) * t2 +
+                    (-a + 3 * b - 3 * c + e) * t3);
     }
     function sampleX(p) {
       p = Math.max(0, Math.min(1, p));
       let i = 0;
       while (i < PATH.length - 2 && p > PATH[i + 1].p) i++;
       const b = PATH[i], c = PATH[i + 1];
-      const a = PATH[i - 1] || b, d = PATH[i + 2] || c;
+      const a = PATH[i - 1] || b, e = PATH[i + 2] || c;
       const seg = c.p - b.p;
-      return catmull(a.x, b.x, c.x, d.x, seg > 0 ? (p - b.p) / seg : 0);
+      return catmull(a.x, b.x, c.x, e.x, seg > 0 ? (p - b.p) / seg : 0);
     }
 
-    function measure() {
-      dpr = Math.min(window.devicePixelRatio || 1, MAX_DPR);
-      w = window.innerWidth; h = window.innerHeight;
-      canvas.width  = Math.round(w * dpr);
-      canvas.height = Math.round(h * dpr);
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-      // the trail is born at the hero's bottom edge, so it appears to come
-      // out from under it
+    function build() {
+      vh = window.innerHeight;
+      const vw = window.innerWidth;
       const r = hero.getBoundingClientRect();
-      start = r.bottom + window.scrollY;
-      span = Math.max(1, document.documentElement.scrollHeight - start);
+      top = Math.round(r.bottom + window.scrollY);   // the trail is born here
+      span = Math.max(1, document.documentElement.scrollHeight - top);
 
-      curve = [];
-      for (let d = 0; d <= span; d += STEP) {
-        curve.push({ x: sampleX(d / span) * w, y: start + d });
+      // the svg is placed in the document, so it scrolls natively
+      svg.style.top = top + 'px';
+      svg.style.height = span + 'px';
+      svg.setAttribute('viewBox', '0 0 ' + vw + ' ' + span);
+      svg.setAttribute('preserveAspectRatio', 'none');
+      svg.style.width = '100%';
+
+      pts = [];
+      for (let y = 0; y <= span; y += STEP) {
+        pts.push({ x: +(sampleX(y / span) * vw).toFixed(1), y: y });
       }
-      reached = 0;
+      drawn = 0; d = '';
+      extend(true);
     }
 
-    function frame() {
-      if (!running) return;
-      raf = requestAnimationFrame(frame);
-
-      const scroll = window.scrollY;
-      // 1:1 with the scroll — no easing, so it never lags behind
-      const headY = scroll + h * HOLD;
-      const depth = headY - start;
-      if (depth > reached) reached = depth;
-
-      ctx.clearRect(0, 0, w, h);
-      if (reached <= 0) return;          // still inside the hero
-
-      const drawnTo = Math.min(reached, span);
-      const first = Math.max(0, Math.floor((scroll - start - 80) / STEP));
-      const last  = Math.min(curve.length - 1, Math.ceil((scroll + h - start + 80) / STEP),
-                             Math.floor(drawnTo / STEP));
-
-      if (last > first) {
-        ctx.strokeStyle = COLOR;
-        ctx.lineWidth = TRAIL_W;
-        ctx.lineCap = 'round';
-        ctx.lineJoin = 'round';
-        ctx.beginPath();
-        ctx.moveTo(curve[first].x, curve[first].y - scroll);
-        for (let i = first + 1; i <= last; i++) {
-          ctx.lineTo(curve[i].x, curve[i].y - scroll);
-        }
-        ctx.stroke();
+    // Only ever appends. The already-drawn line is untouched, which is why
+    // scrolling stays smooth no matter how long the trail gets.
+    function extend(force) {
+      const want = Math.min(pts.length, Math.ceil(Math.min(reach, span) / STEP) + 1);
+      if (!force && want <= drawn) return;
+      for (let i = drawn; i < want; i++) {
+        d += (i === 0 ? 'M' : 'L') + pts[i].x + ' ' + pts[i].y;
       }
+      drawn = want;
+      path.setAttribute('d', d);
+    }
 
-      // the head: a hard disc, no glow, only while it is past the hero
+    function tick() {
+      queued = false;
+      const depth = window.scrollY + vh * HOLD - top;
+      if (depth > reach) { reach = depth; extend(false); }
+
       if (depth > 0 && depth <= span) {
-        ctx.fillStyle = COLOR;
-        ctx.beginPath();
-        ctx.arc(sampleX(depth / span) * w, h * HOLD, ORB_R, 0, TAU);
-        ctx.fill();
+        head.style.display = '';
+        head.setAttribute('transform',
+          'translate(' + (sampleX(depth / span) * window.innerWidth).toFixed(1) +
+          ' ' + depth.toFixed(1) + ')');
+      } else {
+        head.style.display = 'none';
       }
     }
-
-    function start_() { if (!running) { running = true; raf = requestAnimationFrame(frame); } }
-    function stop_()   { running = false; cancelAnimationFrame(raf); }
+    function onScroll() { if (!queued) { queued = true; raf = requestAnimationFrame(tick); } }
 
     let rt = null;
+    window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', () => {
       clearTimeout(rt);
-      rt = setTimeout(() => { const keep = reached; measure(); reached = keep; }, 160);
+      rt = setTimeout(() => { build(); tick(); }, 180);
     });
-    document.addEventListener('visibilitychange', () => { if (document.hidden) stop_(); else start_(); });
 
-    measure();
-    start_();
+    build();
+    tick();
 
-    // sections above the orb settle after fonts and reveals land, which can
-    // shift the hero's height — remeasure once things are stable
-    window.addEventListener('load', () => setTimeout(() => {
-      const keep = reached; measure(); reached = keep;
-    }, 400));
+    // the hero's height settles once fonts and reveals land
+    window.addEventListener('load', () => setTimeout(() => { build(); tick(); }, 400));
   })();
 
   /* ---------------------------------------------------------------
