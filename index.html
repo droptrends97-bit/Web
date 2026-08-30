@@ -63,9 +63,18 @@ tailwind.config = {
   .focus-dark:focus-visible{ outline-color:#7E1F1F; }
 
   /* ---- Drifting orb -------------------------------------------------- */
+  /* Flat cream ground. The paper sections are transparent now, so this is
+     what shows through them — and the orb sits between the two, which is
+     what puts it behind every card. */
+  #pageGround{
+    position:fixed; inset:0; z-index:0; pointer-events:none;
+    background:#F6F1E4;
+  }
+  /* z-index 0 and early in the document: the sections are positioned and
+     come later, so they paint over it. */
   #orbCanvas{
     position:fixed; inset:0; width:100%; height:100%;
-    z-index:30; pointer-events:none;
+    z-index:0; pointer-events:none;
   }
   @media (prefers-reduced-motion: reduce){ #orbCanvas{ display:none; } }
 
@@ -82,7 +91,7 @@ tailwind.config = {
 
   /* ---- Paper / board textures --------------------------------------- */
   .tex-paper{
-    background-color:#F6F1E4;
+    background-color:transparent;
     background-image:
       radial-gradient(circle at 18% 12%, rgba(126,31,31,.05), transparent 45%),
       radial-gradient(circle at 82% 78%, rgba(11,31,24,.06), transparent 50%),
@@ -491,6 +500,7 @@ tailwind.config = {
 <body class="font-sans antialiased bg-forest text-cream">
 
 <div class="grain" aria-hidden="true"></div>
+<div id="pageGround" aria-hidden="true"></div>
 <canvas id="orbCanvas" aria-hidden="true"></canvas>
 
 <!-- ============ SVG SPRITE ============ -->
@@ -2836,80 +2846,64 @@ tailwind.config = {
   })();
 
   /* ---------------------------------------------------------------
-     23. The drifting orb
+     23. The scroll orb
 
-     A green orb whose position is driven by scroll progress rather than
-     by time, so it tracks the reader both ways. Its route is a
-     hand-authored list of waypoints interpolated with a Catmull-Rom
-     spline: a formula would read as an obvious repeating wave, whereas
-     authored points let it swing wide, leave the viewport entirely and
-     come back somewhere unexpected. It drags a short trail behind it
-     that retracts when scrolling stops.
+     A hard green disc that travels down the page behind everything,
+     drawing a solid trail as it goes.
+
+     The route is a fixed curve in PAGE coordinates: x weaves from an
+     authored waypoint list, y is simply how far down the document you
+     are. That makes the trail deterministic and permanent — it is the
+     same line every time, and it never fades or retracts. The orb head
+     is pinned to one height on screen, so it tracks the scroll exactly
+     rather than easing behind it.
+
+     It is drawn on a fixed canvas but positioned in page space, offset
+     by scrollY each frame: a canvas tall enough for the whole document
+     would be around fifty megapixels.
   --------------------------------------------------------------- */
-  (function driftingOrb() {
+  (function scrollOrb() {
     const canvas = $('#orbCanvas');
-    if (!canvas || reduced) return;
+    const hero   = $('#top');
+    if (!canvas || !hero || reduced) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // x and y are fractions of the viewport. x outside 0..1 puts the orb
-    // off-screen; r scales its size. No two legs repeat.
+    const COLOR    = '#14342A';  // the hero green
+    const ORB_R    = 34;         // css px
+    const TRAIL_W  = 15;         // css px
+    const HOLD     = 0.52;       // the orb rides at this height on screen
+    const STEP     = 7;          // page px between sampled points
+    const MAX_DPR  = 2;
+    const TAU      = Math.PI * 2;
+
+    // x as a fraction of viewport width, against how far down the page we
+    // are (0 = the bottom edge of the hero, 1 = the end of the document).
+    // Authored rather than generated, so no leg repeats.
     const PATH = [
-      { p: 0.00, x:  0.86, y: 0.24, r: 0.95 },
-      { p: 0.06, x:  0.68, y: 0.62, r: 1.10 },
-      { p: 0.12, x:  0.28, y: 0.44, r: 0.85 },
-      { p: 0.18, x: -0.28, y: 0.58, r: 1.00 },   // leaves stage left
-      { p: 0.25, x:  0.16, y: 0.20, r: 0.75 },   // slips back in high
-      { p: 0.32, x:  0.58, y: 0.52, r: 1.20 },
-      { p: 0.39, x:  1.26, y: 0.34, r: 1.00 },   // and out to the right
-      { p: 0.46, x:  0.74, y: 0.78, r: 0.90 },   // returns low
-      { p: 0.53, x:  0.22, y: 0.66, r: 1.15 },
-      { p: 0.60, x:  0.44, y: 0.14, r: 0.80 },
-      { p: 0.67, x:  0.88, y: 0.46, r: 1.05 },
-      { p: 0.74, x:  0.36, y: 0.82, r: 0.95 },
-      { p: 0.81, x: -0.20, y: 0.36, r: 1.10 },   // one more exit left
-      { p: 0.88, x:  0.52, y: 0.30, r: 0.85 },
-      { p: 0.94, x:  0.78, y: 0.70, r: 1.00 },
-      { p: 1.00, x:  0.50, y: 0.44, r: 1.25 }    // settles centre
+      { p: 0.00, x:  0.46 },
+      { p: 0.05, x:  0.78 },
+      { p: 0.11, x:  0.34 },
+      { p: 0.17, x: -0.16 },   // out the left
+      { p: 0.24, x:  0.28 },   // and back
+      { p: 0.31, x:  0.70 },
+      { p: 0.38, x:  1.14 },   // out the right
+      { p: 0.45, x:  0.66 },
+      { p: 0.52, x:  0.20 },
+      { p: 0.59, x:  0.52 },
+      { p: 0.66, x:  0.86 },
+      { p: 0.73, x: -0.12 },   // out the left again
+      { p: 0.80, x:  0.40 },
+      { p: 0.87, x:  0.74 },
+      { p: 0.94, x:  0.26 },
+      { p: 1.00, x:  0.56 }
     ];
 
-    const BASE_R      = 92;    // css px at r = 1
-    const TRAIL_STEP  = 13;    // resample spacing, so a fast leg stays joined
-    const TRAIL_MS    = 620;   // trail retracts this long after the orb
-    const EASE        = 0.085; // how hard the orb chases the scroll
-    const MAX_DPR     = 2;
-    const TAU         = Math.PI * 2;
-
-    // over the cream page it reads as deep forest; over the dark bands it
-    // has to invert to a light sage or it simply disappears
-    const ON_LIGHT = [18, 58, 44];
-    const ON_DARK  = [86, 176, 140];
-
     let dpr = 1, w = 0, h = 0;
-    let cur = 0, target = 0;      // scroll progress, smoothed and raw
-    let trail = [];
-    let mix = 0;                  // 0 = over light ground, 1 = over dark
-    let darkBands = [];
-    let running = false, raf = 0;
-
-    function measure() {
-      dpr = Math.min(window.devicePixelRatio || 1, MAX_DPR);
-      w = window.innerWidth; h = window.innerHeight;
-      canvas.width = Math.round(w * dpr);
-      canvas.height = Math.round(h * dpr);
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      collectBands();
-    }
-
-    // page-space extents of the dark sections, so the orb can recolour as
-    // it crosses them
-    function collectBands() {
-      const y = window.scrollY;
-      darkBands = $$('#top, .tex-board').map(el => {
-        const r = el.getBoundingClientRect();
-        return { top: r.top + y, bottom: r.bottom + y };
-      });
-    }
+    let start = 0, span = 1;     // page y where the trail begins, and its length
+    let curve = [];              // {x, y} in page coordinates
+    let reached = 0;             // deepest point drawn so far — never rewinds
+    let raf = 0, running = false;
 
     function catmull(a, b, c, d, t) {
       const t2 = t * t, t3 = t2 * t;
@@ -2917,136 +2911,94 @@ tailwind.config = {
                     (2 * a - 5 * b + 4 * c - d) * t2 +
                     (-a + 3 * b - 3 * c + d) * t3);
     }
-
-    function sample(p) {
+    function sampleX(p) {
       p = Math.max(0, Math.min(1, p));
       let i = 0;
       while (i < PATH.length - 2 && p > PATH[i + 1].p) i++;
       const b = PATH[i], c = PATH[i + 1];
       const a = PATH[i - 1] || b, d = PATH[i + 2] || c;
-      const span = c.p - b.p;
-      const t = span > 0 ? (p - b.p) / span : 0;
-      return {
-        x: catmull(a.x, b.x, c.x, d.x, t) * w,
-        y: catmull(a.y, b.y, c.y, d.y, t) * h,
-        r: catmull(a.r, b.r, c.r, d.r, t) * BASE_R
-      };
+      const seg = c.p - b.p;
+      return catmull(a.x, b.x, c.x, d.x, seg > 0 ? (p - b.p) / seg : 0);
     }
 
-    // The trail can be a couple of hundred blobs a frame. Building a fresh
-    // radial gradient for each one is the expensive way to do it, so the
-    // falloff is baked into a sprite once and re-tinted only when the
-    // colour has actually drifted.
-    const SPRITE = 128;
-    let sprite = null, spriteCol = null;
+    function measure() {
+      dpr = Math.min(window.devicePixelRatio || 1, MAX_DPR);
+      w = window.innerWidth; h = window.innerHeight;
+      canvas.width  = Math.round(w * dpr);
+      canvas.height = Math.round(h * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-    function buildSprite(col) {
-      if (!sprite) {
-        sprite = document.createElement('canvas');
-        sprite.width = sprite.height = SPRITE;
+      // the trail is born at the hero's bottom edge, so it appears to come
+      // out from under it
+      const r = hero.getBoundingClientRect();
+      start = r.bottom + window.scrollY;
+      span = Math.max(1, document.documentElement.scrollHeight - start);
+
+      curve = [];
+      for (let d = 0; d <= span; d += STEP) {
+        curve.push({ x: sampleX(d / span) * w, y: start + d });
       }
-      const g = sprite.getContext('2d');
-      g.clearRect(0, 0, SPRITE, SPRITE);
-      const c = SPRITE / 2;
-      const grd = g.createRadialGradient(c, c, 0, c, c, c);
-      const rgb = col[0] + ',' + col[1] + ',' + col[2];
-      grd.addColorStop(0,    'rgba(' + rgb + ',1)');
-      grd.addColorStop(0.42, 'rgba(' + rgb + ',.62)');
-      grd.addColorStop(0.72, 'rgba(' + rgb + ',.20)');
-      grd.addColorStop(1,    'rgba(' + rgb + ',0)');
-      g.fillStyle = grd;
-      g.fillRect(0, 0, SPRITE, SPRITE);
-      spriteCol = col.slice();
+      reached = 0;
     }
 
-    function blob(x, y, r, alpha) {
-      if (r < 0.5 || alpha <= 0.002) return;
-      ctx.globalAlpha = alpha;
-      ctx.drawImage(sprite, x - r, y - r, r * 2, r * 2);
-      ctx.globalAlpha = 1;
-    }
-
-    function frame(now) {
+    function frame() {
       if (!running) return;
       raf = requestAnimationFrame(frame);
-      const t = now || performance.now();
 
-      const max = document.documentElement.scrollHeight - window.innerHeight;
-      target = max > 0 ? Math.min(Math.max(window.scrollY / max, 0), 1) : 0;
-      cur += (target - cur) * EASE;
-
-      const pos = sample(cur);
-
-      // recolour according to the ground the orb is currently over
-      const pageY = window.scrollY + pos.y;
-      const overDark = darkBands.some(b => pageY >= b.top && pageY <= b.bottom);
-      mix += ((overDark ? 1 : 0) - mix) * 0.06;
-      const col = [
-        Math.round(ON_LIGHT[0] + (ON_DARK[0] - ON_LIGHT[0]) * mix),
-        Math.round(ON_LIGHT[1] + (ON_DARK[1] - ON_LIGHT[1]) * mix),
-        Math.round(ON_LIGHT[2] + (ON_DARK[2] - ON_LIGHT[2]) * mix)
-      ];
-
-      if (!spriteCol || Math.abs(col[1] - spriteCol[1]) > 2) buildSprite(col);
-
-      const last = trail[trail.length - 1];
-      if (!last) {
-        trail.push({ x: pos.x, y: pos.y, r: pos.r, t: t });
-      } else {
-        const dx = pos.x - last.x, dy = pos.y - last.y;
-        const dist = Math.hypot(dx, dy);
-        if (dist > 2) {
-          const steps = Math.min(Math.ceil(dist / TRAIL_STEP), 40);
-          for (let i = 1; i <= steps; i++) {
-            trail.push({
-              x: last.x + dx * (i / steps),
-              y: last.y + dy * (i / steps),
-              r: pos.r, t: t
-            });
-          }
-        }
-      }
-      while (trail.length && t - trail[0].t > TRAIL_MS) trail.shift();
-      if (trail.length > 260) trail.splice(0, trail.length - 260);
+      const scroll = window.scrollY;
+      // 1:1 with the scroll — no easing, so it never lags behind
+      const headY = scroll + h * HOLD;
+      const depth = headY - start;
+      if (depth > reached) reached = depth;
 
       ctx.clearRect(0, 0, w, h);
+      if (reached <= 0) return;          // still inside the hero
 
-      // nothing to draw once it has settled and the trail has caught up
-      const still = Math.abs(target - cur) < 0.0004 && trail.length < 3;
+      const drawnTo = Math.min(reached, span);
+      const first = Math.max(0, Math.floor((scroll - start - 80) / STEP));
+      const last  = Math.min(curve.length - 1, Math.ceil((scroll + h - start + 80) / STEP),
+                             Math.floor(drawnTo / STEP));
 
-      for (let i = 0; i < trail.length; i++) {
-        const q = trail[i];
-        const life = 1 - (t - q.t) / TRAIL_MS;
-        if (life <= 0) continue;
-        blob(q.x, q.y, q.r * 0.58 * Math.pow(life, 0.45), 0.085 * life * life);
+      if (last > first) {
+        ctx.strokeStyle = COLOR;
+        ctx.lineWidth = TRAIL_W;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.beginPath();
+        ctx.moveTo(curve[first].x, curve[first].y - scroll);
+        for (let i = first + 1; i <= last; i++) {
+          ctx.lineTo(curve[i].x, curve[i].y - scroll);
+        }
+        ctx.stroke();
       }
-      // the orb itself: a soft halo with a denser core
-      blob(pos.x, pos.y, pos.r * 1.85, 0.10);
-      blob(pos.x, pos.y, pos.r,        0.30);
-      blob(pos.x, pos.y, pos.r * 0.46, 0.34);
-      blob(pos.x, pos.y, pos.r * 0.18, 0.30);
-      if (still && trail.length === 0) { /* keep looping; cost is negligible */ }
+
+      // the head: a hard disc, no glow, only while it is past the hero
+      if (depth > 0 && depth <= span) {
+        ctx.fillStyle = COLOR;
+        ctx.beginPath();
+        ctx.arc(sampleX(depth / span) * w, h * HOLD, ORB_R, 0, TAU);
+        ctx.fill();
+      }
     }
 
-    function start() { if (!running) { running = true; raf = requestAnimationFrame(frame); } }
-    function stop()  { running = false; cancelAnimationFrame(raf); }
+    function start_() { if (!running) { running = true; raf = requestAnimationFrame(frame); } }
+    function stop_()   { running = false; cancelAnimationFrame(raf); }
 
     let rt = null;
     window.addEventListener('resize', () => {
       clearTimeout(rt);
-      rt = setTimeout(measure, 160);
+      rt = setTimeout(() => { const keep = reached; measure(); reached = keep; }, 160);
     });
-    window.addEventListener('scroll', () => { clearTimeout(rt); rt = setTimeout(collectBands, 400); }, { passive: true });
+    document.addEventListener('visibilitychange', () => { if (document.hidden) stop_(); else start_(); });
 
     measure();
-    // seed the smoothed progress so it does not fly in from the top on load
-    const max0 = document.documentElement.scrollHeight - window.innerHeight;
-    cur = target = max0 > 0 ? Math.min(Math.max(window.scrollY / max0, 0), 1) : 0;
-    start();
+    start_();
 
-    document.addEventListener('visibilitychange', () => {
-      if (document.hidden) stop(); else { trail = []; start(); }
-    });
+    // sections above the orb settle after fonts and reveals land, which can
+    // shift the hero's height — remeasure once things are stable
+    window.addEventListener('load', () => setTimeout(() => {
+      const keep = reached; measure(); reached = keep;
+    }, 400));
   })();
 
   /* ---------------------------------------------------------------
