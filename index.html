@@ -516,8 +516,25 @@ tailwind.config = {
 <div class="grain" aria-hidden="true"></div>
 <div id="pageGround" aria-hidden="true"></div>
 <svg id="orbTrail" aria-hidden="true" width="100%">
-  <path id="orbPath" fill="none" stroke="#14342A" stroke-width="26" stroke-linecap="round" stroke-linejoin="round"></path>
-  <circle id="orbHead" r="34" fill="#14342A"></circle>
+  <defs>
+    <!-- Roughens the edge so the stroke reads as laid on with a brush
+         rather than drawn. The low horizontal / higher vertical frequency
+         pulls the wobble along the direction of travel, like bristle drag. -->
+    <filter id="orbPaint" x="-30%" y="-8%" width="160%" height="116%" primitiveUnits="userSpaceOnUse">
+      <feTurbulence type="fractalNoise" baseFrequency="0.011 0.052" numOctaves="3" seed="11" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="17" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <filter id="orbPaintFine" x="-30%" y="-8%" width="160%" height="116%" primitiveUnits="userSpaceOnUse">
+      <feTurbulence type="fractalNoise" baseFrequency="0.02 0.09" numOctaves="2" seed="29" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="11" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+  <!-- the body of the stroke -->
+  <g id="orbChunks" fill="none" stroke="#14342A" stroke-width="52" stroke-linecap="round" stroke-linejoin="round"></g>
+  <!-- a lighter, broken pass over the top: the streaks a loaded brush leaves -->
+  <g id="orbChunksTop" fill="none" stroke="#1E4A3B" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"
+     stroke-dasharray="140 90 60 120" opacity=".55"></g>
+  <circle id="orbHead" r="44" fill="#14342A" filter="url(#orbPaint)"></circle>
 </svg>
 
 <!-- ============ SVG SPRITE ============ -->
@@ -2879,14 +2896,19 @@ tailwind.config = {
      line is identical on every visit and never retracts.
   --------------------------------------------------------------- */
   (function scrollOrb() {
-    const svg  = $('#orbTrail');
-    const path = $('#orbPath');
-    const head = $('#orbHead');
-    const hero = $('#top');
-    if (!svg || !path || !head || !hero || reduced) return;
+    const svg   = $('#orbTrail');
+    const gBase = $('#orbChunks');
+    const gTop  = $('#orbChunksTop');
+    const head  = $('#orbHead');
+    const hero  = $('#top');
+    if (!svg || !gBase || !gTop || !head || !hero || reduced) return;
 
-    const HOLD = 0.52;   // the head rides at this height on screen
-    const STEP = 18;     // page px between sampled points
+    const HOLD  = 0.52;   // the head rides at this height on screen
+    const STEP  = 18;     // page px between sampled points
+    // The stroke is split into chunks so extending it only re-renders the
+    // brush filter over the frontier, not the whole page-height path.
+    const CHUNK = 600;
+    const W_BASE = 52, W_TOP = 22, R_HEAD = 44;   // at tablet width and up
 
     // x as a fraction of viewport width against depth down the page.
     // Authored, so no leg repeats.
@@ -2911,8 +2933,7 @@ tailwind.config = {
 
     let top = 0, span = 1, vh = 0;
     let pts = [];
-    let drawn = 0;        // how many points are in the path already
-    let d = '';
+    let chunks = [];      // { base, top, first, last, done }
     let reach = 0;        // deepest point reached — never rewinds
     let parked = false;   // once the ball reaches the end it stays there
     let raf = 0, queued = false;
@@ -2943,6 +2964,13 @@ tailwind.config = {
       // the ball can actually reach, otherwise it never arrives.
       span = Math.max(1, document.documentElement.scrollHeight - top - vh * (1 - HOLD));
 
+      // 52px is right on a tablet or desktop but swamps a narrow phone,
+      // so the brush scales down below 900px rather than staying absolute
+      const k = Math.min(1, Math.max(0.62, vw / 900));
+      gBase.setAttribute('stroke-width', Math.round(W_BASE * k));
+      gTop.setAttribute('stroke-width', Math.round(W_TOP * k));
+      head.setAttribute('r', Math.round(R_HEAD * k));
+
       // the svg is placed in the document, so it scrolls natively
       svg.style.top = top + 'px';
       svg.style.height = span + 'px';
@@ -2954,20 +2982,44 @@ tailwind.config = {
       for (let y = 0; y <= span; y += STEP) {
         pts.push({ x: +(sampleX(y / span) * vw).toFixed(1), y: y });
       }
-      drawn = 0; d = '';
+
+      gBase.textContent = ''; gTop.textContent = '';
+      chunks = [];
+      const count = Math.max(1, Math.ceil(span / CHUNK));
+      for (let i = 0; i < count; i++) {
+        // overlap one point back so neighbouring chunks join seamlessly
+        const first = Math.max(0, Math.floor(i * CHUNK / STEP) - 1);
+        const last  = Math.min(pts.length - 1, Math.floor((i + 1) * CHUNK / STEP));
+        if (last <= first) continue;
+        const base = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        base.setAttribute('filter', 'url(#orbPaint)');
+        const top  = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        top.setAttribute('filter', 'url(#orbPaintFine)');
+        gBase.appendChild(base); gTop.appendChild(top);
+        chunks.push({ base: base, top: top, first: first, last: last, done: false });
+      }
       extend(true);
     }
 
-    // Only ever appends. The already-drawn line is untouched, which is why
-    // scrolling stays smooth no matter how long the trail gets.
+    // Only the chunk at the frontier is ever touched; finished chunks are
+    // marked done and never re-rendered. That is what keeps scrolling free.
     function extend(force) {
-      const want = Math.min(pts.length, Math.ceil(Math.min(reach, span) / STEP) + 1);
-      if (!force && want <= drawn) return;
-      for (let i = drawn; i < want; i++) {
-        d += (i === 0 ? 'M' : 'L') + pts[i].x + ' ' + pts[i].y;
+      const frontier = Math.min(reach, span);
+      const lastIdx = Math.max(0, Math.min(pts.length - 1, Math.floor(frontier / STEP)));
+      for (let i = 0; i < chunks.length; i++) {
+        const c = chunks[i];
+        if (c.done && !force) continue;
+        if (c.first > lastIdx) break;
+        const end = Math.min(c.last, lastIdx);
+        if (end <= c.first) continue;
+        let d = '';
+        for (let k = c.first; k <= end; k++) {
+          d += (k === c.first ? 'M' : 'L') + pts[k].x + ' ' + pts[k].y;
+        }
+        c.base.setAttribute('d', d);
+        c.top.setAttribute('d', d);
+        if (end >= c.last) c.done = true;
       }
-      drawn = want;
-      path.setAttribute('d', d);
     }
 
     function tick() {
