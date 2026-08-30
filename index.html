@@ -516,7 +516,7 @@ tailwind.config = {
 <div class="grain" aria-hidden="true"></div>
 <div id="pageGround" aria-hidden="true"></div>
 <svg id="orbTrail" aria-hidden="true" width="100%">
-  <path id="orbPath" fill="none" stroke="#14342A" stroke-width="15" stroke-linecap="round" stroke-linejoin="round"></path>
+  <path id="orbPath" fill="none" stroke="#14342A" stroke-width="26" stroke-linecap="round" stroke-linejoin="round"></path>
   <circle id="orbHead" r="34" fill="#14342A"></circle>
 </svg>
 
@@ -2914,6 +2914,7 @@ tailwind.config = {
     let drawn = 0;        // how many points are in the path already
     let d = '';
     let reach = 0;        // deepest point reached — never rewinds
+    let parked = false;   // once the ball reaches the end it stays there
     let raf = 0, queued = false;
 
     function catmull(a, b, c, e, t) {
@@ -2937,7 +2938,10 @@ tailwind.config = {
       const vw = window.innerWidth;
       const r = hero.getBoundingClientRect();
       top = Math.round(r.bottom + window.scrollY);   // the trail is born here
-      span = Math.max(1, document.documentElement.scrollHeight - top);
+      // The head rides at HOLD down the viewport, so at maximum scroll it
+      // still sits that far short of the document end. End the line where
+      // the ball can actually reach, otherwise it never arrives.
+      span = Math.max(1, document.documentElement.scrollHeight - top - vh * (1 - HOLD));
 
       // the svg is placed in the document, so it scrolls natively
       svg.style.top = top + 'px';
@@ -2971,11 +2975,21 @@ tailwind.config = {
       const depth = window.scrollY + vh * HOLD - top;
       if (depth > reach) { reach = depth; extend(false); }
 
-      if (depth > 0 && depth <= span) {
+      // "Reached the end" means the reader hit the bottom of the page.
+      // Comparing depth against span is fragile — the document height
+      // shifts by a few pixels as reveals and fonts settle.
+      const bottom = document.documentElement.scrollHeight - window.innerHeight;
+      if (depth >= span - 2 || window.scrollY >= bottom - 2) parked = true;
+
+      // once parked, the ball sits at the end of the line for good: it
+      // scrolls away below rather than travelling back up with the reader
+      const at = parked ? span : Math.min(depth, span);
+
+      if (parked || (at > 0 && at <= span)) {
         head.style.display = '';
         head.setAttribute('transform',
-          'translate(' + (sampleX(depth / span) * window.innerWidth).toFixed(1) +
-          ' ' + depth.toFixed(1) + ')');
+          'translate(' + (sampleX(at / span) * window.innerWidth).toFixed(1) +
+          ' ' + at.toFixed(1) + ')');
       } else {
         head.style.display = 'none';
       }
