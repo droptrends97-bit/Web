@@ -1,18 +1,26 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   memo,
   useEffect,
   useRef,
   useState,
   type CSSProperties,
-  type FormEvent,
   type KeyboardEvent as ReactKeyboardEvent,
   type PointerEvent as ReactPointerEvent,
-  type ReactNode,
 } from "react";
-import { useServerFn } from "@tanstack/react-start";
 import { useSiteContent, telHref } from "@/lib/site-content";
-import { sendContactEnquiry } from "@/lib/contact.functions";
+import {
+  Drift,
+  EnquiryForm,
+  Footer,
+  Magnet,
+  Nav,
+  RiseLine,
+  Shell,
+  Tide,
+  delay,
+  useInView,
+} from "@/components/site/chrome";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -36,75 +44,6 @@ const PORTS = [
    stretched to the rail box with a non-scaling stroke. */
 const COAST =
   "M27 0 C15 62 31 118 21 186 S34 296 22 368 C11 438 30 498 20 568 S33 686 23 758 C13 828 30 884 25 1000";
-
-const delay = (i: number) => ({ "--i": i }) as unknown as CSSProperties;
-
-/* ------------------------------------------------------------------ *
- * Reveal helpers
- * ------------------------------------------------------------------ */
-function useInView<T extends Element>(cls: string) {
-  const ref = useRef<T | null>(null);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    if (typeof IntersectionObserver === "undefined") {
-      el.classList.add(cls);
-      return;
-    }
-    const obs = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => {
-          if (e.isIntersecting) {
-            e.target.classList.add(cls);
-            obs.unobserve(e.target);
-          }
-        });
-      },
-      { threshold: 0.12, rootMargin: "0px 0px -6% 0px" },
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, [cls]);
-  return ref;
-}
-
-/** A line of display type that rises out of a clipped box. */
-function RiseLine({ children, i = 0 }: { children: ReactNode; i?: number }) {
-  const ref = useInView<HTMLSpanElement>("rise-in");
-  return (
-    <span ref={ref} className="rise block" style={delay(i)}>
-      <span>{children}</span>
-    </span>
-  );
-}
-
-/** A block that fades and drifts up once. */
-function Drift({
-  children,
-  i = 0,
-  className = "",
-  as = "div",
-}: {
-  children: ReactNode;
-  i?: number;
-  className?: string;
-  as?: "div" | "li";
-}) {
-  const ref = useInView<HTMLElement>("drift-in");
-  const cls = `drift ${className}`;
-  if (as === "li") {
-    return (
-      <li ref={ref as React.RefObject<HTMLLIElement>} className={cls} style={delay(i)}>
-        {children}
-      </li>
-    );
-  }
-  return (
-    <div ref={ref as React.RefObject<HTMLDivElement>} className={cls} style={delay(i)}>
-      {children}
-    </div>
-  );
-}
 
 /* ------------------------------------------------------------------ *
  * Coast rail — a fixed chart of the whole page down the left edge.
@@ -247,240 +186,6 @@ function CoastRail() {
 
       <div ref={hereRef} className="rail-here" aria-hidden="true" />
     </nav>
-  );
-}
-
-/* ------------------------------------------------------------------ *
- * Tide — the boundary between a paper section and an ink one.
- * Two tiles, 1200 units wide each, drifting at different rates.
- * ------------------------------------------------------------------ */
-const TIDE_A =
-  "M0,44 C160,12 300,74 600,48 C900,22 1050,70 1200,44 L1200,90 L0,90 Z " +
-  "M1200,44 C1360,12 1500,74 1800,48 C2100,22 2250,70 2400,44 L2400,90 L1200,90 Z";
-const TIDE_B =
-  "M0,58 C220,30 340,84 620,58 C880,34 1020,80 1200,58 L1200,90 L0,90 Z " +
-  "M1200,58 C1420,30 1540,84 1820,58 C2080,34 2220,80 2400,58 L2400,90 L1200,90 Z";
-
-function Tide({ flip = false }: { flip?: boolean }) {
-  return (
-    <div
-      className={`pointer-events-none relative h-[54px] overflow-hidden md:h-[84px] ${
-        flip ? "rotate-180" : ""
-      }`}
-      aria-hidden="true"
-    >
-      <svg
-        className="tide-b absolute bottom-0 left-0 h-full"
-        style={{ width: "200%" }}
-        viewBox="0 0 2400 90"
-        preserveAspectRatio="none"
-      >
-        <path d={TIDE_B} fill="var(--ink)" opacity="0.35" />
-      </svg>
-      <svg
-        className="tide-a absolute bottom-0 left-0 h-full"
-        style={{ width: "200%" }}
-        viewBox="0 0 2400 90"
-        preserveAspectRatio="none"
-      >
-        <path d={TIDE_A} fill="var(--ink)" />
-      </svg>
-    </div>
-  );
-}
-
-/* ------------------------------------------------------------------ *
- * Section scaffolding — an eyebrow marker and the measured column.
- * ------------------------------------------------------------------ */
-function Shell({
-  children,
-  marker,
-  className = "",
-}: {
-  children: ReactNode;
-  marker: string;
-  className?: string;
-}) {
-  return (
-    <div className={`mx-auto w-full max-w-6xl px-5 lg:pl-28 lg:pr-8 ${className}`}>
-      <Drift className="mb-9 flex items-center gap-3">
-        <span className="h-px w-8 bg-teal" />
-        <span className="eyebrow">{marker}</span>
-      </Drift>
-      {children}
-    </div>
-  );
-}
-
-/** Primary call to action that leans a little toward the pointer. */
-function Magnet({
-  href,
-  children,
-  className = "",
-}: {
-  href: string;
-  children: ReactNode;
-  className?: string;
-}) {
-  const ref = useRef<HTMLAnchorElement | null>(null);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    if (!window.matchMedia("(pointer: fine)").matches) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const move = (e: PointerEvent) => {
-      const r = el.getBoundingClientRect();
-      const dx = e.clientX - (r.left + r.width / 2);
-      const dy = e.clientY - (r.top + r.height / 2);
-      el.style.transform = `translate(${dx * 0.14}px, ${dy * 0.22}px)`;
-    };
-    const reset = () => {
-      el.style.transform = "";
-    };
-    el.addEventListener("pointermove", move);
-    el.addEventListener("pointerleave", reset);
-    return () => {
-      el.removeEventListener("pointermove", move);
-      el.removeEventListener("pointerleave", reset);
-    };
-  }, []);
-  return (
-    <a ref={ref} href={href} className={className} style={{ transition: "transform 0.25s ease-out" }}>
-      {children}
-    </a>
-  );
-}
-
-/* ------------------------------------------------------------------ *
- * Header
- * ------------------------------------------------------------------ */
-function Nav() {
-  const { data: content } = useSiteContent();
-  const [scrolled, setScrolled] = useState(false);
-  const [open, setOpen] = useState(false);
-  const barRef = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    let raf = 0;
-    const tick = () => {
-      raf = 0;
-      const range = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
-      const p = Math.max(0, Math.min(1, window.scrollY / range));
-      if (barRef.current) barRef.current.style.transform = `scaleX(${p})`;
-      setScrolled(window.scrollY > 12);
-    };
-    const onScroll = () => {
-      if (!raf) raf = requestAnimationFrame(tick);
-    };
-    tick();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      if (raf) cancelAnimationFrame(raf);
-    };
-  }, []);
-
-  const links = [
-    { href: "#problem", label: "The problem" },
-    { href: "#work", label: "Work" },
-    { href: "#process", label: "Process" },
-    { href: "#pricing", label: "Pricing" },
-  ];
-
-  return (
-    <header
-      className={`sticky top-0 z-50 transition-colors duration-300 ${
-        scrolled ? "border-b border-ink/10 bg-paper/85 backdrop-blur-md" : "border-b border-transparent"
-      }`}
-    >
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-4 lg:pl-28 lg:pr-8">
-        <a
-          href="#top"
-          className="shrink-0 font-display text-xl font-extrabold uppercase tracking-tight text-ink"
-        >
-          East<span className="text-teal">Coast</span> Digital
-        </a>
-        <nav className="hidden items-center gap-7 md:flex">
-          {links.map((l) => (
-            <a
-              key={l.href}
-              href={l.href}
-              className="wipe whitespace-nowrap pb-0.5 text-sm font-medium text-slate transition-colors hover:text-ink"
-            >
-              {l.label}
-            </a>
-          ))}
-          <a
-            href={telHref(content.phone)}
-            className="wipe hidden whitespace-nowrap pb-0.5 font-mono text-xs tracking-wider text-ink lg:block"
-          >
-            {content.phone}
-          </a>
-          <a
-            href="#contact"
-            className="whitespace-nowrap rounded-md bg-ink px-4 py-2 text-sm font-semibold text-paper transition-transform hover:-translate-y-0.5"
-          >
-            Get a quote
-          </a>
-        </nav>
-        <button
-          type="button"
-          aria-label="Toggle menu"
-          aria-expanded={open}
-          className="flex h-10 w-10 items-center justify-center rounded-md border border-ink/20 text-ink md:hidden"
-          onClick={() => setOpen((v) => !v)}
-        >
-          <span className="sr-only">Menu</span>
-          <span className="flex flex-col gap-1.5">
-            <span
-              className={`h-0.5 w-5 bg-ink transition-transform ${open ? "translate-y-2 rotate-45" : ""}`}
-            />
-            <span className={`h-0.5 w-5 bg-ink transition-opacity ${open ? "opacity-0" : ""}`} />
-            <span
-              className={`h-0.5 w-5 bg-ink transition-transform ${open ? "-translate-y-2 -rotate-45" : ""}`}
-            />
-          </span>
-        </button>
-      </div>
-
-      {open && (
-        <div className="border-t border-ink/10 bg-paper md:hidden">
-          <div className="mx-auto flex max-w-6xl flex-col gap-1 px-5 py-3">
-            {links.map((l) => (
-              <a
-                key={l.href}
-                href={l.href}
-                onClick={() => setOpen(false)}
-                className="rounded-md px-3 py-3 text-sm font-medium text-slate hover:bg-sand"
-              >
-                {l.label}
-              </a>
-            ))}
-            <a
-              href={telHref(content.phone)}
-              onClick={() => setOpen(false)}
-              className="rounded-md px-3 py-3 font-mono text-xs tracking-wider text-ink hover:bg-sand"
-            >
-              {content.phone}
-            </a>
-            <a
-              href="#contact"
-              onClick={() => setOpen(false)}
-              className="mt-2 rounded-md bg-ink px-4 py-3 text-center text-sm font-semibold text-paper"
-            >
-              Get a quote
-            </a>
-          </div>
-        </div>
-      )}
-
-      <div
-        ref={barRef}
-        className="h-px origin-left bg-teal"
-        style={{ transform: "scaleX(0)" }}
-        aria-hidden="true"
-      />
-    </header>
   );
 }
 
@@ -1008,11 +713,17 @@ function Work() {
         </Drift>
 
         <Drift className="mt-7 flex flex-wrap items-center gap-x-8 gap-y-3">
+          <Link
+            to="/work"
+            className="wipe inline-flex items-center gap-2 pb-0.5 text-sm font-semibold uppercase tracking-wide text-teal"
+          >
+            See what went into it <span aria-hidden="true">→</span>
+          </Link>
           <a
             href="/examples/hartnett-butchers"
             target="_blank"
             rel="noopener noreferrer"
-            className="wipe inline-flex items-center gap-2 pb-0.5 text-sm font-semibold uppercase tracking-wide text-teal"
+            className="wipe inline-flex items-center gap-2 pb-0.5 text-sm font-semibold uppercase tracking-wide text-paper/80"
           >
             Open it full size <span aria-hidden="true">↗</span>
           </a>
@@ -1105,6 +816,15 @@ function Process() {
             ))}
           </ol>
         </div>
+
+        <Drift className="mt-12">
+          <Link
+            to="/process"
+            className="wipe inline-flex items-center gap-2 pb-0.5 text-sm font-semibold uppercase tracking-wide text-ink"
+          >
+            What happens at each stage <span aria-hidden="true">→</span>
+          </Link>
+        </Drift>
       </Shell>
     </section>
   );
@@ -1221,11 +941,17 @@ function Pricing() {
           </div>
         </Drift>
 
-        <Drift className="mt-8">
-          <p className="max-w-2xl text-sm text-slate">
+        <Drift className="mt-8 flex flex-wrap items-center gap-x-8 gap-y-3">
+          <p className="max-w-xl text-sm text-slate">
             Need an online shop, a booking system, or something bigger? We'll talk it through and
             quote separately — same flat-fee way.
           </p>
+          <Link
+            to="/pricing"
+            className="wipe inline-flex shrink-0 items-center gap-2 pb-0.5 text-sm font-semibold uppercase tracking-wide text-ink"
+          >
+            Pricing questions answered <span aria-hidden="true">→</span>
+          </Link>
         </Drift>
       </Shell>
     </section>
@@ -1235,77 +961,9 @@ function Pricing() {
 /* ------------------------------------------------------------------ *
  * Contact
  * ------------------------------------------------------------------ */
-function Field({
-  label,
-  name,
-  type = "text",
-  required,
-}: {
-  label: string;
-  name: string;
-  type?: string;
-  required?: boolean;
-}) {
-  return (
-    <div>
-      <label htmlFor={name} className="mb-1.5 block font-mono text-xs uppercase tracking-wider text-slate">
-        {label}
-      </label>
-      <input
-        id={name}
-        name={name}
-        type={type}
-        required={required}
-        className="w-full rounded-md border border-ink/20 bg-paper px-3.5 py-2.5 text-sm text-ink placeholder:text-slate/60 focus:border-teal focus:outline-none"
-      />
-    </div>
-  );
-}
 
 function Contact() {
   const { data: content } = useSiteContent();
-  const [sent, setSent] = useState(false);
-  const [leaving, setLeaving] = useState(false);
-  const [sending, setSending] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const submitEnquiry = useServerFn(sendContactEnquiry);
-
-  useEffect(() => {
-    if (!sent) return;
-    const t1 = setTimeout(() => setLeaving(true), 5000);
-    const t2 = setTimeout(() => {
-      setSent(false);
-      setLeaving(false);
-    }, 5450);
-    return () => {
-      clearTimeout(t1);
-      clearTimeout(t2);
-    };
-  }, [sent]);
-
-  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const form = e.currentTarget;
-    const fd = new FormData(form);
-    setSending(true);
-    setError(null);
-    try {
-      await submitEnquiry({
-        data: {
-          name: String(fd.get("name") ?? ""),
-          business: String(fd.get("business") ?? ""),
-          email: String(fd.get("email") ?? ""),
-          message: String(fd.get("msg") ?? ""),
-        },
-      });
-      form.reset();
-      setSent(true);
-    } catch {
-      setError("Something went wrong sending that. Please call or email us directly.");
-    } finally {
-      setSending(false);
-    }
-  };
 
   return (
     <section id="contact" className="scroll-mt-24 bg-sand py-20 md:py-28">
@@ -1353,99 +1011,11 @@ function Contact() {
           </Drift>
 
           <Drift i={1}>
-            {sent ? (
-              <div
-                role="status"
-                aria-live="polite"
-                className={`rounded-lg border-2 border-teal bg-paper p-8 text-center ${
-                  leaving ? "success-block-leaving" : "success-block"
-                }`}
-              >
-                <div className="eyebrow text-teal">Received</div>
-                <div className="relative mx-auto mt-6 flex h-12 w-12 items-center justify-center">
-                  <span
-                    aria-hidden="true"
-                    className="success-ring absolute h-6 w-6 rounded-full border-2 border-teal"
-                  />
-                  <span
-                    aria-hidden="true"
-                    className="success-ring success-ring-2 absolute h-6 w-6 rounded-full border-2 border-teal"
-                  />
-                  <span aria-hidden="true" className="success-dot relative h-3 w-3 rounded-full bg-teal" />
-                </div>
-                <p className="success-text mt-5 font-display text-xl font-extrabold uppercase text-ink">
-                  Thanks — we'll be in touch shortly.
-                </p>
-                <p className="success-subtext eyebrow mt-3 block">Usually within a day</p>
-              </div>
-            ) : (
-              <form
-                onSubmit={onSubmit}
-                className="space-y-3 rounded-lg border border-ink/12 bg-paper p-6 shadow-[0_20px_50px_-32px_rgba(14,34,51,0.55)] md:p-7"
-              >
-                <div className="eyebrow">Or send a message</div>
-                <Field label="Name" name="name" required />
-                <Field label="Business name" name="business" required />
-                <Field label="Email" name="email" type="email" required />
-                <div>
-                  <label
-                    htmlFor="msg"
-                    className="mb-1.5 block font-mono text-xs uppercase tracking-wider text-slate"
-                  >
-                    What do you need?
-                  </label>
-                  <textarea
-                    id="msg"
-                    name="msg"
-                    rows={4}
-                    required
-                    placeholder="e.g. We don't have a site yet, or ours is old and hard to update..."
-                    className="w-full rounded-md border border-ink/20 bg-paper px-3 py-2 text-sm text-ink placeholder:text-slate/60 focus:border-teal focus:outline-none"
-                  />
-                </div>
-                {error && <p className="text-sm text-rust">{error}</p>}
-                <button
-                  type="submit"
-                  disabled={sending}
-                  className="fillup w-full rounded-md border-2 border-ink px-5 py-3 text-sm font-semibold uppercase tracking-wide text-ink transition-colors hover:text-paper disabled:opacity-60"
-                >
-                  {sending ? "Sending…" : "Send enquiry"}
-                </button>
-              </form>
-            )}
+            <EnquiryForm />
           </Drift>
         </div>
       </Shell>
     </section>
-  );
-}
-
-/* ------------------------------------------------------------------ *
- * Footer
- * ------------------------------------------------------------------ */
-function Footer() {
-  return (
-    <footer className="relative">
-      <div className="bg-sand">
-        <Tide />
-      </div>
-      <div className="bg-ink pb-10 pt-4 text-paper">
-        <div className="overflow-hidden px-5 lg:pl-28 lg:pr-8">
-          <div className="whitespace-nowrap font-display text-[clamp(2.6rem,13.5vw,12rem)] font-black uppercase leading-[0.85] tracking-tight text-paper">
-            East<span className="text-teal">Coast</span> Digital
-          </div>
-        </div>
-        <div className="mx-auto mt-8 flex max-w-6xl flex-col gap-4 px-5 sm:flex-row sm:items-center sm:justify-between lg:pl-28 lg:pr-8">
-          <span className="eyebrow text-paper/45">
-            © 2026 East Coast Digital — built on the east coast, for businesses everywhere in
-            Ireland
-          </span>
-          <a href="#top" className="wipe eyebrow pb-0.5 text-paper/70">
-            Back to the top ↑
-          </a>
-        </div>
-      </div>
-    </footer>
   );
 }
 
