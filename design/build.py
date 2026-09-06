@@ -108,20 +108,21 @@ def team_html():
 HTML = f'''<title>Skin Deep Bray</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Josefin+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Italiana&family=Karla:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap">
 <style>
 :root{{
-  --ground:#171717; --raised:#1F1D1B; --raised2:#262320;
-  --gold:#D4AF37; --gold-dim:#9C7F28;
-  --oat:#F7F2EA; --blush:#E8CFC8; --mute:#A79E92; --rule:#332F2B;
-  --disp:"Cinzel",Georgia,"Times New Roman",serif;
-  --ui:"Josefin Sans",ui-sans-serif,system-ui,-apple-system,sans-serif;
+  --ground:#F7F2EA; --raised:#F1EADD; --raised2:#EAE1D1;
+  --gold:#7D5A39; --gold-dim:#C3A886;
+  --oat:#221D19; --blush:#C98B7A; --mute:#6E6357; --rule:#DFD5C3;
+  --body:#4A423A; --paper:#F7F2EA; --deep:#221D19;
+  --disp:"Italiana",Georgia,"Times New Roman",serif;
+  --ui:"Karla",ui-sans-serif,system-ui,-apple-system,sans-serif;
   --max:1180px; --gut:clamp(20px,4vw,48px);
 }}
 *{{box-sizing:border-box}}
 html{{scroll-behavior:smooth}}
 body{{margin:0;background:var(--ground);color:var(--oat);font-family:var(--ui);
-  font-size:17px;font-weight:300;line-height:1.7;-webkit-font-smoothing:antialiased}}
+  font-size:16.5px;font-weight:400;line-height:1.72;-webkit-font-smoothing:antialiased}}
 img{{max-width:100%;display:block}}
 a{{color:inherit;text-decoration:none}}
 :focus-visible{{outline:2px solid var(--gold);outline-offset:3px}}
@@ -129,16 +130,16 @@ a{{color:inherit;text-decoration:none}}
 .wrap{{max-width:var(--max);margin:0 auto;padding:0 var(--gut)}}
 .eyebrow{{font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);
   font-weight:600;margin:0 0 18px}}
-h1,h2,h3{{font-family:var(--disp);font-weight:400;letter-spacing:.03em;text-wrap:balance;margin:0}}
+h1,h2,h3{{font-family:var(--disp);font-weight:400;letter-spacing:.015em;text-wrap:balance;margin:0}}
 .skip{{position:absolute;left:-9999px}}
 .skip:focus{{left:16px;top:16px;z-index:99;background:var(--gold);color:var(--ground);padding:10px 16px;font-weight:600}}
 
 /* ---------- concept ribbon ---------- */
-.ribbon{{background:var(--gold);color:#171717;font-size:11px;letter-spacing:.2em;
+.ribbon{{background:var(--deep);color:var(--paper);font-size:11px;letter-spacing:.2em;
   text-transform:uppercase;font-weight:600;text-align:center;padding:7px 16px}}
 
 /* ---------- nav ---------- */
-.nav{{position:sticky;top:0;z-index:40;background:rgba(23,23,23,.92);
+.nav{{position:sticky;top:0;z-index:40;background:rgba(247,242,234,.93);
   backdrop-filter:blur(10px);border-bottom:1px solid var(--rule)}}
 .nav .wrap{{display:flex;align-items:center;justify-content:space-between;gap:20px;
   min-height:64px;padding-top:8px;padding-bottom:8px}}
@@ -156,28 +157,28 @@ h1,h2,h3{{font-family:var(--disp);font-weight:400;letter-spacing:.03em;text-wrap
 /* ---------- hero : asymmetric, image bleeds left ---------- */
 .hero{{position:relative;overflow:hidden;border-bottom:1px solid var(--rule)}}
 .hero-img{{position:absolute;inset:0 auto 0 0;width:58%;background-size:cover;
-  background-position:32% 46%;filter:brightness(.46) saturate(.72) contrast(1.04)}}
+  background-position:32% 46%;filter:brightness(1.04) saturate(.94) contrast(.98)}}
 .hero-img::after{{content:"";position:absolute;inset:0;
-  background:linear-gradient(96deg,rgba(23,23,23,.34) 0%,rgba(23,23,23,.06) 42%,rgba(23,23,23,.92) 96%)}}
+  background:linear-gradient(96deg,rgba(247,242,234,.18) 0%,rgba(247,242,234,.30) 30%,rgba(247,242,234,.93) 68%,var(--ground) 90%)}}
 .hero .wrap{{position:relative;z-index:2;padding-top:clamp(88px,15vw,160px);
   padding-bottom:clamp(56px,8vw,88px);display:grid;grid-template-columns:1fr;justify-items:end}}
 .hero-inner{{width:min(560px,100%);text-align:left}}
 .hero h1{{font-size:clamp(40px,7.4vw,84px);line-height:1;letter-spacing:.055em;
-  color:var(--oat);margin:0 0 4px}}
+  color:var(--deep);margin:0 0 4px}}
 .hero h1 .gold{{display:block;color:var(--gold)}}
 .hero .sub{{font-family:var(--disp);font-size:clamp(11px,1.5vw,13px);letter-spacing:.42em;
-  text-transform:uppercase;color:var(--blush);margin:16px 0 26px}}
-.hero p.lede{{font-size:clamp(16px,1.9vw,19px);color:#E4DDD2;max-width:44ch;margin:0 0 34px;font-weight:300}}
+  text-transform:uppercase;color:var(--mute);margin:16px 0 26px}}
+.hero p.lede{{font-size:clamp(16px,1.9vw,19px);color:var(--body);max-width:44ch;margin:0 0 34px;font-weight:300}}
 .hero-cta{{display:flex;flex-wrap:wrap;gap:14px;align-items:center}}
 .btn{{display:inline-flex;align-items:center;justify-content:center;min-height:48px;
   padding:14px 30px;font-size:12.5px;letter-spacing:.2em;text-transform:uppercase;
   font-weight:600;cursor:pointer;transition:background .3s ease,color .3s ease,border-color .3s ease}}
-.btn-gold{{background:var(--gold);color:#171717;border:1px solid var(--gold)}}
-.btn-gold:hover{{background:#E3C25A;border-color:#E3C25A}}
+.btn-gold{{background:var(--gold);color:var(--paper);border:1px solid var(--gold)}}
+.btn-gold:hover{{background:#5F4429;border-color:#5F4429}}
 .btn-ghost{{border:1px solid var(--rule);color:var(--oat);background:none}}
 .btn-ghost:hover{{border-color:var(--gold);color:var(--gold)}}
 @media(max-width:900px){{
-  .hero-img{{width:100%;opacity:.5}}
+  .hero-img{{width:100%;opacity:.28}}
   .hero .wrap{{justify-items:start}}
 }}
 
@@ -207,7 +208,7 @@ section{{padding:clamp(64px,9vw,112px) 0}}
   letter-spacing:.2em;text-transform:uppercase;color:var(--mute);margin-top:26px}}
 .story .card{{position:relative}}
 .story .card img{{border:1px solid var(--rule)}}
-.story .badge{{position:absolute;left:-26px;bottom:-22px;background:var(--ground);
+.story .badge{{position:absolute;left:-26px;bottom:-22px;background:var(--paper);
   border:1px solid var(--gold);padding:16px 20px;max-width:210px}}
 .story .badge b{{display:block;font-family:var(--disp);color:var(--gold);font-size:13px;
   letter-spacing:.14em;line-height:1.4}}
@@ -228,7 +229,7 @@ section{{padding:clamp(64px,9vw,112px) 0}}
 .tlist li{{display:grid;grid-template-columns:auto 1fr auto;align-items:baseline;gap:0 10px;
   padding:11px 0;border-bottom:1px solid var(--rule)}}
 .t-n{{font-size:15.5px;color:var(--oat);font-weight:400}}
-.t-d{{border-bottom:1px dotted #4A443E;transform:translateY(-4px);min-width:14px}}
+.t-d{{border-bottom:1px dotted var(--gold-dim);transform:translateY(-4px);min-width:14px}}
 .t-p{{font-size:15.5px;color:var(--gold);font-variant-numeric:tabular-nums;font-weight:500}}
 .catnote{{grid-column:1/-1;border:1px solid var(--rule);padding:22px 26px;margin-top:8px;
   font-size:14px;color:var(--mute);display:flex;gap:16px;align-items:flex-start}}
@@ -244,17 +245,17 @@ section{{padding:clamp(64px,9vw,112px) 0}}
 @media(max-width:520px){{.member{{grid-template-columns:1fr}}}}
 .portrait{{position:relative;overflow:hidden;
   border-radius:999px 999px 6px 6px;border:1px solid var(--rule)}}
-.portrait img{{width:100%;height:224px;object-fit:cover;object-position:50% 22%;
+.portrait img{{width:100%;height:210px;object-fit:cover;object-position:50% 26%;
   filter:saturate(.86) contrast(1.03);transition:filter .45s ease,transform .6s ease}}
 .member:hover .portrait img{{filter:saturate(1) contrast(1.05);transform:scale(1.035)}}
 .member h3{{font-size:24px;letter-spacing:.1em;color:var(--oat)}}
 .mrole{{font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin:8px 0 14px}}
 .mrole span{{color:var(--rule)}}
-.mbio{{font-size:14.5px;color:#CFC7BB;margin:0;line-height:1.65}}
+.mbio{{font-size:14.5px;color:var(--body);margin:0;line-height:1.65}}
 .mquote{{margin:18px 0 0;padding-left:16px;border-left:1px solid var(--gold-dim);
   font-size:14px;color:var(--mute);font-style:italic;line-height:1.6}}
 .mquote cite{{display:block;font-style:normal;font-size:11px;letter-spacing:.16em;
-  text-transform:uppercase;margin-top:8px;color:#7E766C}}
+  text-transform:uppercase;margin-top:8px;color:var(--mute)}}
 
 /* ---------- reviews ---------- */
 .reviews{{background:var(--raised);border-block:1px solid var(--rule)}}
@@ -266,7 +267,7 @@ section{{padding:clamp(64px,9vw,112px) 0}}
   border:1px solid var(--rule)}}
 @media(max-width:880px){{.rgrid{{grid-template-columns:1fr}}}}
 .rgrid figure{{background:var(--raised);margin:0;padding:28px 26px 26px}}
-.rgrid blockquote{{margin:0;font-size:15.5px;color:#DED7CC;line-height:1.62}}
+.rgrid blockquote{{margin:0;font-size:15.5px;color:var(--body);line-height:1.62}}
 .rgrid figcaption{{margin-top:16px;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--mute)}}
 .rgrid figcaption b{{color:var(--gold);font-weight:600}}
 
@@ -278,7 +279,7 @@ section{{padding:clamp(64px,9vw,112px) 0}}
   border-bottom:1px solid var(--rule);font-size:15px}}
 .hrs li span:first-child{{letter-spacing:.1em;text-transform:uppercase;font-size:12.5px;color:var(--mute)}}
 .hrs li span:last-child{{font-variant-numeric:tabular-nums}}
-.hrs li.shut span:last-child{{color:#7E766C}}
+.hrs li.shut span:last-child{{color:var(--mute)}}
 .contact{{list-style:none;margin:0;padding:0}}
 .contact li{{padding:15px 0;border-bottom:1px solid var(--rule)}}
 .contact .lbl{{display:block;font-size:11px;letter-spacing:.2em;text-transform:uppercase;
@@ -294,7 +295,7 @@ section{{padding:clamp(64px,9vw,112px) 0}}
 .wkgrid article{{background:var(--raised2);padding:28px 28px 30px}}
 .wkgrid h3{{font-family:var(--ui);font-size:12px;letter-spacing:.18em;text-transform:uppercase;
   color:var(--gold);font-weight:600;margin:0 0 12px}}
-.wkgrid p{{margin:0;font-size:14.5px;color:#CFC7BB;line-height:1.62}}
+.wkgrid p{{margin:0;font-size:14.5px;color:var(--body);line-height:1.62}}
 .wkgrid strong{{color:var(--oat);font-weight:500}}
 
 /* ---------- footer ---------- */
@@ -302,14 +303,14 @@ footer{{border-top:1px solid var(--rule);padding:52px 0 40px;font-size:13px;colo
 .fgrid{{display:flex;flex-wrap:wrap;justify-content:space-between;gap:26px 40px;align-items:flex-start}}
 .fbrand{{font-family:var(--disp);font-size:15px;letter-spacing:.24em;color:var(--oat);display:block;margin-bottom:10px}}
 .fnote{{margin-top:34px;padding-top:22px;border-top:1px solid var(--rule);font-size:11.5px;
-  line-height:1.7;color:#7E766C;max-width:78ch}}
+  line-height:1.7;color:var(--mute);max-width:78ch}}
 
 /* ---------- sticky mobile book ---------- */
 .stick{{position:fixed;left:0;right:0;bottom:0;z-index:50;display:none;
-  background:rgba(23,23,23,.96);border-top:1px solid var(--rule);
+  background:rgba(247,242,234,.97);border-top:1px solid var(--rule);
   padding:11px 16px calc(11px + env(safe-area-inset-bottom))}}
 .stick a{{display:flex;align-items:center;justify-content:center;min-height:48px;
-  background:var(--gold);color:#171717;font-size:12.5px;letter-spacing:.2em;
+  background:var(--gold);color:var(--paper);font-size:12.5px;letter-spacing:.2em;
   text-transform:uppercase;font-weight:600}}
 @media(max-width:860px){{.stick{{display:block}} body{{padding-bottom:76px}}}}
 
@@ -386,7 +387,7 @@ footer{{border-top:1px solid var(--rule);padding:52px 0 40px;font-size:13px;colo
     <div class="menu">
       {menu_html()}
       <div class="catnote">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" stroke-width="1.4" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.2v.2"/></svg>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7D5A39" stroke-width="1.4" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.2v.2"/></svg>
         <span><strong style="color:var(--oat);font-weight:500">A patch test is required</strong> before any tinting, lash lift, lamination or waxing treatment &mdash; it takes five minutes, it&rsquo;s free, and it can be done on any visit beforehand.</span>
       </div>
     </div>
@@ -472,7 +473,7 @@ footer{{border-top:1px solid var(--rule);padding:52px 0 40px;font-size:13px;colo
       <div><span class="fbrand" style="font-size:11px;letter-spacing:.2em">HOURS</span>Tue &amp; Fri 10&ndash;6 &middot; Wed &amp; Thu 10&ndash;8<br>Sat 10&ndash;5 &middot; Closed Sun &amp; Mon</div>
       <div><span class="fbrand" style="font-size:11px;letter-spacing:.2em">BOOK</span><a href="{FRESHA}" target="_blank" rel="noopener" style="color:var(--gold)">Instant confirmation on Fresha</a></div>
     </div>
-    <p class="fnote"><strong style="color:var(--mute)">Concept only.</strong> This page is a design proposal and is not a live website. Photography is taken from the salon&rsquo;s own public Facebook page for evaluation and would be replaced by a commissioned shoot. Treatment names, durations and prices are transcribed from the salon&rsquo;s Fresha listing and should be verified before publication. Typography: Cinzel and Josefin Sans. Palette derived from ui-ux-pro-max #90 with substitutions.</p>
+    <p class="fnote"><strong style="color:var(--mute)">Concept only.</strong> This page is a design proposal and is not a live website. Photography is taken from the salon&rsquo;s own public Facebook page for evaluation and would be replaced by a commissioned shoot. Treatment names, durations and prices are transcribed from the salon&rsquo;s Fresha listing and should be verified before publication. Typography: Italiana and Karla. Palette sampled from the salon&rsquo;s own opening-hours card and treatment room.</p>
   </div>
 </footer>
 
