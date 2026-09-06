@@ -7,34 +7,42 @@ A = json.load(open("design/.ed-assets.json"))
 FRESHA = "https://www.fresha.com/a/skin-deep-beauty-salon-bray-44-main-street-rp7gdkj0"
 
 SHOW = [
- ("01","24K Gold Leaf","Facial", A["matis"],
-  "Pure gold leaf application, luxury facial massage, glow-boosting serum and ultimate skin rejuvenation. Limited appointments.",
+ ("01","24K Gold Leaf","Facial", "matis",
+  "Pure gold leaf application, luxury facial massage, glow-boosting serum and ultimate skin rejuvenation. Limited appointments, and never yet bookable online.",
   "By arrangement","Enquire","rowA",
-  "MATIS Paris skincare on the shelf in a Skin Deep treatment room."),
- ("02","LED Dermisonic","Light Therapy", A["foliage"],
-  "Forty-five minutes of light therapy, facial massage included. The newest treatment on the menu and the one the team are proudest of.",
+  "MATIS Paris skincare on the shelf in a Skin Deep treatment room.",
+  ("Gold leaf","Facial massage","Glow serum","Limited"), ("foliage","chair")),
+ ("02","LED Dermisonic","Light Therapy", "foliage",
+  "Forty-five minutes of light therapy with facial massage included. The newest treatment on the menu, and the one the team are proudest of.",
   "1 hour &middot; &euro;75","Book","rowB",
-  "Dried eucalyptus draped over the ornate teardrop mirror in the salon."),
- ("03","Brow Lamination","&amp; Lash Lift", A["chair"],
-  "Brow lamination at &euro;45, Lash Glo lift with serum at &euro;65. Patch test five minutes, free, any visit beforehand.",
+  "Dried eucalyptus draped over the ornate teardrop mirror in the salon.",
+  ("LED therapy","45 minutes","Incl. massage"), ("matis","chair")),
+ ("03","Brow Lamination","&amp; Lash Lift", "chair",
+  "Brow lamination at &euro;45, Lash Glo lift with serum at &euro;65. Patch test takes five minutes, costs nothing, and can be done on any visit beforehand.",
   "45 minutes &middot; from &euro;45","Book","rowC",
-  "Cream pillar candles in rose-gold holders on the white ribbed cabinet at Skin Deep."),
+  "Cream pillar candles in rose-gold holders on the white ribbed cabinet at Skin Deep.",
+  ("Lamination","Lash lift","Patch test free"), ("hero","matis")),
 ]
 
 def rows():
     out=[]
-    for i,(num,l1,l2,img,body,meta,cta,cls,alt) in enumerate(SHOW):
+    for i,(num,l1,l2,img,body,meta,cta,cls,alt,chip,thm) in enumerate(SHOW):
+        chips=''.join('<li>%s</li>'%c for c in chip)
+        thumbs=''.join('<img src="%s" alt="">'%A[k] for k in thm)
         out.append(f'''
 <article class="row {cls}">
   <figure class="row-fig">
-    <div class="imgmask"><img src="{img}" alt="{alt}"></div>
+    <div class="imgmask"><img src="{A[img]}" alt="{alt}"></div>
+    <span class="fignum" aria-hidden="true">{num}</span>
   </figure>
   <div class="row-txt">
     <span class="idx" aria-hidden="true">{num}</span>
     <h3 class="rv-mask"><span>{l1}</span><span class="it">{l2}</span></h3>
     <p class="row-body rv">{body}</p>
+    <ul class="chips rv">{chips}</ul>
     <p class="row-meta rv">{meta}</p>
     <a class="ulink rv" href="{FRESHA}" target="_blank" rel="noopener"><span>{cta}</span></a>
+    <div class="thumbs rv">{thumbs}</div>
   </div>
 </article>''')
     return "".join(out)
@@ -54,12 +62,19 @@ HTML = f'''<title>Skin Deep Editorial</title>
   --cine:cubic-bezier(.16,1,.3,1);
   --soft:cubic-bezier(.22,.61,.36,1);
   --micro:220ms; --sweep:420ms; --reveal:1100ms; --expand:1500ms;
-  --pad:clamp(28px,6vw,110px);
+  --pad:clamp(24px,5vw,92px);
+  --grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.42'/%3E%3C/svg%3E");
   --col:minmax(0,1fr);
 }}
 *{{box-sizing:border-box}}
+.grain{{position:fixed;inset:0;z-index:60;pointer-events:none;opacity:.34;
+  background-image:var(--grain);background-size:180px 180px;mix-blend-mode:multiply}}
 html{{scroll-behavior:smooth;-webkit-text-size-adjust:100%}}
-body{{margin:0;background:var(--paper);color:var(--body);font-family:var(--ui);
+body{{margin:0;background:
+   radial-gradient(90% 55% at 12% 0%,rgba(232,207,200,.44) 0%,rgba(232,207,200,0) 62%),
+   radial-gradient(70% 50% at 96% 22%,rgba(125,90,57,.10) 0%,rgba(125,90,57,0) 60%),
+   radial-gradient(80% 46% at 50% 100%,rgba(235,217,206,.5) 0%,rgba(235,217,206,0) 70%),
+   var(--paper);background-attachment:fixed;color:var(--body);font-family:var(--ui);
   font-weight:300;font-size:16px;line-height:1.85;-webkit-font-smoothing:antialiased;
   overflow-x:hidden}}
 img{{display:block;max-width:100%}}
@@ -130,7 +145,15 @@ a{{color:inherit;text-decoration:none}}
   background:radial-gradient(130% 130% at 58% 42%,rgba(125,90,57,.085) 0%,rgba(125,90,57,0) 62%);
   border-radius:41% 59% 62% 38%/47% 39% 61% 53%}}
 .hero .grid{{position:relative;z-index:2;align-items:end}}
-.hero-type{{grid-column:1/8}}
+.pourwrap{{grid-column:5/9;position:relative;align-self:stretch;min-height:clamp(420px,52vw,700px);
+  display:flex;flex-direction:column;justify-content:flex-end}}
+#pour{{width:100%;height:clamp(400px,50vw,664px);display:block;
+  filter:drop-shadow(0 22px 34px rgba(125,90,57,.22))}}
+.pourcap{{font-size:9.5px;letter-spacing:.3em;text-transform:uppercase;color:var(--bronze);
+  text-align:center;margin:14px 0 0;opacity:.8}}
+@media(max-width:900px){{.pourwrap{{grid-column:1/13;order:3;min-height:0;margin-top:44px}}
+  #pour{{height:340px}}}}
+.hero-type{{grid-column:1/5}}
 .hero .label{{margin-bottom:clamp(26px,4vw,52px)}}
 .hero h1{{font-family:var(--disp);font-weight:400;margin:0;color:var(--ink);
   font-size:clamp(46px,9vw,124px);line-height:.9;letter-spacing:-.018em}}
@@ -139,7 +162,7 @@ a{{color:inherit;text-decoration:none}}
 .hero-sub{{margin:clamp(32px,4.6vw,60px) 0 0;max-width:34ch;font-size:clamp(15px,1.5vw,17.5px);
   line-height:1.9;color:var(--body)}}
 .hero-cta{{margin-top:clamp(24px,3vw,40px)}}
-.hero-fig{{grid-column:8/13;position:relative;margin-top:clamp(28px,5vw,0px)}}
+.hero-fig{{grid-column:9/13;position:relative;margin-top:clamp(28px,5vw,0px)}}
 .hero-fig .imgmask{{overflow:hidden}}
 .hero-fig img{{width:100%;height:clamp(320px,44vw,540px);object-fit:cover;object-position:52% 34%}}
 .hero-fig figcaption{{font-size:10px;letter-spacing:.3em;text-transform:uppercase;
@@ -149,7 +172,21 @@ a{{color:inherit;text-decoration:none}}
   .hero-fig{{grid-column:1/13;margin-top:52px}}
 }}
 /* hairline metadata rail */
-.rail{{margin-top:clamp(48px,7vw,104px)}}
+.orn{{display:flex;align-items:center;gap:16px;margin:clamp(40px,6vw,78px) 0 0}}
+.orn::before,.orn::after{{content:"";flex:1;height:1px;background:linear-gradient(90deg,
+  rgba(125,90,57,0),rgba(125,90,57,.42),rgba(125,90,57,0))}}
+.orn span{{width:7px;height:7px;transform:rotate(45deg);background:var(--bronze);opacity:.6;flex:none}}
+.ticker{{overflow:hidden;border-block:1px solid var(--hair);
+  background:linear-gradient(180deg,rgba(232,207,200,.34),rgba(232,207,200,.10));
+  padding:20px 0;margin-top:clamp(44px,6vw,84px)}}
+.tick-track{{display:flex;width:max-content;gap:0;animation:tick 46s linear infinite}}
+.tick-track span{{font-family:var(--disp);font-style:italic;font-size:clamp(19px,2.5vw,31px);
+  color:var(--bronze);opacity:.82;padding:0 clamp(20px,3vw,44px);white-space:nowrap}}
+.tick-track span{{position:relative;display:inline-block}}
+.tick-track span::after{{content:"";position:absolute;right:-3px;top:50%;width:5px;height:5px;margin-top:-2.5px;background:var(--bronze);border-radius:50%;opacity:.45}}
+@keyframes tick{{from{{transform:translateX(0)}}to{{transform:translateX(-50%)}}}}
+@media (prefers-reduced-motion:reduce){{.tick-track{{animation:none}}}}
+.rail{{margin-top:clamp(40px,5vw,72px)}}
 .rail .grid{{padding-top:0}}
 .railrow{{grid-column:1/13;display:grid;grid-template-columns:repeat(4,1fr);
   border-top:1px solid var(--hair)}}
@@ -193,6 +230,17 @@ a{{color:inherit;text-decoration:none}}
 .row-meta{{margin:22px 0 0;font-size:10.5px;letter-spacing:.32em;text-transform:uppercase;
   color:var(--bronze);padding-top:20px;border-top:1px solid var(--hair)}}
 .row .ulink{{margin-top:8px}}
+.chips{{display:flex;flex-wrap:wrap;gap:8px;margin:22px 0 0;padding:0;list-style:none}}
+.chips li{{font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--bronze);
+  border:1px solid rgba(125,90,57,.34);border-radius:100px;padding:7px 13px;background:rgba(255,255,255,.34)}}
+.thumbs{{display:flex;gap:10px;margin-top:26px}}
+.thumbs img{{width:74px;height:88px;object-fit:cover;flex:none;
+  border:1px solid var(--hair);transition:transform 900ms var(--cine),filter 900ms var(--cine)}}
+.thumbs img:hover{{transform:translateY(-4px);filter:saturate(1.08)}}
+.row-fig{{position:relative}}
+.fignum{{position:absolute;right:14px;bottom:12px;font-family:var(--disp);font-style:italic;
+  font-size:13px;letter-spacing:.2em;color:rgba(255,250,240,.92);
+  text-shadow:0 1px 10px rgba(34,29,25,.5);z-index:2}}
 
 /* three different asymmetries - never a mirrored alternation */
 .rowA .row-fig{{grid-column:1/8;margin-left:calc(var(--pad) * -1)}}
@@ -252,6 +300,10 @@ a{{color:inherit;text-decoration:none}}
         <a class="ulink" href="{FRESHA}" target="_blank" rel="noopener"><span>Book an appointment</span></a>
       </div>
     </div>
+    <div class="pourwrap">
+      <canvas id="pour" role="img" aria-label="An illustration of golden serum pouring from a bottle into a shallow pool."></canvas>
+      <p class="pourcap rv" style="--d:1000ms">MATIS Paris &middot; in every facial</p>
+    </div>
     <figure class="hero-fig" style="margin:0">
       <div class="imgmask" style="--d:320ms">
         <img src="{A["hero"]}" alt="A Skin Deep treatment room: an ornate teardrop mirror hung with dried eucalyptus against blush fluted panelling.">
@@ -260,6 +312,7 @@ a{{color:inherit;text-decoration:none}}
     </figure>
   </div>
 
+  <div class="grid"><div style="grid-column:1/13"><div class="orn rv" style="--d:760ms"><span></span></div></div></div>
   <div class="rail">
     <div class="grid">
       <dl class="railrow rv" style="--d:820ms">
@@ -270,6 +323,7 @@ a{{color:inherit;text-decoration:none}}
       </dl>
     </div>
   </div>
+  <div class="ticker" aria-hidden="true"><div class="tick-track"><span>Brow Lamination</span><span>Lash Glo Lift</span><span>24K Gold Leaf Facial</span><span>LED Dermisonic</span><span>Deep Cleanse</span><span>Aromatherapy Massage</span><span>Gelish Manicure</span><span>Threading</span><span>Reflexology</span><span>MATIS Prescriptive Facial</span><span>Brow Lamination</span><span>Lash Glo Lift</span><span>24K Gold Leaf Facial</span><span>LED Dermisonic</span><span>Deep Cleanse</span><span>Aromatherapy Massage</span><span>Gelish Manicure</span><span>Threading</span><span>Reflexology</span><span>MATIS Prescriptive Facial</span></div></div>
 </section>
 
 <section class="showcase" id="showcase">
@@ -290,6 +344,177 @@ a{{color:inherit;text-decoration:none}}
   </div>
 </section>
 </main>
+
+<script>
+/* ── Serum pour ────────────────────────────────────────────────────────────
+   A tilted apothecary bottle pouring a stream of warm gold serum into a
+   pool that ripples. Canvas 2D, one rAF loop, ~60 lines of real geometry:
+   the stream narrows as it accelerates under gravity and flares where it
+   lands, which is what makes a pour read as liquid rather than as a ribbon. */
+(function () {{
+  var cv = document.getElementById('pour');
+  if (!cv) return;
+  var ctx = cv.getContext('2d');
+  var reduced = !(window.matchMedia && window.matchMedia('(prefers-reduced-motion: no-preference)').matches);
+  var W = 0, H = 0, DPR = 1;
+
+  function size() {{
+    DPR = Math.min(window.devicePixelRatio || 1, 2);
+    var r = cv.getBoundingClientRect();
+    W = Math.max(1, r.width); H = Math.max(1, r.height);
+    cv.width = W * DPR; cv.height = H * DPR;
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  }}
+  size();
+  if (window.ResizeObserver) new ResizeObserver(size).observe(cv);
+  else window.addEventListener('resize', size);
+
+  var GOLD = ['#FFF6E2', '#F3DCA4', '#DFBB63', '#BE9036', '#8A6A2E'];
+  var drops = [], ripples = [], nextDrop = 0;
+
+  function mouth() {{ return {{ x: W * 0.50, y: H * 0.365 }}; }}
+  function poolY()  {{ return H * 0.925; }}
+
+  /* the bottle, drawn in a local frame whose origin is the mouth */
+  function bottle(t) {{
+    var m = mouth();
+    ctx.save();
+    ctx.translate(m.x, m.y);
+    ctx.rotate(-0.42 + Math.sin(t * 0.5) * 0.012);   /* a slow, barely-there sway */
+    var s = Math.min(1.05, W / 300);
+    ctx.scale(s, s);
+
+    var g = ctx.createLinearGradient(-35, -180, 35, 0);
+    g.addColorStop(0, 'rgba(255,246,226,.92)');
+    g.addColorStop(.42, 'rgba(233,206,151,.80)');
+    g.addColorStop(1, 'rgba(160,120,58,.55)');
+
+    ctx.beginPath();                       /* neck → shoulder → body → base */
+    ctx.moveTo(-10, 2);
+    ctx.lineTo(-10, -40);
+    ctx.bezierCurveTo(-11, -54, -34, -58, -35, -76);
+    ctx.lineTo(-35, -184);
+    ctx.quadraticCurveTo(-35, -196, -23, -196);
+    ctx.lineTo(23, -196);
+    ctx.quadraticCurveTo(35, -196, 35, -184);
+    ctx.lineTo(35, -76);
+    ctx.bezierCurveTo(34, -58, 11, -54, 10, -40);
+    ctx.lineTo(10, 2);
+    ctx.closePath();
+    ctx.fillStyle = g; ctx.fill();
+    ctx.lineWidth = 1.4; ctx.strokeStyle = 'rgba(125,90,57,.68)'; ctx.stroke();
+
+    ctx.beginPath();                       /* glass highlight down one side */
+    ctx.moveTo(-24, -184); ctx.lineTo(-24, -86);
+    ctx.lineWidth = 6; ctx.lineCap = 'round';
+    ctx.strokeStyle = 'rgba(255,252,244,.72)'; ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(25, -176); ctx.lineTo(25, -98);
+    ctx.lineWidth = 2.4;
+    ctx.strokeStyle = 'rgba(255,252,244,.34)'; ctx.stroke();
+
+    ctx.beginPath();                       /* collar */
+    ctx.rect(-12.5, -6, 25, 12);
+    ctx.fillStyle = 'rgba(125,90,57,.9)'; ctx.fill();
+    ctx.beginPath(); ctx.rect(-12.5, -6, 25, 3.4);
+    ctx.fillStyle = 'rgba(210,178,120,.85)'; ctx.fill();
+    ctx.restore();
+  }}
+
+  /* centreline + half-width of the falling stream at depth p (0..1) */
+  function streamAt(p, t, m, py) {{
+    var y = m.y + (py - m.y) * p;
+    var v = Math.sqrt(0.12 + p * 2.4);                 /* gravity */
+    var w = (7.2 / v) * (1 + 5.2 * Math.pow(p, 9));    /* narrows, then flares */
+    var sway = Math.sin(p * 6.1 - t * 2.0) * 5.4 * p * (1 - p * 0.55)
+             + Math.sin(p * 12.7 - t * 3.1) * 1.9 * p;
+    return {{ x: m.x + 5 * p + sway, y: y, w: Math.max(1.1, w) }};
+  }}
+
+  function stream(t) {{
+    var m = mouth(), py = poolY(), N = 58, i, a, L = [], R = [];
+    for (i = 0; i <= N; i++) {{ a = streamAt(i / N, t, m, py); L.push([a.x - a.w, a.y]); R.push([a.x + a.w, a.y]); }}
+
+    ctx.beginPath();
+    ctx.moveTo(L[0][0], L[0][1]);
+    for (i = 1; i < L.length; i++) ctx.lineTo(L[i][0], L[i][1]);
+    for (i = R.length - 1; i >= 0; i--) ctx.lineTo(R[i][0], R[i][1]);
+    ctx.closePath();
+
+    var g = ctx.createLinearGradient(m.x - 16, 0, m.x + 18, 0);
+    g.addColorStop(0, GOLD[1]); g.addColorStop(.28, GOLD[0]);
+    g.addColorStop(.55, GOLD[2]); g.addColorStop(1, GOLD[4]);
+    ctx.fillStyle = g; ctx.fill();
+
+    ctx.save();                             /* specular rail inside the stream */
+    ctx.clip();
+    ctx.beginPath();
+    for (i = 0; i <= N; i++) {{ a = streamAt(i / N, t, m, py); ctx.lineTo(a.x - a.w * 0.34, a.y); }}
+    ctx.lineWidth = 2.4; ctx.strokeStyle = 'rgba(255,253,246,.78)'; ctx.stroke();
+
+    var gp = (t * 0.26) % 1.35 - 0.18;      /* a gloss travelling down the pour */
+    var gy = m.y + (py - m.y) * gp;
+    var gg = ctx.createLinearGradient(0, gy - 74, 0, gy + 74);
+    gg.addColorStop(0, 'rgba(255,255,255,0)');
+    gg.addColorStop(.5, 'rgba(255,255,255,.5)');
+    gg.addColorStop(1, 'rgba(255,255,255,0)');
+    ctx.fillStyle = gg; ctx.fillRect(m.x - 40, gy - 74, 80, 148);
+    ctx.restore();
+  }}
+
+  function pool(t) {{
+    var py = poolY(), rx = Math.min(W * 0.34, 132), i, r;
+    var breathe = 1 + Math.sin(t * 1.5) * 0.018;
+    ctx.beginPath();
+    ctx.ellipse(W * 0.52, py + 4, rx * breathe, 15 * breathe, 0, 0, Math.PI * 2);
+    var g = ctx.createLinearGradient(W * 0.52 - rx, 0, W * 0.52 + rx, 0);
+    g.addColorStop(0, GOLD[3]); g.addColorStop(.34, GOLD[1]);
+    g.addColorStop(.6, GOLD[2]); g.addColorStop(1, GOLD[4]);
+    ctx.fillStyle = g; ctx.fill();
+
+    ctx.beginPath();
+    ctx.ellipse(W * 0.485, py, rx * 0.42, 4.6, 0, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(255,252,242,.6)'; ctx.fill();
+
+    for (i = ripples.length - 1; i >= 0; i--) {{
+      r = ripples[i]; r.r += 34 * r.dt; r.a -= 0.62 * r.dt;
+      if (r.a <= 0) {{ ripples.splice(i, 1); continue; }}
+      ctx.beginPath();
+      ctx.ellipse(W * 0.52, py + 3, r.r, r.r * 0.19, 0, 0, Math.PI * 2);
+      ctx.lineWidth = 1; ctx.strokeStyle = 'rgba(255,248,231,' + r.a.toFixed(3) + ')';
+      ctx.stroke();
+    }}
+  }}
+
+  function droplets(t, dt) {{
+    var m = mouth(), py = poolY(), i, d;
+    if (t > nextDrop) {{
+      nextDrop = t + 1.5 + Math.random() * 2.2;
+      drops.push({{ y: m.y + 34, x: m.x + 3 + (Math.random() - 0.5) * 4, v: 42, r: 2.4 + Math.random() * 2 }});
+    }}
+    for (i = drops.length - 1; i >= 0; i--) {{
+      d = drops[i]; d.v += 620 * dt; d.y += d.v * dt;
+      if (d.y >= py) {{ drops.splice(i, 1); ripples.push({{ r: 5, a: 0.5, dt: dt }}); continue; }}
+      ctx.beginPath();
+      ctx.ellipse(d.x, d.y, d.r, d.r * 1.5, 0, 0, Math.PI * 2);
+      ctx.fillStyle = GOLD[2]; ctx.fill();
+      ctx.beginPath();
+      ctx.ellipse(d.x - 0.8, d.y - d.r * 0.4, d.r * 0.32, d.r * 0.5, 0, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(255,252,242,.75)'; ctx.fill();
+    }}
+  }}
+
+  var last = 0;
+  function frame(ms) {{
+    var t = ms / 1000, dt = Math.min(0.05, t - last || 0.016); last = t;
+    ctx.clearRect(0, 0, W, H);
+    stream(t); droplets(t, dt); pool(t); bottle(t);
+    if (!reduced) requestAnimationFrame(frame);
+  }}
+  ripples.push({{ r: 40, a: 0.28, dt: 0.016 }});
+  requestAnimationFrame(frame);   /* one frame even under reduced motion */
+}})();
+</script>
 
 <script>
 (function () {{
