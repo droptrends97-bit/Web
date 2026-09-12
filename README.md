@@ -55,25 +55,34 @@ consistent across sections.
 - **Keyboard parity.** Every underline, arrow and mark driven by `group-hover`
   is mirrored on `group-focus-visible`, so tabbing through the page animates
   exactly what a pointer does.
-- **Threads** (`components/chrome/ScrollThreads.tsx`) — a bundle of white
-  strands running down the page in three dimensions. Each is a helix sampled in
-  world space and pushed through a real perspective projection, so it bows
-  toward the viewer and away again: where a strand swings close it thickens,
-  brightens and its vertical spacing stretches; where it swings behind it thins
-  and compresses toward the vanishing point. The depth is computed, not faked
-  with a gradient. Strands are painter-sorted by mean depth, and each is drawn
-  in three passes — body, a highlight over the near stretches, and a specular
-  spine along the nearest — with the highlight runs feathered at both ends so
+- **Threads** (`components/chrome/ScrollThreads.tsx`) — a rope of hard-white
+  filaments running down the page in three dimensions. Every strand orbits one
+  shared axis, half clockwise and half anticlockwise: counter-rotation is what
+  makes them cross and trade places rather than run parallel, and because they
+  all share one period the braid repeats exactly, over and over, for the length
+  of the document.
+
+  Each sample goes through a real perspective projection, so a filament
+  thickens, brightens and stretches as it swings toward the camera and thins
+  and compresses as it swings behind. Depth swings half again as wide as the
+  lateral, which gives the shine somewhere to travel. Strands are
+  painter-sorted by mean depth, so they genuinely pass in front of one another.
+
+  Five passes per strand: two widening halos (a cheap stand-in for a blur), the
+  filament body, the lit side, and a specular that sits off-axis the way it
+  does on a real cylinder. The specular is restricted to the nearest arcs —
+  light should catch in short brilliant stretches as a filament turns, not glow
+  along its whole length — and every partial run is feathered at both ends so
   light falls off instead of ending in a blunt cap.
 
-  Scroll flows the bundle downward faster than the page, so it reads as diving
-  ahead of the reader. The twist blooms through the middle of the document and
-  collapses over the last fifth: the strands converge onto one axis and fade,
-  so the animation resolves at the foot of the page rather than being cut off.
-  A slow time term keeps it breathing while the page is still. Cost is about
-  0.5ms per frame at 1920×1080, drawn at 40fps. Under reduced motion the
-  breathing stops entirely — it paints one frame and redraws only on scroll,
-  so the composition still tracks position without moving on its own.
+  Nothing is drawn on the hero. The first touch of scroll sends the heads down
+  from above the fold, tapered to a point, and the rope is established a sixth
+  of the way in. Scroll drives it downward faster than the page, twelve turns
+  over the document, so it reads as diving ahead of the reader. It fades out
+  over the last tenth; the pattern itself never distorts. Cost is about 1.7ms
+  per frame at 1920×1080, drawn at 40fps, held to 55% opacity below 700px where
+  the text column is full-bleed. Under reduced motion the breathing stops
+  entirely — one painted frame, redrawn only on scroll.
 - **Behind that, a halftone screen** (`components/chrome/ScreenField.tsx`).
   Four-colour printing rotates each separation to its own screen angle so the
   lattices never moiré — 15° cyan, 75° magenta, 0° yellow, 45° black. Scrolling
