@@ -3,6 +3,7 @@ import { Instrument_Sans, Instrument_Serif } from "next/font/google";
 import { site } from "@/lib/content";
 import SmoothScroll from "@/components/providers/SmoothScroll";
 import Grain from "@/components/chrome/Grain";
+import ScreenField from "@/components/chrome/ScreenField";
 import Nav from "@/components/chrome/Nav";
 import ScrollProgress from "@/components/chrome/ScrollProgress";
 import "./globals.css";
@@ -49,6 +50,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* Everything sits inside SmoothScroll so the chrome inherits the same
             MotionConfig, and therefore the same reduced-motion behaviour. */}
         <SmoothScroll>
+          <ScreenField />
           <Grain />
           <ScrollProgress />
           <Nav />

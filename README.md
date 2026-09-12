@@ -47,6 +47,22 @@ consistent across sections.
   statistics. Interaction shows up as rules that sweep, indices that catch the
   accent, and a printed plate that rides beside the pointer on the work index —
   beside it, not under it, so it never covers the row you are reading.
+- **The background is a halftone screen** (`components/chrome/ScreenField.tsx`).
+  Four-colour printing rotates each separation to its own screen angle so the
+  lattices never moiré — 15° cyan, 75° magenta, 0° yellow, 45° black. Scrolling
+  walks the screen through that range, so the page is re-screened as it is
+  read. A diagonal wave modulates dot size the way ink density varies across a
+  roller, and about one dot in six hundred prints in the accent, like a
+  separation out of register.
+
+  It is canvas, not SVG — thousands of marks redrawn on scroll is what a raster
+  surface is for. It costs roughly 2ms per frame at 1920×1080: capped at 30fps
+  (invisible on 1px dots, half the main-thread cost), redrawn only when the
+  screen would actually move, bounded by inverse-rotating the viewport corners
+  into lattice space rather than culling a bounding square, and stepped along
+  each lattice row instead of rotating per dot. Device pixel ratio is capped at
+  1.5. Under reduced motion it paints one static screen at the black angle and
+  never starts a frame loop.
 
 ## Accessibility
 
