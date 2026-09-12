@@ -2,7 +2,7 @@
 
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
-import { hero, site } from "@/lib/content";
+import { currently, hero, site } from "@/lib/content";
 import { EASE } from "@/lib/motion";
 import { useLocalTime } from "@/lib/hooks";
 
@@ -54,14 +54,33 @@ export default function Hero() {
         style={{ y: contentY, opacity: contentOpacity }}
         className="gutter relative z-10 mx-auto flex w-full max-w-[104rem] flex-1 flex-col justify-center"
       >
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.1, duration: 0.9 }}
-          className="label mb-9 md:mb-14"
-        >
-          {hero.eyebrow}
-        </motion.p>
+        {/* The masthead is deliberately left-weighted, but the right column
+            was carrying nothing at all. A short colophon anchors it without
+            closing the asymmetry. */}
+        <div className="mb-9 flex items-start justify-between gap-8 md:mb-14">
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.1, duration: 0.9 }}
+            className="label"
+          >
+            {hero.eyebrow}
+          </motion.p>
+
+          <motion.dl
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.55, duration: 1 }}
+            className="hidden w-[17rem] shrink-0 border-t-[0.5px] border-t-[color-mix(in_oklab,var(--color-paper)_14%,transparent)] pt-3 md:block"
+          >
+            <dt className="label">{currently.label}</dt>
+            {currently.items.map((item) => (
+              <dd key={item} className="mt-1.5 text-paper-2">
+                {item}
+              </dd>
+            ))}
+          </motion.dl>
+        </div>
 
         {/* The masthead. One typeface, one voice shift — the second line is the
             same serif in italic, not a different face wearing a gradient. */}
@@ -112,7 +131,7 @@ export default function Hero() {
               />
               <span
                 aria-hidden
-                className="absolute inset-x-0 -bottom-0.5 h-px origin-left scale-x-0 bg-vermillion transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-x-100"
+                className="absolute inset-x-0 -bottom-0.5 h-px origin-left scale-x-0 bg-vermillion transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-x-100 group-focus-visible:scale-x-100"
               />
             </a>
 
@@ -123,7 +142,7 @@ export default function Hero() {
               {hero.secondaryCta.label}
               <span
                 aria-hidden
-                className="absolute inset-x-0 -bottom-0.5 h-px origin-right scale-x-0 bg-paper/40 transition-transform duration-600 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:origin-left group-hover:scale-x-100"
+                className="absolute inset-x-0 -bottom-0.5 h-px origin-right scale-x-0 bg-paper/40 transition-transform duration-600 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:origin-left group-focus-visible:origin-left group-hover:scale-x-100 group-focus-visible:scale-x-100"
               />
             </a>
           </motion.div>

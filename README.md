@@ -46,7 +46,15 @@ consistent across sections.
 - **Restraint is the point.** No preloader, no custom cursor, no counting-up
   statistics. Interaction shows up as rules that sweep, indices that catch the
   accent, and a printed plate that rides beside the pointer on the work index —
-  beside it, not under it, so it never covers the row you are reading.
+  beside it, not under it, so it never covers the row you are reading. The
+  plate is a press sheet rather than a swatch: the index numeral bleeds off
+  the head, the client is set in the studio's serif, and the foot carries a
+  colour control strip — the tint ramp printers pull along the edge of a sheet
+  to check ink density. It is drawn entirely from each project's two data
+  colours, so the index needs no image assets.
+- **Keyboard parity.** Every underline, arrow and mark driven by `group-hover`
+  is mirrored on `group-focus-visible`, so tabbing through the page animates
+  exactly what a pointer does.
 - **The background is a halftone screen** (`components/chrome/ScreenField.tsx`).
   Four-colour printing rotates each separation to its own screen angle so the
   lattices never moiré — 15° cyan, 75° magenta, 0° yellow, 45° black. Scrolling

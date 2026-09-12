@@ -33,6 +33,12 @@ export const hero = {
   secondaryCta: { label: "Selected work", href: "#work" },
 } as const;
 
+/** Short colophon shown in the masthead's open right-hand column. */
+export const currently = {
+  label: "Currently",
+  items: ["Booking from March 2026", "Hiring — front-end engineer"],
+} as const;
+
 export const services = [
   "Brand identity",
   "Websites",

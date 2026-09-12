@@ -51,7 +51,7 @@ export default function Nav() {
             </span>
             <span
               aria-hidden
-              className="size-[3px] rotate-45 bg-vermillion transition-transform duration-500 group-hover:scale-150"
+              className="size-[3px] rotate-45 bg-vermillion transition-transform duration-500 group-hover:scale-150 group-focus-visible:scale-150"
             />
           </a>
 
@@ -65,7 +65,7 @@ export default function Nav() {
                 {item.label}
                 <span
                   aria-hidden
-                  className="absolute inset-x-0 -bottom-0.5 h-px origin-right scale-x-0 bg-vermillion transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:origin-left group-hover:scale-x-100"
+                  className="absolute inset-x-0 -bottom-0.5 h-px origin-right scale-x-0 bg-vermillion transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:origin-left group-focus-visible:origin-left group-hover:scale-x-100 group-focus-visible:scale-x-100"
                 />
               </a>
             ))}
@@ -77,7 +77,7 @@ export default function Nav() {
               <span aria-hidden className="absolute inset-x-0 -bottom-0.5 h-px bg-paper/30" />
               <span
                 aria-hidden
-                className="absolute inset-x-0 -bottom-0.5 h-px origin-left scale-x-0 bg-vermillion transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-x-100"
+                className="absolute inset-x-0 -bottom-0.5 h-px origin-left scale-x-0 bg-vermillion transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-x-100 group-focus-visible:scale-x-100"
               />
             </a>
           </nav>

@@ -47,7 +47,7 @@ export default function Footer() {
               {site.email}
               <span
                 aria-hidden
-                className="absolute inset-x-0 -bottom-0.5 h-px origin-right scale-x-0 bg-vermillion transition-transform duration-600 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:origin-left group-hover:scale-x-100"
+                className="absolute inset-x-0 -bottom-0.5 h-px origin-right scale-x-0 bg-vermillion transition-transform duration-600 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:origin-left group-focus-visible:origin-left group-hover:scale-x-100 group-focus-visible:scale-x-100"
               />
             </a>
           </motion.div>
@@ -72,7 +72,7 @@ export default function Footer() {
                       {link.label}
                       <span
                         aria-hidden
-                        className="absolute inset-x-0 -bottom-0.5 h-px origin-right scale-x-0 bg-paper/40 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:origin-left group-hover:scale-x-100"
+                        className="absolute inset-x-0 -bottom-0.5 h-px origin-right scale-x-0 bg-paper/40 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:origin-left group-focus-visible:origin-left group-hover:scale-x-100 group-focus-visible:scale-x-100"
                       />
                     </a>
                   </li>
@@ -101,7 +101,7 @@ export default function Footer() {
             Back to top
             <span
               aria-hidden
-              className="inline-block transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:-translate-y-1"
+              className="inline-block transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:-translate-y-1 group-focus-visible:-translate-y-1"
             >
               ↑
             </span>

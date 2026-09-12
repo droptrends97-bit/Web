@@ -16,9 +16,12 @@ import { useHasPointer } from "@/lib/hooks";
 /**
  * The plate that rides the cursor.
  *
- * A flat printed colour field with the client set on it — not a gradient, not
- * a glass card. Portrait, because every real piece of work in a studio index
- * is a photograph or a cover, and those are rarely square.
+ * Not a swatch: a press sheet. The index numeral bleeds off the top edge, the
+ * client is set in the studio's own serif, and the foot carries a colour
+ * control strip — the tint ramp printers pull along the edge of a sheet to
+ * check ink density, which is also what the halftone field behind the page is
+ * measuring. Everything is drawn from the project's two data colours, so the
+ * whole index needs no image assets.
  */
 function Plate({
   project,
@@ -29,6 +32,8 @@ function Plate({
   x: MotionValue<number>;
   y: MotionValue<number>;
 }) {
+  const ink = project.plateType;
+
   return (
     <motion.div
       style={{ x, y, translateX: "-50%", translateY: "-50%" }}
@@ -39,22 +44,62 @@ function Plate({
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.97 }}
         transition={{ duration: 0.42, ease: EASE.outExpo }}
-        className="relative h-[24rem] w-[17rem] overflow-hidden"
+        className="relative flex h-[24rem] w-[17rem] flex-col justify-between overflow-hidden"
         style={{ backgroundColor: project.plate }}
       >
-        <div
-          className="absolute inset-x-0 top-0 flex items-baseline justify-between p-4"
-          style={{ color: project.plateType }}
+        {/* index numeral, bled off the head of the sheet */}
+        <span
+          aria-hidden
+          className="display pointer-events-none absolute -top-[0.34em] -left-[0.06em] text-[9rem] leading-none"
+          style={{ color: "transparent", WebkitTextStroke: `0.5px ${ink}59` }}
         >
-          <span className="label" style={{ color: "inherit", opacity: 0.7 }}>
-            {project.sector}
-          </span>
-          <span className="label figure-num" style={{ color: "inherit", opacity: 0.7 }}>
-            {project.year}
-          </span>
-        </div>
-        <div className="absolute inset-x-0 bottom-0 p-4" style={{ color: project.plateType }}>
-          <p className="display text-[1.75rem] leading-[1.05]">{project.client}</p>
+          {project.index}
+        </span>
+
+        <p
+          className="label relative px-4 pt-4"
+          style={{ color: ink, opacity: 0.62 }}
+        >
+          {project.sector}
+        </p>
+
+        <div className="relative">
+          <p
+            className="display px-4 text-[2rem] leading-[1.02]"
+            style={{ color: ink }}
+          >
+            {project.client}
+          </p>
+
+          <div
+            className="mx-4 mt-3 mb-3 flex items-baseline justify-between border-t-[0.5px] pt-2"
+            style={{ borderTopColor: `${ink}3d`, color: ink }}
+          >
+            <span className="label" style={{ color: "inherit", opacity: 0.62 }}>
+              {project.scope}
+            </span>
+            <span
+              className="label figure-num"
+              style={{ color: "inherit", opacity: 0.62 }}
+            >
+              {project.year}
+            </span>
+          </div>
+
+          {/* colour control strip */}
+          <div aria-hidden className="flex h-2 w-full">
+            {[1, 0.75, 0.5, 0.25, 0.1].map((tint) => (
+              <span
+                key={tint}
+                className="h-full flex-1"
+                style={{ backgroundColor: ink, opacity: tint }}
+              />
+            ))}
+            <span
+              className="h-full flex-1"
+              style={{ backgroundColor: "#d4502a" }}
+            />
+          </div>
         </div>
       </motion.div>
     </motion.div>
@@ -127,8 +172,13 @@ export default function Work() {
                   {project.index}
                 </span>
 
-                <span className="display text-[clamp(1.75rem,4.6vw,3.75rem)] transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-2 md:group-hover:translate-x-4">
-                  {project.client}
+                <span className="block transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-2 md:group-hover:translate-x-4">
+                  <span className="display block text-[clamp(1.75rem,4.6vw,3.75rem)]">
+                    {project.client}
+                  </span>
+                  {/* On a phone there is no room for a scope column, but the
+                      scope is the most useful thing in the row. */}
+                  <span className="label mt-1 block md:hidden">{project.scope}</span>
                 </span>
 
                 <span className="hidden text-paper-3 md:block">{project.scope}</span>
@@ -139,7 +189,7 @@ export default function Work() {
 
                 <span
                   aria-hidden
-                  className="hidden text-paper-3 opacity-0 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-1 group-hover:text-vermillion group-hover:opacity-100 md:block"
+                  className="hidden text-paper-3 opacity-0 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-1 group-focus-visible:translate-x-1 group-hover:text-vermillion group-hover:opacity-100 group-focus-visible:opacity-100 md:block"
                 >
                   →
                 </span>
@@ -153,7 +203,7 @@ export default function Work() {
             Full index
             <span
               aria-hidden
-              className="absolute inset-x-0 -bottom-1 h-px origin-right scale-x-0 bg-vermillion transition-transform duration-600 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:origin-left group-hover:scale-x-100"
+              className="absolute inset-x-0 -bottom-1 h-px origin-right scale-x-0 bg-vermillion transition-transform duration-600 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:origin-left group-focus-visible:origin-left group-hover:scale-x-100 group-focus-visible:scale-x-100"
             />
           </a>
         </p>
