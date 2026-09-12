@@ -55,7 +55,26 @@ consistent across sections.
 - **Keyboard parity.** Every underline, arrow and mark driven by `group-hover`
   is mirrored on `group-focus-visible`, so tabbing through the page animates
   exactly what a pointer does.
-- **The background is a halftone screen** (`components/chrome/ScreenField.tsx`).
+- **Threads** (`components/chrome/ScrollThreads.tsx`) — a bundle of white
+  strands running down the page in three dimensions. Each is a helix sampled in
+  world space and pushed through a real perspective projection, so it bows
+  toward the viewer and away again: where a strand swings close it thickens,
+  brightens and its vertical spacing stretches; where it swings behind it thins
+  and compresses toward the vanishing point. The depth is computed, not faked
+  with a gradient. Strands are painter-sorted by mean depth, and each is drawn
+  in three passes — body, a highlight over the near stretches, and a specular
+  spine along the nearest — with the highlight runs feathered at both ends so
+  light falls off instead of ending in a blunt cap.
+
+  Scroll flows the bundle downward faster than the page, so it reads as diving
+  ahead of the reader. The twist blooms through the middle of the document and
+  collapses over the last fifth: the strands converge onto one axis and fade,
+  so the animation resolves at the foot of the page rather than being cut off.
+  A slow time term keeps it breathing while the page is still. Cost is about
+  0.5ms per frame at 1920×1080, drawn at 40fps. Under reduced motion the
+  breathing stops entirely — it paints one frame and redraws only on scroll,
+  so the composition still tracks position without moving on its own.
+- **Behind that, a halftone screen** (`components/chrome/ScreenField.tsx`).
   Four-colour printing rotates each separation to its own screen angle so the
   lattices never moiré — 15° cyan, 75° magenta, 0° yellow, 45° black. Scrolling
   walks the screen through that range, so the page is re-screened as it is

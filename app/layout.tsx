@@ -4,6 +4,7 @@ import { site } from "@/lib/content";
 import SmoothScroll from "@/components/providers/SmoothScroll";
 import Grain from "@/components/chrome/Grain";
 import ScreenField from "@/components/chrome/ScreenField";
+import ScrollThreads from "@/components/chrome/ScrollThreads";
 import Nav from "@/components/chrome/Nav";
 import ScrollProgress from "@/components/chrome/ScrollProgress";
 import "./globals.css";
@@ -51,6 +52,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             MotionConfig, and therefore the same reduced-motion behaviour. */}
         <SmoothScroll>
           <ScreenField />
+          <ScrollThreads />
           <Grain />
           <ScrollProgress />
           <Nav />

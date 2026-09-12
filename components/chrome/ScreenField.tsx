@@ -213,7 +213,7 @@ export default function ScreenField() {
     <canvas
       ref={ref}
       aria-hidden
-      className="pointer-events-none fixed inset-0 -z-10 h-full w-full"
+      className="pointer-events-none fixed inset-0 -z-20 h-full w-full"
     />
   );
 }
