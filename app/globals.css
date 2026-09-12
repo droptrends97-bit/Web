@@ -1,0 +1,308 @@
+@import "tailwindcss";
+
+/* ============================================================
+   NOCTURNE — design tokens
+   A dark, layered system: void black grounds, bone-warm type,
+   acid + violet light sources. Nothing here is default Tailwind.
+   ============================================================ */
+
+@theme {
+  /* --- ground --- */
+  --color-void: #06050a;
+  --color-pitch: #0a0810;
+  --color-carbon: #100d18;
+  --color-slate-ink: #171320;
+
+  /* --- type --- */
+  --color-bone: #efeae1;
+  --color-ash: #a79fb4;
+  --color-smoke: #6b6479;
+  --color-ghost: #3a3446;
+
+  /* --- light sources --- */
+  --color-acid: #c9fa4b;
+  --color-acid-deep: #8fc400;
+  --color-violet-glow: #7a52ff;
+  --color-ember: #ff6a3d;
+
+  /* --- fluid type scale (clamp-driven, viewport reactive) --- */
+  --text-micro: 0.6875rem;
+  --text-label: 0.75rem;
+  --text-body: clamp(0.9375rem, 0.88rem + 0.28vw, 1.0625rem);
+  --text-lead: clamp(1.125rem, 0.98rem + 0.7vw, 1.5rem);
+  --text-h3: clamp(1.5rem, 1.1rem + 1.9vw, 2.5rem);
+  --text-h2: clamp(2.25rem, 1.2rem + 5vw, 5rem);
+  --text-h1: clamp(3rem, 0.6rem + 11vw, 11rem);
+  --text-mega: clamp(4rem, -1rem + 22vw, 20rem);
+
+  /* --- motion --- */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* --- fonts (wired by next/font in layout.tsx) --- */
+  --font-display: var(--font-inter-tight), "Helvetica Neue", sans-serif;
+  --font-serif-accent: var(--font-instrument), Georgia, serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+}
+
+/* ============================================================
+   base
+   ============================================================ */
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    /* Lenis drives scroll; never let the browser fight it. */
+    scroll-behavior: auto;
+    -webkit-text-size-adjust: 100%;
+    /* Must sit on html as well as body: with it only on body the root still
+       overflows, which makes mobile browsers widen the layout viewport and
+       push fixed chrome off-screen. `clip` rather than `hidden` so no scroll
+       container is created and position:fixed keeps working. */
+    overflow-x: clip;
+  }
+
+  body {
+    margin: 0;
+    background-color: var(--color-void);
+    color: var(--color-bone);
+    font-family: var(--font-display);
+    font-size: var(--text-body);
+    line-height: 1.55;
+    font-synthesis-weight: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: clip;
+  }
+
+  /* Lenis owns the scroll position; html/body must not scroll natively. */
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+  .lenis.lenis-stopped {
+    overflow: hidden;
+  }
+
+  ::selection {
+    background: var(--color-acid);
+    color: var(--color-void);
+  }
+
+  :focus-visible {
+    outline: 1px solid var(--color-acid);
+    outline-offset: 3px;
+  }
+
+  /* Hairline dividers — true sub-pixel where the display allows it. */
+  hr {
+    border: 0;
+    height: 0.5px;
+    background: color-mix(in oklab, var(--color-bone) 14%, transparent);
+  }
+
+  /* Native scrollbar, restyled to disappear into the void. */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--color-void);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-slate-ink);
+    border-radius: 99px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-ghost);
+  }
+}
+
+/* ============================================================
+   utilities — the house style
+   ============================================================ */
+
+@utility hairline {
+  border-width: 0.5px;
+  border-style: solid;
+  border-color: color-mix(in oklab, var(--color-bone) 12%, transparent);
+}
+
+@utility hairline-t {
+  border-top-width: 0.5px;
+  border-top-style: solid;
+  border-top-color: color-mix(in oklab, var(--color-bone) 12%, transparent);
+}
+
+@utility hairline-b {
+  border-bottom-width: 0.5px;
+  border-bottom-style: solid;
+  border-bottom-color: color-mix(in oklab, var(--color-bone) 12%, transparent);
+}
+
+@utility hairline-l {
+  border-left-width: 0.5px;
+  border-left-style: solid;
+  border-left-color: color-mix(in oklab, var(--color-bone) 12%, transparent);
+}
+
+/* Eyebrow / technical label — mono, tracked out, small caps energy. */
+@utility eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-smoke);
+}
+
+/* Display headline defaults: tight tracking, tight leading, big weight. */
+@utility display {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.045em;
+  line-height: 0.86;
+  text-wrap: balance;
+}
+
+/* Type filled with a moving gradient — the mask-clip header treatment. */
+@utility text-gradient {
+  background-image: linear-gradient(
+    100deg,
+    var(--color-bone) 0%,
+    var(--color-bone) 30%,
+    var(--color-acid) 50%,
+    var(--color-violet-glow) 70%,
+    var(--color-bone) 100%
+  );
+  background-size: 250% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Hollow display type — outline only, for layered overlaps. */
+@utility text-hollow {
+  color: transparent;
+  -webkit-text-stroke: 0.5px color-mix(in oklab, var(--color-bone) 34%, transparent);
+}
+
+/* The page gutter. One source of truth for horizontal rhythm. */
+@utility gutter {
+  padding-inline: clamp(1.25rem, 4vw, 5rem);
+}
+
+@utility section-y {
+  padding-block: clamp(6rem, 14vh, 12rem);
+}
+
+/* Glass panel: layered translucency over the void. */
+@utility panel {
+  background:
+    linear-gradient(
+      160deg,
+      color-mix(in oklab, var(--color-bone) 6%, transparent) 0%,
+      color-mix(in oklab, var(--color-bone) 1.5%, transparent) 45%,
+      transparent 100%
+    );
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+}
+
+/* ============================================================
+   grain — a single fixed film layer over the whole document
+   ============================================================ */
+
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0.045;
+  background-image: var(--grain-src);
+  background-size: 180px 180px;
+  /* Jitter via background-position rather than an oversized transformed box —
+     the layer stays exactly viewport-sized and can never affect layout. */
+  animation: grain-shift 0.7s steps(1) infinite;
+}
+
+@keyframes grain-shift {
+  0%   { background-position: 0 0; }
+  20%  { background-position: -36px 18px; }
+  40%  { background-position: 24px -30px; }
+  60%  { background-position: -18px 36px; }
+  80%  { background-position: 30px 12px; }
+  100% { background-position: 0 0; }
+}
+
+/* ============================================================
+   ambient light — radial bloom that sits behind content
+   ============================================================ */
+
+.bloom {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(90px);
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+/* ============================================================
+   marquee
+   ============================================================ */
+
+@keyframes marquee-x {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-50%, 0, 0); }
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee-x var(--marquee-duration, 40s) linear infinite;
+  animation-direction: var(--marquee-direction, normal);
+}
+
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+/* ============================================================
+   gradient drift — used on text-gradient headers
+   ============================================================ */
+
+@keyframes gradient-drift {
+  0%   { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+.drift {
+  animation: gradient-drift 9s linear infinite;
+}
+
+/* ============================================================
+   accessibility — respect the user, always
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+
+  .grain {
+    animation: none;
+  }
+}
