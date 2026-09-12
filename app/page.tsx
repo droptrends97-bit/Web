@@ -1,24 +1,24 @@
 import Hero from "@/components/sections/Hero";
-import Ticker from "@/components/sections/Ticker";
+import Services from "@/components/sections/Services";
 import Manifesto from "@/components/sections/Manifesto";
 import Work from "@/components/sections/Work";
-import Capabilities from "@/components/sections/Capabilities";
+import Disciplines from "@/components/sections/Disciplines";
 import Process from "@/components/sections/Process";
-import Metrics from "@/components/sections/Metrics";
-import CallToAction from "@/components/sections/CallToAction";
+import Index from "@/components/sections/Index";
+import Contact from "@/components/sections/Contact";
 import Footer from "@/components/sections/Footer";
 
 export default function Home() {
   return (
     <>
       <Hero />
-      <Ticker />
+      <Services />
       <Manifesto />
       <Work />
-      <Capabilities />
+      <Disciplines />
       <Process />
-      <Metrics />
-      <CallToAction />
+      <Index />
+      <Contact />
       <Footer />
     </>
   );

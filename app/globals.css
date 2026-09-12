@@ -1,49 +1,51 @@
 @import "tailwindcss";
 
 /* ============================================================
-   NOCTURNE — design tokens
-   A dark, layered system: void black grounds, bone-warm type,
-   acid + violet light sources. Nothing here is default Tailwind.
+   SETPIECE — design tokens
+
+   Direction: ink on paper, at night. Warm neutrals (no blue in the
+   greys), one ink-red accent used at roughly two percent of the
+   surface, and depth built from overlap, rules and scale rather
+   than from light. There are no glows in this system.
    ============================================================ */
 
 @theme {
-  /* --- ground --- */
-  --color-void: #06050a;
-  --color-pitch: #0a0810;
-  --color-carbon: #100d18;
-  --color-slate-ink: #171320;
+  /* --- ground: warm blacks, mixed from the paper colour --- */
+  --color-ink: #0d0c0a;
+  --color-ink-raised: #141310;
+  --color-ink-card: #1a1814;
+  --color-ink-edge: #23201a;
 
-  /* --- type --- */
-  --color-bone: #efeae1;
-  --color-ash: #a79fb4;
-  --color-smoke: #6b6479;
-  --color-ghost: #3a3446;
+  /* --- type: a four-step warm ramp --- */
+  --color-paper: #efece4;
+  --color-paper-2: #b3ada0;
+  --color-paper-3: #7b7567;
+  --color-paper-4: #4c483e;
 
-  /* --- light sources --- */
-  --color-acid: #c9fa4b;
-  --color-acid-deep: #8fc400;
-  --color-violet-glow: #7a52ff;
-  --color-ember: #ff6a3d;
+  /* --- the only accent in the system --- */
+  --color-vermillion: #d4502a;
 
-  /* --- fluid type scale (clamp-driven, viewport reactive) --- */
+  /* --- type scale --- *
+     Sized for a high-contrast serif: the display steps run larger
+     and tighter than a sans would take. */
   --text-micro: 0.6875rem;
   --text-label: 0.75rem;
-  --text-body: clamp(0.9375rem, 0.88rem + 0.28vw, 1.0625rem);
-  --text-lead: clamp(1.125rem, 0.98rem + 0.7vw, 1.5rem);
-  --text-h3: clamp(1.5rem, 1.1rem + 1.9vw, 2.5rem);
-  --text-h2: clamp(2.25rem, 1.2rem + 5vw, 5rem);
-  --text-h1: clamp(3rem, 0.6rem + 11vw, 11rem);
-  --text-mega: clamp(4rem, -1rem + 22vw, 20rem);
+  --text-body: clamp(0.9375rem, 0.89rem + 0.22vw, 1.0625rem);
+  --text-lead: clamp(1.125rem, 0.97rem + 0.74vw, 1.5rem);
+  --text-h3: clamp(1.625rem, 1.2rem + 2vw, 2.75rem);
+  --text-h2: clamp(2.5rem, 1.3rem + 5.6vw, 5.75rem);
+  --text-h1: clamp(3.25rem, 0.4rem + 12.5vw, 12rem);
+  --text-mega: clamp(4.5rem, -1.2rem + 25vw, 22rem);
 
   /* --- motion --- */
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
-  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
 
-  /* --- fonts (wired by next/font in layout.tsx) --- */
-  --font-display: var(--font-inter-tight), "Helvetica Neue", sans-serif;
-  --font-serif-accent: var(--font-instrument), Georgia, serif;
-  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+  /* --- fonts (wired by next/font in layout.tsx) --- *
+     One family in two voices. Instrument Serif carries every display
+     size; Instrument Sans carries everything you actually read. */
+  --font-display: var(--font-instrument-serif), "Times New Roman", serif;
+  --font-sans: var(--font-instrument-sans), "Helvetica Neue", Arial, sans-serif;
 }
 
 /* ============================================================
@@ -58,23 +60,22 @@
   }
 
   html {
-    /* Lenis drives scroll; never let the browser fight it. */
     scroll-behavior: auto;
     -webkit-text-size-adjust: 100%;
-    /* Must sit on html as well as body: with it only on body the root still
-       overflows, which makes mobile browsers widen the layout viewport and
-       push fixed chrome off-screen. `clip` rather than `hidden` so no scroll
-       container is created and position:fixed keeps working. */
+    /* Must sit on html as well as body: with it only on body the root
+       still overflows, which makes mobile browsers widen the layout
+       viewport and push fixed chrome off-screen. `clip` rather than
+       `hidden` so no scroll container is created and fixed still works. */
     overflow-x: clip;
   }
 
   body {
     margin: 0;
-    background-color: var(--color-void);
-    color: var(--color-bone);
-    font-family: var(--font-display);
+    background-color: var(--color-ink);
+    color: var(--color-paper);
+    font-family: var(--font-sans);
     font-size: var(--text-body);
-    line-height: 1.55;
+    line-height: 1.6;
     font-synthesis-weight: none;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
@@ -82,7 +83,7 @@
     overflow-x: clip;
   }
 
-  /* Lenis owns the scroll position; html/body must not scroll natively. */
+  /* Lenis owns the scroll position. */
   html.lenis,
   html.lenis body {
     height: auto;
@@ -95,165 +96,114 @@
   }
 
   ::selection {
-    background: var(--color-acid);
-    color: var(--color-void);
+    background: var(--color-vermillion);
+    color: var(--color-paper);
   }
 
   :focus-visible {
-    outline: 1px solid var(--color-acid);
+    outline: 1px solid var(--color-vermillion);
     outline-offset: 3px;
   }
 
-  /* Hairline dividers — true sub-pixel where the display allows it. */
-  hr {
-    border: 0;
-    height: 0.5px;
-    background: color-mix(in oklab, var(--color-bone) 14%, transparent);
-  }
-
-  /* Native scrollbar, restyled to disappear into the void. */
   ::-webkit-scrollbar {
-    width: 8px;
+    width: 9px;
   }
   ::-webkit-scrollbar-track {
-    background: var(--color-void);
+    background: var(--color-ink);
   }
   ::-webkit-scrollbar-thumb {
-    background: var(--color-slate-ink);
-    border-radius: 99px;
+    background: var(--color-ink-edge);
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: var(--color-ghost);
+    background: var(--color-paper-4);
   }
 }
 
 /* ============================================================
-   utilities — the house style
+   utilities
    ============================================================ */
 
 @utility hairline {
   border-width: 0.5px;
   border-style: solid;
-  border-color: color-mix(in oklab, var(--color-bone) 12%, transparent);
+  border-color: color-mix(in oklab, var(--color-paper) 14%, transparent);
 }
 
 @utility hairline-t {
   border-top-width: 0.5px;
   border-top-style: solid;
-  border-top-color: color-mix(in oklab, var(--color-bone) 12%, transparent);
+  border-top-color: color-mix(in oklab, var(--color-paper) 14%, transparent);
 }
 
 @utility hairline-b {
   border-bottom-width: 0.5px;
   border-bottom-style: solid;
-  border-bottom-color: color-mix(in oklab, var(--color-bone) 12%, transparent);
+  border-bottom-color: color-mix(in oklab, var(--color-paper) 14%, transparent);
 }
 
 @utility hairline-l {
   border-left-width: 0.5px;
   border-left-style: solid;
-  border-left-color: color-mix(in oklab, var(--color-bone) 12%, transparent);
+  border-left-color: color-mix(in oklab, var(--color-paper) 14%, transparent);
 }
 
-/* Eyebrow / technical label — mono, tracked out, small caps energy. */
-@utility eyebrow {
-  font-family: var(--font-mono);
+/* Small caps-ish label. Tracked sans, not a monospace — a mono label on
+   every caption is its own kind of costume. */
+@utility label {
+  font-family: var(--font-sans);
   font-size: var(--text-label);
   font-weight: 500;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--color-smoke);
+  color: var(--color-paper-3);
 }
 
-/* Display headline defaults: tight tracking, tight leading, big weight. */
+/* Display type: the serif, set tight. */
 @utility display {
   font-family: var(--font-display);
-  font-weight: 600;
-  letter-spacing: -0.045em;
-  line-height: 0.86;
+  font-weight: 400;
+  letter-spacing: -0.025em;
+  line-height: 0.88;
   text-wrap: balance;
 }
 
-/* Type filled with a moving gradient — the mask-clip header treatment. */
-@utility text-gradient {
-  background-image: linear-gradient(
-    100deg,
-    var(--color-bone) 0%,
-    var(--color-bone) 30%,
-    var(--color-acid) 50%,
-    var(--color-violet-glow) 70%,
-    var(--color-bone) 100%
-  );
-  background-size: 250% 100%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+/* Figures in lists and indices. Lining, tabular, slightly tracked. */
+@utility figure-num {
+  font-variant-numeric: tabular-nums lining-nums;
+  letter-spacing: 0.02em;
 }
 
-/* Hollow display type — outline only, for layered overlaps. */
-@utility text-hollow {
-  color: transparent;
-  -webkit-text-stroke: 0.5px color-mix(in oklab, var(--color-bone) 34%, transparent);
-}
-
-/* The page gutter. One source of truth for horizontal rhythm. */
 @utility gutter {
-  padding-inline: clamp(1.25rem, 4vw, 5rem);
+  padding-inline: clamp(1.25rem, 4vw, 4.5rem);
 }
 
 @utility section-y {
-  padding-block: clamp(6rem, 14vh, 12rem);
-}
-
-/* Glass panel: layered translucency over the void. */
-@utility panel {
-  background:
-    linear-gradient(
-      160deg,
-      color-mix(in oklab, var(--color-bone) 6%, transparent) 0%,
-      color-mix(in oklab, var(--color-bone) 1.5%, transparent) 45%,
-      transparent 100%
-    );
-  backdrop-filter: blur(14px) saturate(140%);
-  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  padding-block: clamp(4.5rem, 9vh, 7.5rem);
 }
 
 /* ============================================================
-   grain — a single fixed film layer over the whole document
+   grain — a fixed paper tooth over the whole document
    ============================================================ */
 
 .grain {
   position: fixed;
   inset: 0;
-  z-index: 100;
+  z-index: 60;
   pointer-events: none;
-  opacity: 0.045;
+  opacity: 0.028;
   background-image: var(--grain-src);
-  background-size: 180px 180px;
-  /* Jitter via background-position rather than an oversized transformed box —
-     the layer stays exactly viewport-sized and can never affect layout. */
-  animation: grain-shift 0.7s steps(1) infinite;
+  background-size: 170px 170px;
+  /* Jitter via background-position: the layer stays exactly viewport
+     sized and can never affect layout. */
+  animation: grain-shift 0.8s steps(1) infinite;
 }
 
 @keyframes grain-shift {
   0%   { background-position: 0 0; }
-  20%  { background-position: -36px 18px; }
-  40%  { background-position: 24px -30px; }
-  60%  { background-position: -18px 36px; }
-  80%  { background-position: 30px 12px; }
+  25%  { background-position: -34px 17px; }
+  50%  { background-position: 22px -28px; }
+  75%  { background-position: -16px 33px; }
   100% { background-position: 0 0; }
-}
-
-/* ============================================================
-   ambient light — radial bloom that sits behind content
-   ============================================================ */
-
-.bloom {
-  position: absolute;
-  border-radius: 9999px;
-  filter: blur(90px);
-  pointer-events: none;
-  will-change: transform, opacity;
 }
 
 /* ============================================================
@@ -268,8 +218,7 @@
 .marquee-track {
   display: flex;
   width: max-content;
-  animation: marquee-x var(--marquee-duration, 40s) linear infinite;
-  animation-direction: var(--marquee-direction, normal);
+  animation: marquee-x var(--marquee-duration, 48s) linear infinite;
 }
 
 .marquee:hover .marquee-track {
@@ -277,20 +226,7 @@
 }
 
 /* ============================================================
-   gradient drift — used on text-gradient headers
-   ============================================================ */
-
-@keyframes gradient-drift {
-  0%   { background-position: 0% 50%; }
-  100% { background-position: 200% 50%; }
-}
-
-.drift {
-  animation: gradient-drift 9s linear infinite;
-}
-
-/* ============================================================
-   accessibility — respect the user, always
+   accessibility
    ============================================================ */
 
 @media (prefers-reduced-motion: reduce) {

@@ -1,169 +1,208 @@
 /**
- * Single source of truth for site copy.
- * Sections read from here so content can be swapped without touching motion code.
+ * All site copy in one place. Sections read from here, so words can change
+ * without anyone touching motion code.
+ *
+ * Placeholder content for a fictional studio — swap it for the real thing.
  */
 
 export const site = {
-  name: "Nocturne",
-  tagline: "Creative technology studio",
-  location: "London",
+  name: "Setpiece",
+  what: "Design and front-end",
+  city: "London",
+  district: "Bermondsey",
   timezone: "Europe/London",
   founded: "2019",
-  email: "studio@nocturne.dev",
+  email: "hello@setpiece.studio",
+  phone: "+44 20 7946 0813",
 } as const;
 
 export const nav = [
   { label: "Work", href: "#work" },
-  { label: "Capabilities", href: "#capabilities" },
-  { label: "Process", href: "#process" },
   { label: "Studio", href: "#studio" },
+  { label: "Process", href: "#process" },
+  { label: "Contact", href: "#contact" },
 ] as const;
 
 export const hero = {
-  eyebrow: `${site.tagline} — ${site.location} / Est. ${site.founded}`,
-  lines: ["We design", "the unreasonable", "web"],
-  /** index of the line rendered in the serif-italic gradient treatment */
-  accentLine: 1,
-  sub: "Interface engineering and motion design for companies who refuse to look like everyone else.",
-  primaryCta: { label: "Start a project", href: "#studio" },
-  secondaryCta: { label: "See the work", href: "#work" },
+  eyebrow: `${site.what} · ${site.city} · Since ${site.founded}`,
+  lines: ["Design", "and front-end,", "under one roof."],
+  /** Line set in the serif italic. One word of voice, not a gradient. */
+  italicLine: 1,
+  sub: "Sixteen of us, above a printworks in Bermondsey. We take four or five projects a year and stay on each one from the first sketch to the last deploy.",
+  primaryCta: { label: "Start a conversation", href: "#contact" },
+  secondaryCta: { label: "Selected work", href: "#work" },
 } as const;
 
-export const ticker = [
-  "Motion design",
-  "WebGL",
-  "Design systems",
+export const services = [
   "Brand identity",
+  "Websites",
+  "Design systems",
   "Front-end engineering",
   "Art direction",
-  "Prototyping",
+  "Editorial",
+  "Accessibility",
 ] as const;
 
 export const manifesto = {
-  eyebrow: "Manifesto",
+  eyebrow: "Position",
   body:
-    "Most of the internet is a spreadsheet with rounded corners. We make the other kind — interfaces with weight, rhythm and a pulse, engineered to hold sixty frames a second on the phone in your pocket.",
-  signature: "— The studio",
+    "We are less interested in work that looks expensive than in the moment a page opens on a four-year-old Android, in a tunnel, and still feels like somebody thought about it.",
+  attribution: "Studio handbook, page one",
 } as const;
 
 export type Project = {
   index: string;
-  title: string;
-  discipline: string;
+  client: string;
+  scope: string;
+  sector: string;
   year: string;
-  /** two-stop gradient used to generate the hover plate — no image assets required */
-  hue: [string, string];
+  /** Flat field colour for the hover plate. Muted, printed, never neon. */
+  plate: string;
+  /** Type colour that sits on the plate. */
+  plateType: string;
 };
 
 export const projects: Project[] = [
   {
     index: "01",
-    title: "Halcyon Capital",
-    discipline: "Brand & web platform",
+    client: "Marlow & Fitch",
+    scope: "Identity, website",
+    sector: "Publishing",
     year: "2025",
-    hue: ["#7a52ff", "#1a0f3d"],
+    plate: "#8a3f2b",
+    plateType: "#f4ede2",
   },
   {
     index: "02",
-    title: "Sonder Audio",
-    discipline: "Commerce / WebGL",
+    client: "Kestrel Instruments",
+    scope: "Product site",
+    sector: "Hardware",
     year: "2025",
-    hue: ["#c9fa4b", "#1d2a00"],
+    plate: "#3f4a3c",
+    plateType: "#eef0e6",
   },
   {
     index: "03",
-    title: "Meridian Health",
-    discipline: "Design system",
+    client: "Southbank Ballet",
+    scope: "Season site, ticketing",
+    sector: "Arts",
     year: "2024",
-    hue: ["#3ad1c8", "#03211f"],
+    plate: "#2f3a4a",
+    plateType: "#e8edf4",
   },
   {
     index: "04",
-    title: "Atlas Robotics",
-    discipline: "Product marketing",
+    client: "Tide & Tow",
+    scope: "Commerce",
+    sector: "Outdoor",
     year: "2024",
-    hue: ["#ff6a3d", "#2b0d03"],
+    plate: "#8d7434",
+    plateType: "#f7f1dd",
   },
   {
     index: "05",
-    title: "Vanta Studios",
-    discipline: "Identity & site",
+    client: "Werrington Trust",
+    scope: "Design system",
+    sector: "Healthcare",
     year: "2023",
-    hue: ["#e8e3d8", "#22202b"],
+    plate: "#d8d2c4",
+    plateType: "#1a1814",
   },
 ];
 
-export const capabilities = [
+export const disciplines = [
   {
-    index: "A",
-    title: "Interface design",
+    num: "01",
+    title: "Identity",
     body:
-      "Layout, type and colour systems built from first principles. We design in the browser, so what you approve is what ships.",
-    items: ["Art direction", "UI systems", "Typography", "Prototyping"],
+      "Wordmarks, type systems, colour, photographic direction and the guidelines that keep them intact once we leave.",
+    items: ["Naming", "Wordmarks", "Type systems", "Guidelines"],
   },
   {
-    index: "B",
-    title: "Motion & interaction",
+    num: "02",
+    title: "Websites",
     body:
-      "Choreography, not decoration. Every transition carries meaning about state, hierarchy and cause.",
-    items: ["Scroll choreography", "Micro-interaction", "Page transitions", "WebGL"],
+      "Designed in the browser from week two, so the thing you sign off is the thing that ships rather than a picture of it.",
+    items: ["Art direction", "Prototypes", "Copy support", "CMS"],
   },
   {
-    index: "C",
-    title: "Front-end engineering",
+    num: "03",
+    title: "Front-end",
     body:
-      "Typed, accessible, fast. React and Next.js delivered with budgets we hold ourselves to after launch.",
-    items: ["Next.js", "Accessibility", "Performance", "Headless CMS"],
+      "React and Next.js, typed and tested. We agree a performance budget in week one and hold ourselves to it after launch.",
+    items: ["Next.js", "Accessibility", "Performance", "Handover"],
   },
   {
-    index: "D",
-    title: "Design systems",
+    num: "04",
+    title: "Systems",
     body:
-      "Tokens, primitives and documentation that let an in-house team keep the quality bar after we hand over.",
-    items: ["Tokens", "Component libraries", "Docs", "Governance"],
+      "Tokens, components and documentation for in-house teams who have to keep shipping long after the launch post.",
+    items: ["Tokens", "Components", "Documentation", "Training"],
   },
 ] as const;
 
 export const process = [
   {
     step: "01",
-    title: "Orient",
+    title: "Read the room",
+    weeks: "Weeks 1—2",
     body:
-      "Two weeks inside your business. We audit what exists, interview the people who use it, and agree on the one metric this work has to move.",
+      "We sit in your office, read the support tickets and talk to the people who use the thing every day. At the end we agree the one number this project has to move.",
   },
   {
     step: "02",
-    title: "Compose",
+    title: "Set the direction",
+    weeks: "Weeks 3—5",
     body:
-      "Art direction first. Type, colour, grid and motion language, explored as real pages in a real browser rather than static boards.",
+      "Two routes, built as working pages rather than static boards. You look at them on your own phone, on your own connection, before anyone commits.",
   },
   {
     step: "03",
-    title: "Engineer",
+    title: "Build it",
+    weeks: "Weeks 6—12",
     body:
-      "Design and build run together. Components arrive typed, accessible and measured against a performance budget from the first commit.",
+      "Design and engineering run together in one repo. Everything lands typed, accessible and measured against the budget we set in week one.",
   },
   {
     step: "04",
-    title: "Launch",
+    title: "Hand it over",
+    weeks: "Weeks 13—16",
     body:
-      "We ship, watch the numbers, and stay on for a cycle of refinement. Then we hand over a system your team can actually drive.",
+      "We launch, watch the numbers for a month, fix what the real world finds, then train your team on the system and get out of the way.",
   },
 ] as const;
 
-export const metrics = [
-  { value: 74, suffix: "", label: "Projects shipped" },
-  { value: 12, suffix: "", label: "Awards & mentions" },
-  { value: 98, suffix: "", label: "Median Lighthouse" },
-  { value: 6, suffix: "", label: "Continents served" },
+export const clients = [
+  "Marlow & Fitch",
+  "Kestrel Instruments",
+  "Southbank Ballet",
+  "Tide & Tow",
+  "Werrington Trust",
+  "Halland Paper",
+  "The Lowry Archive",
+  "Pike Street Records",
 ] as const;
+
+export const recognition = [
+  { name: "D&AD, Wood Pencil — Digital Design", year: "2025" },
+  { name: "Type Directors Club, Certificate of Excellence", year: "2024" },
+  { name: "Creative Review Annual, selected", year: "2024" },
+  { name: "Design Week Awards, shortlist", year: "2023" },
+] as const;
+
+export const contact = {
+  heading: "Tell us what you're making.",
+  body:
+    "We read everything ourselves and reply within two working days — including the ones we turn down.",
+  availability: "Taking on two projects for spring",
+} as const;
 
 export const footerLinks = [
   {
     heading: "Studio",
     links: [
       { label: "Work", href: "#work" },
-      { label: "Capabilities", href: "#capabilities" },
+      { label: "What we do", href: "#studio" },
       { label: "Process", href: "#process" },
     ],
   },
@@ -171,8 +210,10 @@ export const footerLinks = [
     heading: "Elsewhere",
     links: [
       { label: "Instagram", href: "#" },
-      { label: "Dribbble", href: "#" },
+      { label: "Are.na", href: "#" },
       { label: "LinkedIn", href: "#" },
     ],
   },
 ] as const;
+
+export const address = ["Unit 4, Tanner Street", "London SE1 3LD"] as const;

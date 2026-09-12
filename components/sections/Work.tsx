@@ -7,7 +7,8 @@ import {
   useSpring,
   useTransform,
 } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import type { MotionValue } from "framer-motion";
 import { projects, type Project } from "@/lib/content";
 import { EASE, inViewLoose } from "@/lib/motion";
 import { useHasPointer } from "@/lib/hooks";
@@ -15,61 +16,45 @@ import { useHasPointer } from "@/lib/hooks";
 /**
  * The plate that rides the cursor.
  *
- * It is generated entirely from each project's two-stop gradient — no image
- * assets — and tilts based on how fast the pointer is travelling, which is what
- * sells it as a physical card rather than a div following a mouse.
+ * A flat printed colour field with the client set on it — not a gradient, not
+ * a glass card. Portrait, because every real piece of work in a studio index
+ * is a photograph or a cover, and those are rarely square.
  */
 function Plate({
   project,
   x,
   y,
-  rotate,
 }: {
   project: Project;
-  x: ReturnType<typeof useSpring>;
-  y: ReturnType<typeof useSpring>;
-  rotate: ReturnType<typeof useTransform<number, number>>;
+  x: MotionValue<number>;
+  y: MotionValue<number>;
 }) {
   return (
     <motion.div
-      style={{ x, y, rotate, translateX: "-50%", translateY: "-50%" }}
+      style={{ x, y, translateX: "-50%", translateY: "-50%" }}
       className="pointer-events-none fixed top-0 left-0 z-40 hidden md:block"
     >
       <motion.div
-        initial={{ opacity: 0, scale: 0.82, filter: "blur(10px)" }}
-        animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-        exit={{ opacity: 0, scale: 0.9, filter: "blur(10px)" }}
-        transition={{ duration: 0.45, ease: EASE.outExpo }}
-        className="hairline relative size-[22rem] overflow-hidden rounded-[2px]"
-        style={{
-          background: `linear-gradient(145deg, ${project.hue[0]} 0%, ${project.hue[1]} 78%)`,
-        }}
+        initial={{ opacity: 0, scale: 0.94, y: 10 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.97 }}
+        transition={{ duration: 0.42, ease: EASE.outExpo }}
+        className="relative h-[24rem] w-[17rem] overflow-hidden"
+        style={{ backgroundColor: project.plate }}
       >
-        {/* interior structure so the plate reads as a composition, not a swatch */}
-        <div aria-hidden className="absolute inset-0 opacity-[0.14]">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <div
-              key={i}
-              className="absolute inset-y-0 w-px bg-void"
-              style={{ left: `${((i + 1) / 7) * 100}%` }}
-            />
-          ))}
-        </div>
         <div
-          aria-hidden
-          className="absolute inset-0"
-          style={{
-            background:
-              "radial-gradient(120% 80% at 20% 10%, rgba(255,255,255,0.22), transparent 60%)",
-          }}
-        />
-        <div className="absolute inset-x-0 bottom-0 flex items-end justify-between p-5">
-          <span className="display text-[1.5rem] leading-none text-void/85">
-            {project.title}
+          className="absolute inset-x-0 top-0 flex items-baseline justify-between p-4"
+          style={{ color: project.plateType }}
+        >
+          <span className="label" style={{ color: "inherit", opacity: 0.7 }}>
+            {project.sector}
           </span>
-          <span className="font-mono text-[10px] tracking-[0.16em] text-void/60 uppercase">
+          <span className="label figure-num" style={{ color: "inherit", opacity: 0.7 }}>
             {project.year}
           </span>
+        </div>
+        <div className="absolute inset-x-0 bottom-0 p-4" style={{ color: project.plateType }}>
+          <p className="display text-[1.75rem] leading-[1.05]">{project.client}</p>
         </div>
       </motion.div>
     </motion.div>
@@ -82,13 +67,25 @@ export default function Work() {
 
   const px = useMotionValue(0);
   const py = useMotionValue(0);
-  const x = useSpring(px, { stiffness: 220, damping: 26, mass: 0.7 });
-  const y = useSpring(py, { stiffness: 220, damping: 26, mass: 0.7 });
+  const x = useSpring(px, { stiffness: 260, damping: 30, mass: 0.6 });
+  const y = useSpring(py, { stiffness: 260, damping: 30, mass: 0.6 });
 
-  // Lag between raw and sprung position becomes the plate's tilt.
-  const rotate = useTransform<number, number>([px, x], ([raw, eased]) =>
-    Math.max(-14, Math.min(14, ((raw as number) - (eased as number)) * 0.12)),
-  );
+  // The plate sits beside the pointer rather than under it, so it never covers
+  // the row you are reading — clamped so it stays on screen near the edges.
+  const [vw, setVw] = useState(0);
+  useEffect(() => {
+    const sync = () => setVw(window.innerWidth);
+    sync();
+    window.addEventListener("resize", sync);
+    return () => window.removeEventListener("resize", sync);
+  }, []);
+
+  const plateX = useTransform(x, (v) => {
+    const halfPlate = 136; // 17rem / 2
+    const offset = 208;
+    const max = (vw || 1600) - halfPlate - 32;
+    return Math.min(v + offset, max);
+  });
 
   const onMove = (event: React.PointerEvent) => {
     px.set(event.clientX);
@@ -96,92 +93,75 @@ export default function Work() {
   };
 
   return (
-    <section id="work" className="section-y relative isolate">
-      <div aria-hidden className="bloom size-[38rem] top-0 -right-[14rem] bg-acid/10" />
-
-      <div className="gutter mx-auto max-w-[110rem]">
-        {/* header */}
-        <div className="hairline-b flex flex-wrap items-end justify-between gap-6 pb-6">
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={inViewLoose}
-            transition={{ duration: 1, ease: EASE.outExpo }}
-            className="display text-h2"
-          >
-            Selected work
-          </motion.h2>
-          <span className="eyebrow">
-            {String(projects.length).padStart(2, "0")} projects / 2023—2025
-          </span>
+    <section id="work" className="section-y">
+      <div className="gutter mx-auto max-w-[104rem]">
+        <div className="hairline-b flex flex-wrap items-baseline justify-between gap-4 pb-4">
+          <h2 className="label">Selected work</h2>
+          <p className="label figure-num">
+            {projects.length} of 31 · 2023—2025
+          </p>
         </div>
 
-        {/* index */}
-        <ul onPointerMove={hasPointer ? onMove : undefined} onPointerLeave={() => setActive(null)}>
+        <ul
+          onPointerMove={hasPointer ? onMove : undefined}
+          onPointerLeave={() => setActive(null)}
+        >
           {projects.map((project, i) => (
             <motion.li
               key={project.index}
-              initial={{ opacity: 0, y: 40 }}
+              initial={{ opacity: 0, y: 28 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={inViewLoose}
-              transition={{ duration: 0.9, delay: i * 0.06, ease: EASE.outExpo }}
+              transition={{ duration: 0.85, delay: i * 0.05, ease: EASE.outExpo }}
               onPointerEnter={() => setActive(i)}
-              // Neighbouring rows recede while one is focused.
-              animate={{
-                opacity: active === null || active === i ? 1 : 0.32,
-                filter: active === null || active === i ? "blur(0px)" : "blur(1.5px)",
-              }}
+              // Neighbours step back. No blur — just a drop in contrast,
+              // the way a printed index dims under a reading finger.
+              animate={{ opacity: active === null || active === i ? 1 : 0.38 }}
               className="hairline-b"
             >
               <a
                 href="#"
-                data-cursor="view"
-                data-cursor-label="View case"
-                className="group relative flex items-center gap-4 py-7 md:gap-10 md:py-10"
+                className="group grid grid-cols-[2.5rem_1fr_auto] items-baseline gap-x-4 py-6 md:grid-cols-[4rem_minmax(0,1fr)_14rem_4.5rem_1.5rem] md:gap-x-8 md:py-8"
               >
-                {/* acid sweep that fills the row from the left on hover */}
-                <span
-                  aria-hidden
-                  className="absolute inset-x-0 bottom-0 h-px origin-left scale-x-0 bg-acid transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-x-100"
-                />
-
-                <span className="font-mono text-[11px] tracking-[0.16em] text-smoke transition-colors duration-500 group-hover:text-acid">
+                <span className="label figure-num transition-colors duration-500 group-hover:text-vermillion">
                   {project.index}
                 </span>
 
-                <span className="flex-1 overflow-hidden">
-                  <span className="display block text-[clamp(1.75rem,5.5vw,4.5rem)] transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-3 md:group-hover:translate-x-6">
-                    {project.title}
-                  </span>
+                <span className="display text-[clamp(1.75rem,4.6vw,3.75rem)] transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-2 md:group-hover:translate-x-4">
+                  {project.client}
                 </span>
 
-                <span className="hidden shrink-0 text-right font-mono text-[11px] tracking-[0.14em] text-ash uppercase md:block">
-                  {project.discipline}
-                </span>
+                <span className="hidden text-paper-3 md:block">{project.scope}</span>
 
-                <span className="shrink-0 font-mono text-[11px] tracking-[0.14em] text-smoke">
+                <span className="label figure-num col-start-3 row-start-1 text-right md:col-start-4 md:text-left">
                   {project.year}
                 </span>
 
-                <svg
-                  viewBox="0 0 16 16"
+                <span
                   aria-hidden
-                  className="size-4 shrink-0 -translate-x-2 text-acid opacity-0 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-0 group-hover:opacity-100"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
+                  className="hidden text-paper-3 opacity-0 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-1 group-hover:text-vermillion group-hover:opacity-100 md:block"
                 >
-                  <path d="M4 12L12 4M6 4h6v6" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
+                  →
+                </span>
               </a>
             </motion.li>
           ))}
         </ul>
+
+        <p className="label mt-6">
+          <a href="#" className="group relative inline-block text-paper-2 hover:text-paper">
+            Full index
+            <span
+              aria-hidden
+              className="absolute inset-x-0 -bottom-1 h-px origin-right scale-x-0 bg-vermillion transition-transform duration-600 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:origin-left group-hover:scale-x-100"
+            />
+          </a>
+        </p>
       </div>
 
       <AnimatePresence>
         {hasPointer && active !== null && (
-          <Plate key={projects[active].index} project={projects[active]} x={x} y={y} rotate={rotate} />
+          <Plate key={projects[active].index} project={projects[active]} x={plateX} y={y} />
         )}
       </AnimatePresence>
     </section>

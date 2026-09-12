@@ -8,9 +8,9 @@ import { EASE, inViewLoose } from "@/lib/motion";
 /**
  * One step in the stack.
  *
- * Every card pins to the same offset and the outgoing card scales down and
- * darkens as the next one slides over it — the deck compresses as you scroll
- * rather than each step simply scrolling past.
+ * Cards pin at the same offset and the outgoing one sinks under a scrim as the
+ * next slides over it. Opacity is deliberately NOT animated on the card itself:
+ * a translucent card lets the one beneath bleed through the stack.
  */
 function Step({
   item,
@@ -22,56 +22,45 @@ function Step({
   total: number;
 }) {
   const ref = useRef<HTMLDivElement>(null);
+  const still = useReducedMotion();
+
   const { scrollYProgress } = useScroll({
     target: ref,
-    offset: ["start 0.35", "end 0.1"],
+    offset: ["start 0.32", "end 0.1"],
   });
 
-  // Cards deeper in the stack settle slightly smaller and fall into shadow.
-  // Opacity is deliberately NOT animated: a translucent card would let the one
-  // beneath it bleed through the stack. A scrim does the dimming instead.
-  const still = useReducedMotion();
-  const scale = useTransform(scrollYProgress, [0, 1], [1, still ? 1 : 0.91]);
-  const scrim = useTransform(scrollYProgress, [0, 1], [0, 0.72]);
+  const scale = useTransform(scrollYProgress, [0, 1], [1, still ? 1 : 0.94]);
+  const scrim = useTransform(scrollYProgress, [0, 1], [0, 0.78]);
 
   return (
     <div
       ref={ref}
       className="sticky"
-      // Each card pins a little lower, so the stack fans out at the top edge.
-      style={{ top: `calc(14vh + ${index * 1.1}rem)` }}
+      style={{ top: `calc(16vh + ${index * 0.9}rem)` }}
     >
       <motion.article
         style={{ scale, transformOrigin: "center top" }}
-        className="hairline relative overflow-hidden rounded-[4px] bg-carbon shadow-[0_-24px_60px_-20px_rgba(0,0,0,0.9)]"
+        className="hairline relative overflow-hidden bg-ink-card"
       >
-        <div
-          aria-hidden
-          className="absolute inset-0"
-          style={{
-            background:
-              "radial-gradient(90% 120% at 88% 0%, rgba(122,82,255,0.14), transparent 62%)",
-          }}
-        />
-        {/* the scrim that sinks this card as the next one arrives */}
         <motion.div
           aria-hidden
           style={{ opacity: scrim }}
-          className="absolute inset-0 z-10 bg-void"
+          className="absolute inset-0 z-10 bg-ink"
         />
-        <div className="relative z-0 grid min-h-[18rem] gap-6 p-8 md:grid-cols-12 md:items-start md:gap-10 md:p-14">
-          <div className="flex items-center gap-4 md:col-span-3 md:block">
-            <span className="display text-[3rem] leading-none text-acid md:text-[5rem]">
+        <div className="relative z-0 grid min-h-[17rem] gap-5 p-7 md:grid-cols-12 md:gap-8 md:p-12">
+          <div className="flex items-baseline gap-4 md:col-span-3 md:block">
+            <span className="display figure-num text-[2.75rem] leading-none text-vermillion md:text-[4rem]">
               {item.step}
             </span>
-            <span className="eyebrow md:mt-3 md:block">
-              Step {index + 1} of {total}
-            </span>
+            <p className="label md:mt-4">{item.weeks}</p>
+            <p className="label hidden md:mt-1 md:block">
+              Step {index + 1} / {total}
+            </p>
           </div>
 
-          <div className="md:col-span-9">
+          <div className="md:col-span-8 md:col-start-5">
             <h3 className="display text-h2">{item.title}</h3>
-            <p className="text-lead mt-5 max-w-[46ch] text-ash">{item.body}</p>
+            <p className="text-lead mt-5 max-w-[44ch] text-paper-2">{item.body}</p>
           </div>
         </div>
       </motion.article>
@@ -80,43 +69,25 @@ function Step({
 }
 
 export default function Process() {
-  const stackRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: stackRef,
-    offset: ["start 0.6", "end 0.9"],
-  });
-  const railScale = useTransform(scrollYProgress, [0, 1], [0, 1]);
-
   return (
-    <section id="process" className="section-y relative isolate">
-      <div className="gutter mx-auto max-w-[110rem]">
-        <div className="mb-12 flex flex-wrap items-end justify-between gap-6 md:mb-20">
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={inViewLoose}
-            transition={{ duration: 1, ease: EASE.outExpo }}
-            className="display text-h2"
-          >
-            How it runs
-          </motion.h2>
-          <span className="eyebrow">Typically 10—16 weeks</span>
+    <section id="process" className="section-y">
+      <div className="gutter mx-auto max-w-[104rem]">
+        <div className="hairline-b mb-12 flex flex-wrap items-baseline justify-between gap-4 pb-4 md:mb-20">
+          <h2 className="label">How a project runs</h2>
+          <p className="label">Sixteen weeks, typically</p>
         </div>
 
-        <div ref={stackRef} className="relative">
-          {/* progress rail — scrubs with the stack */}
-          <motion.div
-            aria-hidden
-            style={{ scaleY: railScale }}
-            className="absolute top-0 -left-4 hidden h-full w-px origin-top bg-gradient-to-b from-acid via-violet-glow to-transparent md:block"
-          />
-
-          <div className="flex flex-col gap-6">
-            {process.map((item, i) => (
-              <Step key={item.step} item={item} index={i} total={process.length} />
-            ))}
-          </div>
-        </div>
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={inViewLoose}
+          transition={{ duration: 0.9, ease: EASE.outExpo }}
+          className="flex flex-col gap-5"
+        >
+          {process.map((item, i) => (
+            <Step key={item.step} item={item} index={i} total={process.length} />
+          ))}
+        </motion.div>
       </div>
     </section>
   );
