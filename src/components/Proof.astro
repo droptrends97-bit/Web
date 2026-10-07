@@ -17,7 +17,7 @@ const logos = [
         <p>{lead.quote}</p>
       </blockquote>
       <figcaption>
-        <span class="avatar" aria-hidden="true">{lead.name.split(' ').map((n) => n[0]).join('')}</span>
+        <span class="avatar" aria-hidden="true" data-pop style="--d:3">{lead.name.split(' ').map((n) => n[0]).join('')}</span>
         <span>{lead.name}<br /><span class="role">Client</span></span>
       </figcaption>
     </figure>
@@ -109,12 +109,15 @@ const logos = [
     height: 6.5rem;
     width: 12rem;
     padding: 0.9rem 1.2rem;
-    display: grid;
-    place-items: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
   }
   .logos img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
   }
 </style>

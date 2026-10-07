@@ -286,6 +286,59 @@ a {
   filter: none;
 }
 
+/* Pop: springy scale-in */
+.js [data-pop] {
+  opacity: 0;
+  transform: scale(0.82) translateY(18px);
+  transition:
+    opacity 500ms var(--ease-out),
+    transform 800ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition-delay: calc(var(--d, 0) * 90ms);
+}
+.js [data-pop].in {
+  opacity: 1;
+  transform: none;
+}
+
+/* Typewriter: characters keep their space, so nothing reflows while typing. */
+.tc {
+  opacity: 0;
+}
+.tc.on {
+  opacity: 1;
+}
+.caret {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0.8em;
+}
+.caret::after {
+  content: '';
+  position: absolute;
+  left: 0.05em;
+  bottom: -0.05em;
+  width: 0.07em;
+  min-width: 2px;
+  height: 0.9em;
+  background: var(--leaf);
+  border-radius: 2px;
+  animation: blink 1s steps(1) infinite;
+}
+.caret.done::after {
+  animation: fade-caret 600ms forwards;
+}
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+@keyframes fade-caret {
+  to {
+    opacity: 0;
+  }
+}
+
 /* Infinite marquee */
 .marquee {
   display: flex;
@@ -314,7 +367,8 @@ a {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .js [data-reveal] {
+  .js [data-reveal],
+  .js [data-pop] {
     opacity: 1;
     transform: none;
     filter: none;

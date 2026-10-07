@@ -11,11 +11,11 @@ const { heading = 'Tell us about your garden.' } = Astro.props;
 <section class="cta" aria-labelledby="cta-title">
   <div class="cta-card" data-reveal>
     <div class="cta-copy">
-      <h2 id="cta-title">{heading}</h2>
+      <h2 id="cta-title" data-type>{heading}</h2>
       <p>Call Darragh for a chat, or send a few details and we'll arrange a visit. We work across {contact.area}.</p>
     </div>
     <div class="cta-actions">
-      <a class="cta-phone" href={contact.phoneHref}>
+      <a class="cta-phone" href={contact.phoneHref} data-pop style="--d:2">
         <span class="cta-phone-icon"><Icon name="phone" /></span>
         <span>{contact.phone}</span>
       </a>

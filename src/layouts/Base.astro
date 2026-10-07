@@ -143,18 +143,55 @@ const jsonLd = {
       addEventListener('scroll', onScroll, { passive: true });
       onScroll();
 
+      const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      // Typewriter for [data-type] headings: the text is in the HTML, JS only hides and reveals it.
+      const typeIt = (el: HTMLElement) => {
+        const text = el.textContent ?? '';
+        el.setAttribute('aria-label', text);
+        el.textContent = '';
+        const chars = [...text].map((c) => {
+          const s = document.createElement('span');
+          s.className = 'tc';
+          s.textContent = c;
+          s.setAttribute('aria-hidden', 'true');
+          el.append(s);
+          return s;
+        });
+        const caret = document.createElement('span');
+        caret.className = 'caret';
+        caret.setAttribute('aria-hidden', 'true');
+        el.prepend(caret);
+        const speed = Number(el.dataset.speed) || 34;
+        let i = 0;
+        const step = () => {
+          if (i < chars.length) {
+            const c = chars[i++];
+            c.classList.add('on');
+            c.after(caret);
+            setTimeout(step, speed + (/[,.?]/.test(c.textContent ?? '') ? 260 : Math.random() * 30));
+          } else {
+            setTimeout(() => caret.classList.add('done'), 1400);
+          }
+        };
+        step();
+      };
+
       const io = new IntersectionObserver(
         (entries) => {
           for (const e of entries) {
-            if (e.isIntersecting) {
-              e.target.classList.add('in');
-              io.unobserve(e.target);
-            }
+            if (!e.isIntersecting) continue;
+            const el = e.target as HTMLElement;
+            if (el.hasAttribute('data-type')) typeIt(el);
+            else el.classList.add('in');
+            io.unobserve(el);
           }
         },
         { rootMargin: '0px 0px -8% 0px', threshold: 0.12 },
       );
-      document.querySelectorAll('[data-reveal]').forEach((el) => io.observe(el));
+      document
+        .querySelectorAll<HTMLElement>(reduce ? '[data-reveal], [data-pop]' : '[data-reveal], [data-pop], [data-type]')
+        .forEach((el) => io.observe(el));
     </script>
   </body>
 </html>

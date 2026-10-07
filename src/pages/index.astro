@@ -18,11 +18,10 @@ const colA = [
 const colB = [
   { src: '/img/bench-border.jpg', alt: 'A curved lawn with bay trees and a white bench.' },
   { src: '/img/alliums-van.jpg', alt: 'Purple alliums in front of the Darragh Connolly van.' },
-  { src: '/img/garden-bench-panorama.jpg', alt: 'A white bench before trellis and hydrangeas.' },
-  { src: '/img/lawn-stripes.jpg', alt: 'A freshly striped lawn.' },
+  { src: '/img/striped-lawn-bench.jpg', alt: 'A striped lawn leading to a white bench.' },
+  { src: '/img/topiary-tulips.jpg', alt: 'Lollipop topiary above pink tulips at a granite entrance.' },
 ];
 
-const headline = 'Your garden, looked after all year.'.split(' ');
 const ticker = ['Lawn care', 'Hedging', 'Bulb planting', 'Pots & planters', 'Pruning', 'Mulching', 'Garden health', 'Weeding', 'Border care', 'Power washing'];
 
 const steps = [
@@ -56,15 +55,7 @@ const statement =
   <!-- Hero -->
   <section class="hero" aria-labelledby="hero-title">
     <div class="hero-copy">
-      <h1 id="hero-title" class="words">
-        {
-          headline.map((w, i) => (
-            <span class="w">
-              <span style={`--i:${i}`}>{w}</span>
-            </span>
-          ))
-        }
-      </h1>
+      <h1 id="hero-title" data-type data-speed="55">Your garden, looked after all year.</h1>
       <p class="lede hero-lede">
         Darragh Connolly and his team care for gardens across Dublin and North Wicklow: regular maintenance, seasonal
         interventions, lawn health and planted pots.
@@ -116,28 +107,28 @@ const statement =
   <section class="services" aria-labelledby="services-title">
     <div class="wrap">
       <div class="section-head" data-reveal>
-        <h2 id="services-title">How we look after a garden</h2>
+        <h2 id="services-title" data-type>How we look after a garden</h2>
         <p class="lede">Garden care is all we do. Start with a visit or a Garden Intervention, then keep it right with regular care.</p>
       </div>
 
       <div class="bento">
-        <article class="tile tile-care" data-reveal>
+        <article class="tile tile-care" data-pop>
           <div class="care-top">
             <img src={care.image} alt={care.imageAlt} loading="lazy" />
             <div class="care-head">
               <h3><a href={`/services/${care.slug}/`}>{care.name}</a></h3>
               <p>{care.short}</p>
               <ul class="freq">
-                <li>Monthly</li>
-                <li>Fortnightly</li>
-                <li>Weekly</li>
+                <li data-pop style="--d:3">Monthly</li>
+                <li data-pop style="--d:4">Fortnightly</li>
+                <li data-pop style="--d:5">Weekly</li>
               </ul>
             </div>
           </div>
           <ul class="visits">
             {
-              visitOptions.map((v) => (
-                <li>
+              visitOptions.map((v, i) => (
+                <li data-pop style={`--d:${i + 2}`}>
                   <span class="v-len">{v.length}</span>
                   <span class="v-team">{v.team}</span>
                 </li>
@@ -149,7 +140,7 @@ const statement =
 
         {
           [intervention, health, pots].map((s, i) => (
-            <a class:list={['tile', 'tile-photo', `tile-${s.slug}`]} href={`/services/${s.slug}/`} data-reveal style={`--d:${i + 1}`}>
+            <a class:list={['tile', 'tile-photo', `tile-${s.slug}`]} href={`/services/${s.slug}/`} data-pop style={`--d:${i + 1}`}>
               <img src={s.image} alt="" loading="lazy" />
               <span class="tile-body">
                 <span class="tile-name">{s.name}</span>
@@ -162,10 +153,10 @@ const statement =
           ))
         }
 
-        <div class="tile tile-also" data-reveal style="--d:2">
+        <div class="tile tile-also" data-pop style="--d:2">
           <p class="also-title">Also on the list</p>
           <ul class="also-chips">
-            {alsoOffer.map((a) => <li>{a}</li>)}
+            {alsoOffer.map((a, i) => <li data-pop style={`--d:${i + 3}`}>{a}</li>)}
           </ul>
           <a class="btn btn-leaf" href="/services/">All services <Icon name="arrow" /></a>
         </div>
@@ -176,13 +167,13 @@ const statement =
   <!-- How it works: stacking cards -->
   <section class="steps" aria-labelledby="steps-title">
     <div class="wrap">
-      <h2 id="steps-title" class="steps-title" data-reveal>Three steps to a garden you don't have to worry about</h2>
+      <h2 id="steps-title" class="steps-title" data-type>Three steps to a garden you don't have to worry about</h2>
       <ol class="stack">
         {
           steps.map((s, i) => (
-            <li class:list={['card', `tone-${s.tone}`]} style={`--i:${i}`}>
+            <li class:list={['card', `tone-${s.tone}`]} style={`--i:${i}`} data-pop>
               <div class="card-copy">
-                <span class="card-num">{i + 1}</span>
+                <span class="card-num" data-pop style="--d:3">{i + 1}</span>
                 <h3>{s.title}</h3>
                 <p>{s.text}</p>
               </div>
@@ -208,11 +199,11 @@ const statement =
   <!-- About -->
   <section class="about" aria-labelledby="about-title">
     <div class="wrap about-grid">
-      <figure class="plate about-plate" data-reveal>
+      <figure class="plate about-plate" data-pop>
         <img src="/img/alliums-van.jpg" alt="Purple alliums in front of the Darragh Connolly Garden Care van." loading="lazy" />
       </figure>
       <div class="about-body" data-reveal style="--d:1">
-        <h2 id="about-title">He'll look after your garden like it's his own.</h2>
+        <h2 id="about-title" data-type>He'll look after your garden like it's his own.</h2>
         <p>
           Darragh's work is mainly in Dublin and North Wicklow. He carries out all work thoroughly, to the highest
           standard possible, and takes pride in doing so. The business has grown through referrals from clients who are
@@ -224,9 +215,38 @@ const statement =
   </section>
 
   <CallToAction />
+
+  <aside class="toast" role="status" aria-live="polite" hidden>
+    <span class="toast-icon" aria-hidden="true"><Icon name="phone" /></span>
+    <span class="toast-text"><strong>Planning {thisMonth.season} work?</strong> Darragh is on {contact.phone}</span>
+    <a class="toast-go" href={contact.phoneHref}>Call</a>
+    <button class="toast-x" type="button" aria-label="Dismiss"><Icon name="close" /></button>
+  </aside>
 </Base>
 
 <script>
+  // A small note that pops up once per visit.
+  const toast = document.querySelector<HTMLElement>('.toast');
+  if (toast) {
+    let seen = false;
+    try {
+      seen = sessionStorage.getItem('dc-toast') === '1';
+    } catch {}
+    if (!seen) {
+      setTimeout(() => {
+        toast.hidden = false;
+        requestAnimationFrame(() => toast.classList.add('show'));
+      }, 4500);
+    }
+    toast.querySelector('.toast-x')?.addEventListener('click', () => {
+      toast.classList.remove('show');
+      setTimeout(() => (toast.hidden = true), 400);
+      try {
+        sessionStorage.setItem('dc-toast', '1');
+      } catch {}
+    });
+  }
+
   // Spotlight that follows the pointer across bento tiles.
   document.querySelectorAll<HTMLElement>('.tile').forEach((tile) => {
     tile.addEventListener('pointermove', (e) => {
@@ -290,25 +310,6 @@ const statement =
     letter-spacing: -0.03em;
     max-width: 12ch;
   }
-  .w {
-    display: inline-flex;
-    overflow: hidden;
-    padding-bottom: 0.06em;
-    margin-bottom: -0.06em;
-    margin-right: 0.16em;
-  }
-  .w > span {
-    display: inline-block;
-  }
-  .js .w > span {
-    animation: word-up 1000ms var(--ease-out) both;
-    animation-delay: calc(120ms + var(--i) * 80ms);
-  }
-  @keyframes word-up {
-    from {
-      transform: translateY(110%) rotate(4deg);
-    }
-  }
   .hero-lede {
     max-width: 34ch;
   }
@@ -318,13 +319,25 @@ const statement =
     animation: fade-up 900ms var(--ease-out) both;
   }
   .js .hero-lede {
-    animation-delay: 550ms;
+    animation-delay: 1700ms;
+  }
+  .js .hero-actions,
+  .js .now {
+    animation-name: pop-in;
+    animation-duration: 800ms;
+    animation-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
   }
   .js .hero-actions {
-    animation-delay: 650ms;
+    animation-delay: 2100ms;
   }
   .js .now {
-    animation-delay: 750ms;
+    animation-delay: 2500ms;
+  }
+  @keyframes pop-in {
+    from {
+      opacity: 0;
+      transform: scale(0.85) translateY(12px);
+    }
   }
   @keyframes fade-up {
     from {
@@ -396,11 +409,11 @@ const statement =
   .col-track {
     display: grid;
     gap: 1rem;
-    animation: col-up 60s linear infinite;
+    animation: col-up 34s linear infinite;
   }
   .col-down .col-track {
-    animation-direction: reverse;
-    animation-duration: 70s;
+    animation-duration: 46s;
+    animation-delay: -12s;
   }
   .hero-cols:hover .col-track {
     animation-play-state: paused;
@@ -902,7 +915,90 @@ const statement =
     }
   }
 
+  /* Toast */
+  .toast {
+    position: fixed;
+    z-index: 70;
+    left: 1rem;
+    bottom: calc(1rem + env(safe-area-inset-bottom));
+    max-width: min(26rem, calc(100% - 2rem));
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.6rem 0.6rem 0.6rem 0.7rem;
+    border-radius: 999px;
+    background: #fbfbf7;
+    color: var(--ink);
+    box-shadow:
+      0 1px 2px rgb(23 37 28 / 0.08),
+      0 22px 44px -18px rgb(23 37 28 / 0.45);
+    transform: translateY(140%) scale(0.9);
+    opacity: 0;
+    transition:
+      transform 700ms cubic-bezier(0.34, 1.56, 0.64, 1),
+      opacity 300ms;
+  }
+  .toast.show {
+    transform: none;
+    opacity: 1;
+  }
+  .toast-icon {
+    flex: none;
+    width: 2.4rem;
+    height: 2.4rem;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: var(--season);
+    color: var(--on-season);
+    animation: ring 2.8s ease-in-out infinite;
+  }
+  @keyframes ring {
+    0%, 70%, 100% { transform: rotate(0); }
+    74% { transform: rotate(-14deg); }
+    78% { transform: rotate(12deg); }
+    82% { transform: rotate(-8deg); }
+    86% { transform: rotate(5deg); }
+  }
+  .toast-text {
+    font-size: 0.92rem;
+    line-height: 1.3;
+  }
+  .toast-go {
+    flex: none;
+    background: var(--evergreen);
+    color: var(--on-evergreen);
+    text-decoration: none;
+    font-weight: 650;
+    font-size: 0.9rem;
+    padding: 0.55rem 0.95rem;
+    border-radius: 999px;
+  }
+  .toast-x {
+    flex: none;
+    appearance: none;
+    border: 0;
+    background: none;
+    color: var(--ink-2);
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+  }
+  .toast-x:hover {
+    background: var(--paper-2);
+  }
+  @media (max-width: 960px) {
+    .toast {
+      bottom: calc(5.25rem + env(safe-area-inset-bottom));
+      border-radius: 20px;
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
+    .toast-icon,
     .col-track,
     .now-dot {
       animation: none;
