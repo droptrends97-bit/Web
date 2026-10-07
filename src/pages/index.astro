@@ -1,0 +1,401 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import YearRibbon from '../components/YearRibbon.astro';
+import Proof from '../components/Proof.astro';
+import CallToAction from '../components/CallToAction.astro';
+import { contact, services, alsoOffer, visitOptions } from '../data/site';
+
+const [care, ...others] = services;
+---
+
+<Base>
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="wrap hero-head">
+      <h1 id="hero-title">Your garden, looked after all year.</h1>
+      <div class="hero-side">
+        <p class="lede">
+          Darragh Connolly and his team care for gardens across Dublin and North Wicklow: regular maintenance,
+          seasonal interventions, lawn health and planted pots.
+        </p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="/contact/">Get a quote <Icon name="arrow" /></a>
+          <a class="btn btn-ghost" href={contact.phoneHref}><Icon name="phone" /> {contact.phone}</a>
+        </div>
+      </div>
+    </div>
+    <figure class="hero-plate">
+      <img
+        src="/img/garden-bench-panorama.jpg"
+        alt="A white bench set against trellis, clipped bay trees, white hydrangeas and a border of blue geraniums."
+        width="2160"
+        height="428"
+        fetchpriority="high"
+      />
+    </figure>
+  </section>
+
+  <YearRibbon />
+
+  <section class="services" aria-labelledby="services-title">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 id="services-title">How we look after a garden</h2>
+        <p class="lede">
+          Garden care is all we do. Most clients start with a visit or a Garden Intervention, then keep the garden
+          right with regular care.
+        </p>
+      </div>
+
+      <article class="care">
+        <figure class="plate care-plate">
+          <img src={care.image} alt={care.imageAlt} width="648" height="648" loading="lazy" />
+        </figure>
+        <div class="care-body">
+          <h3><a href={`/services/${care.slug}/`}>{care.name}</a></h3>
+          <p>{care.intro}</p>
+          <div class="care-table">
+            <table>
+              <caption>Visit options</caption>
+              <thead>
+                <tr><th scope="col">Visit</th><th scope="col">Team</th></tr>
+              </thead>
+              <tbody>
+                {visitOptions.map((v) => <tr><td>{v.length}</td><td>{v.team}</td></tr>)}
+              </tbody>
+            </table>
+            <div class="care-freq">
+              <p class="care-freq-label">How often</p>
+              <p class="care-freq-list">Monthly<br />Fortnightly<br />Weekly</p>
+            </div>
+          </div>
+          <a class="more" href={`/services/${care.slug}/`}>What a maintenance visit includes <Icon name="arrow" /></a>
+        </div>
+      </article>
+
+      <ul class="entries">
+        {
+          others.map((s) => (
+            <li class="entry">
+              <a class="entry-link" href={`/services/${s.slug}/`}>
+                <img src={s.image} alt="" width="360" height="360" loading="lazy" />
+                <span class="entry-text">
+                  <span class="entry-name">{s.name}</span>
+                  <span class="entry-short">{s.short}</span>
+                </span>
+                <Icon name="arrow" class="entry-arrow" />
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="also">Also: {alsoOffer.join(', ').toLowerCase().replace(/^./, (c) => c.toUpperCase())}.</p>
+    </div>
+  </section>
+
+  <section class="honest" aria-labelledby="honest-title">
+    <div class="wrap honest-grid">
+      <h2 id="honest-title">We don't lay paving, paths or patios.</h2>
+      <p>
+        We look after gardens, and that is all we do. It means your garden gets our full attention, and the work is
+        done thoroughly, to the highest standard, every visit.
+      </p>
+    </div>
+  </section>
+
+  <Proof />
+
+  <section class="about" aria-labelledby="about-title">
+    <div class="wrap about-grid">
+      <figure class="plate">
+        <img
+          src="/img/alliums-van.jpg"
+          alt="Purple alliums in front of the Darragh Connolly Garden Care van."
+          width="396"
+          height="396"
+          loading="lazy"
+        />
+      </figure>
+      <div class="about-body">
+        <h2 id="about-title">He'll look after your garden like it's his own.</h2>
+        <p>
+          Darragh's work is mainly in Dublin and North Wicklow. He carries out all work thoroughly, to the highest
+          standard possible, and takes pride in doing so. The business has grown through referrals from clients who
+          are happy with their gardens.
+        </p>
+        <a class="more" href="/about/">About Darragh <Icon name="arrow" /></a>
+      </div>
+    </div>
+  </section>
+
+  <CallToAction />
+</Base>
+
+<style>
+  .hero-head {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+    gap: 1.5rem clamp(2rem, 5vw, 5rem);
+    align-items: end;
+    padding-block: clamp(2rem, 5vw, 4rem) clamp(1.5rem, 3vw, 2.5rem);
+  }
+  .hero h1 {
+    max-width: 11ch;
+  }
+  .hero-side {
+    display: grid;
+    gap: 1.5rem;
+    padding-bottom: 0.4rem;
+  }
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .hero-actions .btn-ghost {
+    font-variant-numeric: tabular-nums;
+  }
+  .hero-plate {
+    margin: 0;
+  }
+  .hero-plate img {
+    width: 100%;
+    height: clamp(13rem, 24vw, 22rem);
+    object-fit: cover;
+    object-position: 50% 40%;
+  }
+
+  @media (max-width: 760px) {
+    .hero-head {
+      grid-template-columns: 1fr;
+    }
+    .hero-plate img {
+      height: 15rem;
+      object-position: 55% 50%;
+    }
+  }
+
+  .services {
+    padding-block: clamp(4rem, 9vw, 7.5rem);
+  }
+  .section-head {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+    gap: 1.25rem clamp(2rem, 5vw, 5rem);
+    align-items: end;
+    margin-bottom: clamp(2.5rem, 5vw, 4rem);
+  }
+  .section-head h2 {
+    max-width: 12ch;
+  }
+
+  .care {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+    gap: clamp(1.5rem, 4vw, 4rem);
+    align-items: start;
+    padding-bottom: clamp(2.5rem, 5vw, 4rem);
+  }
+  .care-plate img {
+    aspect-ratio: 1;
+    border-radius: 2px;
+  }
+  .care-body {
+    display: grid;
+    gap: 1.25rem;
+  }
+  .care-body h3 {
+    font-size: clamp(2rem, 3.6vw, 3rem);
+  }
+  .care-body h3 a {
+    text-decoration: none;
+  }
+  .care-body > p {
+    color: var(--ink-2);
+    max-width: 52ch;
+  }
+  .care-table {
+    display: grid;
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+    gap: 2rem;
+    border-top: 2px solid var(--ink);
+    padding-top: 0.25rem;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+  caption,
+  .care-freq-label {
+    text-align: left;
+    font-weight: 650;
+    font-size: 0.95rem;
+    padding: 0.6rem 0;
+  }
+  thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+  td {
+    padding: 0.5rem 0;
+    border-top: 1px solid var(--rule);
+  }
+  td:last-child {
+    text-align: right;
+    color: var(--ink-2);
+  }
+  .care-freq-list {
+    font-family: var(--display);
+    font-stretch: 80%;
+    font-weight: 650;
+    font-size: 1.6rem;
+    line-height: 1.25;
+    border-top: 1px solid var(--rule);
+    padding-top: 0.5rem;
+  }
+  .more {
+    justify-self: start;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 650;
+    text-decoration: none;
+    border-bottom: 2px solid var(--leaf);
+    padding-bottom: 0.15rem;
+  }
+  .more :global(svg) {
+    transition: transform 220ms var(--ease-out);
+  }
+  .more:hover :global(svg) {
+    transform: translateX(4px);
+  }
+
+  .entries {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 2px solid var(--ink);
+  }
+  .entry {
+    border-bottom: 1px solid var(--rule);
+  }
+  .entry-link {
+    display: grid;
+    grid-template-columns: clamp(5rem, 11vw, 8.5rem) minmax(0, 1fr) auto;
+    gap: clamp(1rem, 3vw, 2.5rem);
+    align-items: center;
+    padding-block: 1.1rem;
+    text-decoration: none;
+  }
+  .entry-link img {
+    aspect-ratio: 1;
+    object-fit: cover;
+    width: 100%;
+    transition: transform 400ms var(--ease-out);
+  }
+  .entry-text {
+    display: grid;
+    gap: 0.35rem;
+  }
+  .entry-name {
+    font-family: var(--display);
+    font-stretch: 78%;
+    font-weight: 700;
+    font-size: clamp(1.6rem, 3.2vw, 2.6rem);
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+  .entry-short {
+    color: var(--ink-2);
+    max-width: 52ch;
+  }
+  .entry-link :global(.entry-arrow) {
+    width: 1.8rem;
+    height: 1.8rem;
+    color: var(--leaf-ink);
+    transition: transform 260ms var(--ease-out);
+  }
+  @media (hover: hover) {
+    .entry-link:hover :global(.entry-arrow) {
+      transform: translateX(6px);
+    }
+    .entry-link:hover img {
+      transform: scale(1.03);
+    }
+  }
+  .also {
+    margin-top: 1.5rem;
+    color: var(--ink-2);
+  }
+
+  @media (max-width: 760px) {
+    .section-head,
+    .care,
+    .care-table {
+      grid-template-columns: 1fr;
+    }
+    .care-table {
+      gap: 0.5rem;
+    }
+    .entry-link :global(.entry-arrow) {
+      display: none;
+    }
+    .entry-link {
+      grid-template-columns: 5.5rem minmax(0, 1fr);
+    }
+  }
+
+  .honest {
+    background: var(--evergreen);
+    color: var(--on-evergreen);
+    padding-block: clamp(4rem, 9vw, 7rem);
+  }
+  .honest-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+    gap: 1.5rem clamp(2rem, 5vw, 5rem);
+    align-items: end;
+  }
+  .honest h2 {
+    font-size: clamp(2.6rem, 6.4vw, 5.5rem);
+    max-width: 12ch;
+  }
+  .honest p {
+    color: var(--on-evergreen-2);
+    font-size: 1.2rem;
+    max-width: 38ch;
+  }
+
+  .about {
+    padding-block: clamp(4rem, 9vw, 7rem);
+  }
+  .about-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    gap: clamp(1.5rem, 5vw, 5rem);
+    align-items: center;
+  }
+  .about-grid img {
+    aspect-ratio: 1;
+  }
+  .about-body {
+    display: grid;
+    gap: 1.25rem;
+  }
+  .about-body h2 {
+    max-width: 14ch;
+  }
+  .about-body p {
+    color: var(--ink-2);
+    max-width: 52ch;
+  }
+  @media (max-width: 760px) {
+    .honest-grid,
+    .about-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

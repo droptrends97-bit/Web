@@ -1,0 +1,47 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import CallToAction from '../components/CallToAction.astro';
+import { gallery } from '../data/site';
+---
+
+<Base title="Gallery" description="Gardens cared for by Darragh Connolly Garden Care in Dublin and North Wicklow.">
+  <PageHead title="Gardens we look after" lede="Lawns, borders, topiary and pots from gardens we care for across Dublin and North Wicklow." />
+  <div class="wrap grid">
+    {
+      gallery.map((g) => (
+        <figure class:list={['plate', { wide: g.wide }]}>
+          <img src={g.src} alt={g.alt} loading="lazy" />
+        </figure>
+      ))
+    }
+  </div>
+  <CallToAction />
+</Base>
+
+<style>
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(0.75rem, 1.5vw, 1.25rem);
+    padding-block: clamp(2.5rem, 6vw, 5rem);
+  }
+  .plate img {
+    aspect-ratio: 1;
+    height: 100%;
+  }
+  .wide {
+    grid-column: 1 / -1;
+  }
+  .wide img {
+    aspect-ratio: 5 / 1;
+  }
+  @media (max-width: 760px) {
+    .grid {
+      grid-template-columns: 1fr 1fr;
+    }
+    .wide img {
+      aspect-ratio: 3 / 1;
+    }
+  }
+</style>

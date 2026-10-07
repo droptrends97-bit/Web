@@ -1,0 +1,11 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import { contact } from '../data/site';
+---
+
+<Base title="Thank you">
+  <PageHead title="Thanks, we'll be in touch." lede={`Darragh will get back to you shortly. If it's urgent, call ${contact.phone}.`}>
+    <p><a class="btn btn-ghost" href="/">Back to the home page</a></p>
+  </PageHead>
+</Base>

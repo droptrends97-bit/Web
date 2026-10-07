@@ -1,0 +1,112 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import YearRibbon from '../components/YearRibbon.astro';
+import CallToAction from '../components/CallToAction.astro';
+import { months, services } from '../data/site';
+
+const seasons = [
+  { key: 'spring', name: 'Spring' },
+  { key: 'summer', name: 'Summer' },
+  { key: 'autumn', name: 'Autumn' },
+  { key: 'winter', name: 'Winter' },
+] as const;
+const serviceName = (slug: string) => services.find((s) => s.slug === slug)?.name ?? '';
+---
+
+<Base title="The gardener's year" description="What Darragh Connolly Garden Care does in a garden month by month, through spring, summer, autumn and winter.">
+  <PageHead
+    title="The gardener's year"
+    lede="A garden needs different things as the year turns. This is the work we typically do each month, so you know what to expect from regular care."
+  />
+  <YearRibbon />
+
+  <div class="wrap almanac">
+    {
+      seasons.map((s) => (
+        <section class="season" data-season={s.key} aria-labelledby={`season-${s.key}`}>
+          <h2 id={`season-${s.key}`}>{s.name}</h2>
+          <dl>
+            {months
+              .filter((m) => m.season === s.key)
+              .map((m) => (
+                <div class="row">
+                  <dt>{m.name}</dt>
+                  <dd>
+                    <ul>
+                      {m.work.map((w) => <li>{w}</li>)}
+                    </ul>
+                    <a href={`/services/${m.service}/`}>{serviceName(m.service)}</a>
+                  </dd>
+                </div>
+              ))}
+          </dl>
+        </section>
+      ))
+    }
+  </div>
+
+  <CallToAction heading="Book in for the season ahead." />
+</Base>
+
+<style>
+  .almanac {
+    padding-block: clamp(3rem, 7vw, 6rem);
+    display: grid;
+    gap: clamp(3rem, 6vw, 5rem);
+  }
+  .season {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2.6fr);
+    gap: 1.5rem clamp(2rem, 5vw, 5rem);
+    border-top: 6px solid var(--season);
+    padding-top: 1.25rem;
+  }
+  .season h2 {
+    color: var(--season-ink);
+  }
+  dl {
+    margin: 0;
+  }
+  .row {
+    display: grid;
+    grid-template-columns: 9rem minmax(0, 1fr);
+    gap: 1rem 2rem;
+    padding-block: 1rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .row:first-child {
+    padding-top: 0.25rem;
+  }
+  dt {
+    font-family: var(--display);
+    font-stretch: 78%;
+    font-weight: 700;
+    font-size: 1.6rem;
+    line-height: 1.1;
+  }
+  dd {
+    margin: 0;
+    display: grid;
+    gap: 0.5rem;
+  }
+  dd ul {
+    margin: 0;
+    padding-left: 1.1rem;
+  }
+  dd a {
+    justify-self: start;
+    font-weight: 600;
+    color: var(--ink-2);
+    font-size: 0.95rem;
+  }
+  @media (max-width: 760px) {
+    .season,
+    .row {
+      grid-template-columns: 1fr;
+    }
+    .row {
+      gap: 0.4rem;
+    }
+  }
+</style>

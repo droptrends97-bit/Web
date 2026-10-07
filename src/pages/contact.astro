@@ -1,0 +1,229 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import Icon from '../components/Icon.astro';
+import { contact, services } from '../data/site';
+---
+
+<Base title="Get a quote" callbar={false} description="Request a garden care quote from Darragh Connolly Garden Care, or call 087 225 9319.">
+  <PageHead title="Get a quote" lede="Tell us a little about your garden and we'll be in touch to arrange a visit. Prefer to talk? Call Darragh." />
+
+  <div class="wrap contact">
+    <form
+      class="form"
+      name="quote"
+      method="POST"
+      action="/thanks/"
+      data-netlify="true"
+      netlify-honeypot="company"
+    >
+      <input type="hidden" name="form-name" value="quote" />
+      <p class="visually-hidden">
+        <label>Leave this empty <input name="company" tabindex="-1" autocomplete="off" /></label>
+      </p>
+
+      <div class="field">
+        <label for="name">Your name</label>
+        <input id="name" name="name" type="text" autocomplete="name" required />
+      </div>
+      <div class="pair">
+        <div class="field">
+          <label for="phone">Phone</label>
+          <input id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" required />
+        </div>
+        <div class="field">
+          <label for="email">Email <span class="opt">(optional)</span></label>
+          <input id="email" name="email" type="email" autocomplete="email" />
+        </div>
+      </div>
+      <div class="field">
+        <label for="area">Where is the garden?</label>
+        <input id="area" name="area" type="text" autocomplete="address-level2" placeholder="e.g. Dalkey, Co. Dublin" required />
+      </div>
+      <fieldset class="field">
+        <legend>What are you interested in?</legend>
+        <div class="choices">
+          {
+            services.map((s) => (
+              <label class="choice">
+                <input type="checkbox" name="interest" value={s.name} />
+                <span>{s.name}</span>
+              </label>
+            ))
+          }
+          <label class="choice">
+            <input type="checkbox" name="interest" value="Not sure yet" />
+            <span>Not sure yet</span>
+          </label>
+        </div>
+      </fieldset>
+      <div class="field">
+        <label for="message">About your garden</label>
+        <textarea id="message" name="message" rows="5" placeholder="Size, what it needs, how often you'd like us to come…"></textarea>
+      </div>
+      <button class="btn btn-primary" type="submit">Send request <Icon name="arrow" /></button>
+      <p class="small">We use your details only to reply to you. We don't lay paving, paths or patios.</p>
+    </form>
+
+    <aside class="direct">
+      <h2>Talk to Darragh</h2>
+      <a class="direct-phone" href={contact.phoneHref}><Icon name="phone" /> {contact.phone}</a>
+      <a class="direct-mail" href={`mailto:${contact.email}`}><Icon name="mail" /> {contact.email}</a>
+      <p class="direct-area"><Icon name="pin" /> {contact.area}</p>
+    </aside>
+  </div>
+</Base>
+
+<style>
+  .contact {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+    gap: clamp(2.5rem, 6vw, 6rem);
+    padding-block: clamp(3rem, 6vw, 5rem) clamp(4rem, 8vw, 7rem);
+    align-items: start;
+  }
+  .form {
+    display: grid;
+    gap: 1.4rem;
+    max-width: 44rem;
+  }
+  .pair {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.4rem;
+  }
+  .field {
+    display: grid;
+    gap: 0.45rem;
+    border: 0;
+    margin: 0;
+    padding: 0;
+    min-width: 0;
+  }
+  label,
+  legend {
+    font-weight: 650;
+    font-size: 1rem;
+    padding: 0;
+  }
+  legend {
+    margin-bottom: 0.6rem;
+  }
+  .opt {
+    font-weight: 400;
+    color: var(--ink-2);
+  }
+  input[type='text'],
+  input[type='tel'],
+  input[type='email'],
+  textarea {
+    width: 100%;
+    font: inherit;
+    font-size: 1.0625rem;
+    color: var(--ink);
+    background: #fbfbf7;
+    border: 1.5px solid #8f978a;
+    border-radius: 10px;
+    padding: 0.8rem 0.9rem;
+    caret-color: var(--leaf-ink);
+    transition:
+      border-color 160ms,
+      box-shadow 160ms;
+  }
+  input::placeholder,
+  textarea::placeholder {
+    color: #5f6a61;
+  }
+  input:focus,
+  textarea:focus {
+    outline: none;
+    border-color: var(--evergreen);
+    box-shadow: 0 0 0 3px rgb(140 198 63 / 0.45);
+  }
+  input:user-invalid,
+  textarea:user-invalid {
+    border-color: #a3242f;
+  }
+  .choices {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+  .choice {
+    position: relative;
+    font-weight: 550;
+  }
+  .choice input {
+    position: absolute;
+    opacity: 0;
+    inset: 0;
+    cursor: pointer;
+  }
+  .choice span {
+    display: inline-block;
+    padding: 0.6rem 1rem;
+    border: 1.5px solid #8f978a;
+    border-radius: 999px;
+    transition:
+      background-color 160ms,
+      color 160ms,
+      border-color 160ms;
+  }
+  .choice input:checked + span {
+    background: var(--evergreen);
+    border-color: var(--evergreen);
+    color: var(--on-evergreen);
+  }
+  .choice input:focus-visible + span {
+    outline: 3px solid var(--leaf-ink);
+    outline-offset: 2px;
+  }
+  .form .btn {
+    justify-self: start;
+  }
+  .small {
+    font-size: 0.9rem;
+    color: var(--ink-2);
+  }
+
+  .direct {
+    display: grid;
+    gap: 1rem;
+    background: var(--evergreen);
+    color: var(--on-evergreen);
+    padding: clamp(1.75rem, 3vw, 2.5rem);
+    border-radius: 14px;
+  }
+  .direct h2 {
+    font-size: clamp(1.8rem, 3vw, 2.4rem);
+    margin-bottom: 0.5rem;
+  }
+  .direct a,
+  .direct p {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    text-decoration: none;
+    overflow-wrap: anywhere;
+  }
+  .direct :global(svg) {
+    color: var(--leaf);
+  }
+  .direct-phone {
+    font-family: var(--display);
+    font-stretch: 78%;
+    font-weight: 800;
+    font-size: clamp(2rem, 3.6vw, 2.8rem);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .direct-area {
+    color: var(--on-evergreen-2);
+  }
+  @media (max-width: 860px) {
+    .contact,
+    .pair {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

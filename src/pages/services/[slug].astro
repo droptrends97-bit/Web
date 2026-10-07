@@ -1,0 +1,229 @@
+---
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import CallToAction from '../../components/CallToAction.astro';
+import { services, visitOptions, months, contact, type Service } from '../../data/site';
+
+export function getStaticPaths() {
+  return services.map((service) => ({ params: { slug: service.slug }, props: { service } }));
+}
+
+const { service } = Astro.props as { service: Service };
+const when = months.filter((m) => m.service === service.slug).map((m) => m.name);
+const whenText =
+  when.length > 3 ? 'all year round' : when.length > 1 ? `${when.slice(0, -1).join(', ')} and ${when.at(-1)}` : when[0];
+const others = services.filter((s) => s.slug !== service.slug);
+---
+
+<Base title={service.name} description={service.intro}>
+  <article>
+    <header class="svc-head">
+      <div class="wrap svc-head-grid">
+        <div class="svc-head-copy">
+          <a class="crumb" href="/services/">Services</a>
+          <h1>{service.name}</h1>
+          <p class="lede">{service.intro}</p>
+          <div class="actions">
+            <a class="btn btn-primary" href="/contact/">Get a quote <Icon name="arrow" /></a>
+            <a class="btn btn-ghost" href={contact.phoneHref}><Icon name="phone" /> {contact.phone}</a>
+          </div>
+        </div>
+        <figure class="plate svc-plate">
+          <img src={service.image} alt={service.imageAlt} />
+        </figure>
+      </div>
+    </header>
+
+    <div class="wrap svc-main">
+      <div class="svc-text">
+        {service.body.map((p) => <p>{p}</p>)}
+        {
+          service.slug === 'garden-care' && (
+            <div class="visits">
+              <h2>Visit options</h2>
+              <table>
+                <thead>
+                  <tr><th scope="col">Visit length</th><th scope="col">Team</th></tr>
+                </thead>
+                <tbody>
+                  {visitOptions.map((v) => <tr><td>{v.length}</td><td>{v.team}</td></tr>)}
+                </tbody>
+              </table>
+              <p class="note">Visits are scheduled monthly, fortnightly or weekly, whatever suits your garden.</p>
+            </div>
+          )
+        }
+      </div>
+      <aside class="svc-aside">
+        <h2>What's included</h2>
+        <ul class="ticks">
+          {service.includes.map((x) => <li>{x}</li>)}
+        </ul>
+        {
+          when.length > 0 && (
+            <p class="when">
+              {when.length > 3 ? 'Needed ' : 'Busiest in '}
+              <a href="/the-year/">{whenText}</a>.
+            </p>
+          )
+        }
+      </aside>
+    </div>
+
+    <nav class="wrap others" aria-label="Other services">
+      <h2>Other ways we help</h2>
+      <ul>
+        {
+          others.map((s) => (
+            <li>
+              <a href={`/services/${s.slug}/`}>
+                <span>{s.name}</span>
+                <Icon name="arrow" />
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </article>
+
+  <CallToAction />
+</Base>
+
+<style>
+  .svc-head {
+    border-bottom: 2px solid var(--ink);
+  }
+  .svc-head-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    gap: 2rem clamp(2rem, 5vw, 5rem);
+    align-items: center;
+    padding-block: clamp(2rem, 5vw, 4rem);
+  }
+  .svc-head-copy {
+    display: grid;
+    gap: 1.25rem;
+    justify-items: start;
+  }
+  .crumb {
+    font-weight: 600;
+    color: var(--ink-2);
+    text-decoration: none;
+    border-bottom: 2px solid var(--leaf);
+  }
+  h1 {
+    font-size: clamp(2.75rem, 7vw, 5.5rem);
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .svc-plate img {
+    aspect-ratio: 1;
+    object-fit: cover;
+  }
+
+  .svc-main {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    gap: 2.5rem clamp(2rem, 6vw, 6rem);
+    padding-block: clamp(3rem, 7vw, 5.5rem);
+  }
+  .svc-text {
+    display: grid;
+    gap: 1.25rem;
+    align-content: start;
+    font-size: 1.2rem;
+  }
+  .svc-text > p {
+    max-width: 58ch;
+  }
+  .visits {
+    margin-top: 1.5rem;
+  }
+  .visits h2,
+  .svc-aside h2,
+  .others h2 {
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    margin-bottom: 1rem;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    max-width: 32rem;
+    font-size: 1.05rem;
+  }
+  th {
+    text-align: left;
+    font-weight: 650;
+    font-size: 0.95rem;
+    padding: 0.5rem 0;
+    border-bottom: 2px solid var(--ink);
+  }
+  td {
+    padding: 0.6rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  th:last-child,
+  td:last-child {
+    text-align: right;
+  }
+  .note {
+    margin-top: 1rem;
+    color: var(--ink-2);
+    font-size: 1rem;
+  }
+  .svc-aside {
+    background: var(--paper-2);
+    padding: clamp(1.5rem, 3vw, 2.25rem);
+    border-radius: 14px;
+    align-self: start;
+  }
+  .when {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--rule);
+    color: var(--ink-2);
+  }
+
+  .others {
+    padding-bottom: clamp(3rem, 7vw, 5.5rem);
+  }
+  .others ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 2px solid var(--ink);
+  }
+  .others li {
+    border-bottom: 1px solid var(--rule);
+  }
+  .others a {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-block: 1rem;
+    text-decoration: none;
+    font-family: var(--display);
+    font-stretch: 78%;
+    font-weight: 700;
+    font-size: clamp(1.5rem, 3vw, 2.2rem);
+    letter-spacing: -0.02em;
+  }
+  .others a :global(svg) {
+    color: var(--leaf-ink);
+    transition: transform 240ms var(--ease-out);
+  }
+  .others a:hover :global(svg) {
+    transform: translateX(6px);
+  }
+
+  @media (max-width: 860px) {
+    .svc-head-grid,
+    .svc-main {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

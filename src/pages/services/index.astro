@@ -1,0 +1,87 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHead from '../../components/PageHead.astro';
+import Icon from '../../components/Icon.astro';
+import CallToAction from '../../components/CallToAction.astro';
+import { services, alsoOffer } from '../../data/site';
+---
+
+<Base title="Services" description="Garden care and maintenance, Garden Interventions, garden health programmes and seasonal pots and planters across Dublin and North Wicklow.">
+  <PageHead
+    title="Garden care, and nothing else"
+    lede="We look after gardens through the year. We don't lay paving, paths or patios, so every visit is spent on the garden itself."
+  />
+
+  <div class="wrap list">
+    {
+      services.map((s, i) => (
+        <article class:list={['svc', { flip: i % 2 === 1 }]}>
+          <figure class="plate">
+            <img src={s.image} alt={s.imageAlt} loading={i === 0 ? 'eager' : 'lazy'} />
+          </figure>
+          <div class="svc-body">
+            <h2><a href={`/services/${s.slug}/`}>{s.name}</a></h2>
+            <p>{s.intro}</p>
+            <ul class="ticks">
+              {s.includes.map((x) => <li>{x}</li>)}
+            </ul>
+            <a class="btn btn-ghost" href={`/services/${s.slug}/`}>More about {s.name.toLowerCase()} <Icon name="arrow" /></a>
+          </div>
+        </article>
+      ))
+    }
+    <p class="also">We also offer {alsoOffer.join(', ').toLowerCase()}. Ask when you call.</p>
+  </div>
+
+  <CallToAction />
+</Base>
+
+<style>
+  .list {
+    padding-block: clamp(3rem, 7vw, 6rem);
+    display: grid;
+    gap: clamp(3.5rem, 8vw, 6.5rem);
+  }
+  .svc {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(1.5rem, 5vw, 5rem);
+    align-items: center;
+  }
+  .svc.flip .plate {
+    order: 2;
+  }
+  .svc img {
+    aspect-ratio: 4 / 3.4;
+    object-fit: cover;
+    width: 100%;
+  }
+  .svc-body {
+    display: grid;
+    gap: 1.25rem;
+    justify-items: start;
+  }
+  .svc-body h2 {
+    font-size: clamp(2.2rem, 4.4vw, 3.5rem);
+  }
+  .svc-body h2 a {
+    text-decoration: none;
+  }
+  .svc-body > p {
+    color: var(--ink-2);
+    max-width: 50ch;
+  }
+  .also {
+    color: var(--ink-2);
+    border-top: 1px solid var(--rule);
+    padding-top: 1.5rem;
+  }
+  @media (max-width: 760px) {
+    .svc {
+      grid-template-columns: 1fr;
+    }
+    .svc.flip .plate {
+      order: 0;
+    }
+  }
+</style>

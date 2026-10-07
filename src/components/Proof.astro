@@ -1,0 +1,123 @@
+---
+import { testimonials } from '../data/site';
+const [lead] = testimonials;
+---
+
+<section class="proof" aria-labelledby="proof-title">
+  <div class="wrap proof-grid">
+    <h2 id="proof-title" class="visually-hidden">Reviews and memberships</h2>
+    <figure class="quote">
+      <blockquote>
+        <p>{lead.quote}</p>
+      </blockquote>
+      <figcaption>{lead.name}</figcaption>
+    </figure>
+
+    <div class="badges">
+      <p class="badges-label">Member of</p>
+      <ul class="badge-row">
+        <li>
+          <img src="/img/alci.png" alt="ALCI member: Association of Landscape Contractors of Ireland" width="432" height="313" loading="lazy" />
+        </li>
+        <li>
+          <img src="/img/guild.png" alt="Member of the National Guild of Master Craftsmen" width="324" height="334" loading="lazy" />
+        </li>
+      </ul>
+      <p class="badges-label">Find us on</p>
+      <ul class="badge-row badge-row-small">
+        <li><img src="/img/houzz.png" alt="Houzz" width="356" height="259" loading="lazy" /></li>
+        <li><img src="/img/pickapro.png" alt="pickapro.ie" width="226" height="162" loading="lazy" /></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .proof {
+    background: var(--paper-2);
+    padding-block: clamp(4rem, 9vw, 7rem);
+  }
+  .proof-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    gap: clamp(2.5rem, 6vw, 6rem);
+    align-items: center;
+  }
+  .quote {
+    margin: 0;
+  }
+  blockquote {
+    margin: 0;
+  }
+  blockquote p {
+    font-family: var(--display);
+    font-stretch: 85%;
+    font-weight: 500;
+    font-size: clamp(1.9rem, 3.8vw, 3.2rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+  blockquote p::before {
+    content: '“';
+    color: var(--leaf-ink);
+  }
+  blockquote p::after {
+    content: '”';
+    color: var(--leaf-ink);
+  }
+  figcaption {
+    margin-top: 1.5rem;
+    font-weight: 650;
+  }
+  figcaption::before {
+    content: '';
+    display: inline-block;
+    width: 2rem;
+    height: 2px;
+    background: var(--ink);
+    vertical-align: middle;
+    margin-right: 0.75rem;
+  }
+
+  .badges-label {
+    font-weight: 650;
+    font-size: 0.95rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 1rem;
+  }
+  .badge-row {
+    list-style: none;
+    margin: 0 0 2rem;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 1rem;
+  }
+  .badge-row li {
+    background: #fff;
+    border-radius: 12px;
+    padding: 0.9rem;
+    height: 8.5rem;
+  }
+  .badge-row img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+  .badge-row-small {
+    grid-template-columns: 1fr 1fr;
+    margin-bottom: 0;
+  }
+  .badge-row-small li {
+    height: 5rem;
+    padding: 0.75rem 1rem;
+  }
+
+  @media (max-width: 860px) {
+    .proof-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

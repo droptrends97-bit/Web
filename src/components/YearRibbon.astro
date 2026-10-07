@@ -1,0 +1,270 @@
+---
+import Icon from './Icon.astro';
+import { months, services } from '../data/site';
+
+interface Props {
+  heading?: string;
+}
+const { heading = 'in the garden' } = Astro.props;
+const buildMonth = new Date().getMonth();
+const serviceName = (slug: string) => services.find((s) => s.slug === slug)?.name ?? '';
+---
+
+<section class="year" data-season={months[buildMonth].season} aria-labelledby="year-title">
+  <div class="wrap">
+    <h2 id="year-title" class="visually-hidden">The gardener's year: what we do each month</h2>
+    <div class="strip" role="tablist" aria-label="Months of the year">
+      {
+        months.map((m, i) => (
+          <button
+            type="button"
+            role="tab"
+            class="tab"
+            id={`tab-${i}`}
+            data-index={i}
+            data-month-season={m.season}
+            aria-selected={i === buildMonth ? 'true' : 'false'}
+            aria-controls={`month-${i}`}
+            tabindex={i === buildMonth ? 0 : -1}
+          >
+            <span class="tab-num">{String(i + 1).padStart(2, '0')}</span>
+            <span class="tab-name">{m.short}</span>
+          </button>
+        ))
+      }
+    </div>
+
+    <div class="panels">
+      {
+        months.map((m, i) => (
+          <div
+            class="panel"
+            id={`month-${i}`}
+            role="tabpanel"
+            aria-labelledby={`tab-${i}`}
+            hidden={i !== buildMonth}
+          >
+            <p class="panel-title">
+              <span class="panel-month">{m.name}</span>
+              <span class="panel-sub">{heading}</span>
+            </p>
+            <div class="panel-body">
+              <ul class="ticks">
+                {m.work.map((w) => <li>{w}</li>)}
+              </ul>
+              <a class="panel-link" href={`/services/${m.service}/`}>
+                {serviceName(m.service)} <Icon name="arrow" />
+              </a>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<script>
+  const root = document.querySelector<HTMLElement>('.year');
+  if (root) {
+    const tabs = Array.from(root.querySelectorAll<HTMLButtonElement>('[role="tab"]'));
+    const panels = Array.from(root.querySelectorAll<HTMLElement>('[role="tabpanel"]'));
+    const strip = root.querySelector<HTMLElement>('.strip')!;
+
+    const select = (i: number, focus = false, instant = false) => {
+      tabs.forEach((t, j) => {
+        const on = j === i;
+        t.setAttribute('aria-selected', String(on));
+        t.tabIndex = on ? 0 : -1;
+      });
+      panels.forEach((p, j) => {
+        p.hidden = j !== i;
+        if (j === i && !instant) {
+          p.classList.remove('enter');
+          void p.offsetWidth;
+          p.classList.add('enter');
+        }
+      });
+      root.dataset.season = tabs[i].dataset.monthSeason;
+      const t = tabs[i];
+      const left = t.offsetLeft - (strip.clientWidth - t.offsetWidth) / 2;
+      strip.scrollTo({ left, behavior: instant ? 'auto' : 'smooth' });
+      if (focus) t.focus({ preventScroll: true });
+    };
+
+    tabs.forEach((t, i) => {
+      t.addEventListener('click', () => select(i));
+      t.addEventListener('keydown', (e) => {
+        const keys: Record<string, number> = {
+          ArrowRight: (i + 1) % tabs.length,
+          ArrowLeft: (i - 1 + tabs.length) % tabs.length,
+          Home: 0,
+          End: tabs.length - 1,
+        };
+        if (e.key in keys) {
+          e.preventDefault();
+          select(keys[e.key], true);
+        }
+      });
+    });
+
+    // The page may have been built in another month: follow the visitor's date.
+    select(new Date().getMonth(), false, true);
+  }
+</script>
+
+<style>
+  .year {
+    background: var(--season);
+    color: var(--on-season);
+    padding-block: clamp(1.25rem, 3vw, 2rem) clamp(2.5rem, 6vw, 4.5rem);
+    transition:
+      background-color 500ms var(--ease-out),
+      color 500ms var(--ease-out);
+  }
+
+  .strip {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(4.25rem, 1fr));
+    border-top: 1px solid color-mix(in srgb, currentColor 35%, transparent);
+    overflow-x: auto;
+    scrollbar-width: none;
+    scroll-snap-type: x proximity;
+    margin-inline: calc(var(--gutter) * -1);
+    padding-inline: var(--gutter);
+  }
+  .strip::-webkit-scrollbar {
+    display: none;
+  }
+
+  .tab {
+    appearance: none;
+    background: none;
+    border: 0;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    padding: 0.85rem 0.6rem 0.9rem;
+    cursor: pointer;
+    scroll-snap-align: center;
+    display: grid;
+    gap: 0.1rem;
+    position: relative;
+    color: var(--on-season-2);
+    transition: color 200ms;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .tab::before {
+    content: '';
+    position: absolute;
+    left: 0.6rem;
+    right: 0.6rem;
+    top: -1px;
+    height: 4px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 320ms var(--ease-out);
+  }
+  .tab[aria-selected='true'] {
+    color: var(--on-season);
+  }
+  .tab[aria-selected='true']::before {
+    transform: scaleX(1);
+  }
+  @media (hover: hover) {
+    .tab:hover {
+      color: var(--on-season);
+    }
+  }
+  .tab:focus-visible {
+    outline-color: currentColor;
+    outline-offset: -3px;
+  }
+  .tab-num {
+    font-size: 0.8rem;
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+  }
+  .tab-name {
+    font-family: var(--display);
+    font-stretch: 80%;
+    font-weight: 650;
+    font-size: 1.35rem;
+    line-height: 1;
+  }
+
+  .panel {
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+    gap: 1.5rem clamp(2rem, 5vw, 5rem);
+    align-items: end;
+    padding-top: clamp(1.5rem, 4vw, 3rem);
+  }
+  .panel[hidden] {
+    display: none;
+  }
+  .panel.enter {
+    animation: panel-in 520ms var(--ease-out);
+  }
+  @keyframes panel-in {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+      filter: blur(3px);
+    }
+  }
+  .panel-title {
+    display: grid;
+    line-height: 0.9;
+  }
+  .panel-month {
+    font-family: var(--display);
+    font-stretch: 75%;
+    font-weight: 800;
+    font-size: clamp(3.5rem, 11vw, 9.5rem);
+    letter-spacing: -0.03em;
+    font-variation-settings: 'opsz' 96;
+  }
+  .panel-sub {
+    font-family: var(--display);
+    font-stretch: 85%;
+    font-weight: 400;
+    font-size: clamp(1.5rem, 3vw, 2.4rem);
+    color: var(--on-season-2);
+    padding-left: 0.2rem;
+  }
+  .panel-body {
+    display: grid;
+    gap: 1.5rem;
+    padding-bottom: 0.6rem;
+  }
+  .panel-body .ticks {
+    font-size: 1.125rem;
+  }
+  .panel-body .ticks :global(li::before) {
+    color: currentColor;
+  }
+  .panel-link {
+    justify-self: start;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 650;
+    text-decoration: none;
+    border-bottom: 2px solid currentColor;
+    padding-bottom: 0.15rem;
+  }
+  .panel-link :global(svg) {
+    transition: transform 220ms var(--ease-out);
+  }
+  .panel-link:hover :global(svg) {
+    transform: translateX(4px);
+  }
+
+  @media (max-width: 760px) {
+    .panel {
+      grid-template-columns: 1fr;
+      align-items: start;
+    }
+  }
+</style>

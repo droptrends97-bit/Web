@@ -1,0 +1,94 @@
+---
+import Icon from './Icon.astro';
+import { contact } from '../data/site';
+
+interface Props {
+  heading?: string;
+}
+const { heading = 'Tell us about your garden.' } = Astro.props;
+---
+
+<section class="cta" aria-labelledby="cta-title">
+  <div class="wrap cta-grid">
+    <div class="cta-copy">
+      <h2 id="cta-title">{heading}</h2>
+      <p>
+        Call Darragh for a chat, or send a few details and we'll arrange a visit. We work across {contact.area}.
+      </p>
+    </div>
+    <div class="cta-actions">
+      <a class="cta-phone" href={contact.phoneHref}>
+        <Icon name="phone" />
+        <span>{contact.phone}</span>
+      </a>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="/contact/">Request a quote <Icon name="arrow" /></a>
+        <a class="cta-mail" href={`mailto:${contact.email}`}>{contact.email}</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cta {
+    background: var(--season-soft);
+    padding-block: clamp(4rem, 9vw, 7rem);
+    transition: background-color 500ms var(--ease-out);
+  }
+  .cta-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 2rem clamp(2rem, 5vw, 5rem);
+    align-items: end;
+  }
+  .cta h2 {
+    max-width: 10ch;
+  }
+  .cta-copy {
+    display: grid;
+    gap: 1.25rem;
+  }
+  .cta-copy p {
+    color: var(--ink-2);
+    max-width: 44ch;
+  }
+  .cta-actions {
+    display: grid;
+    gap: 1.5rem;
+  }
+  .cta-phone {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-family: var(--display);
+    font-stretch: 75%;
+    font-weight: 800;
+    font-size: clamp(2.6rem, 6.5vw, 5.5rem);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+    text-decoration: none;
+    color: var(--season-ink);
+    white-space: nowrap;
+  }
+  .cta-phone :global(svg) {
+    width: 0.7em;
+    height: 0.7em;
+    stroke-width: 2.2;
+  }
+  .cta-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem 1.5rem;
+  }
+  .cta-mail {
+    font-weight: 600;
+    overflow-wrap: anywhere;
+  }
+  @media (max-width: 860px) {
+    .cta-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
