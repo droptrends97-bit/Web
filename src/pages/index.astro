@@ -4,126 +4,221 @@ import Icon from '../components/Icon.astro';
 import YearRibbon from '../components/YearRibbon.astro';
 import Proof from '../components/Proof.astro';
 import CallToAction from '../components/CallToAction.astro';
-import { contact, services, alsoOffer, visitOptions } from '../data/site';
+import { contact, services, alsoOffer, visitOptions, months } from '../data/site';
 
-const [care, ...others] = services;
+const [care, intervention, health, pots] = services;
+const thisMonth = months[new Date().getMonth()];
+
+const colA = [
+  { src: '/img/topiary-tulips.jpg', alt: 'Lollipop topiary above pink tulips at a granite entrance.' },
+  { src: '/img/acer-garden.jpg', alt: 'A copper acer framing a lawn and a border of roses.' },
+  { src: '/img/striped-lawn-bench.jpg', alt: 'A striped lawn leading to a white bench.' },
+  { src: '/img/tulips-paving.jpg', alt: 'Tulips along a granite kerb.' },
+];
+const colB = [
+  { src: '/img/bench-border.jpg', alt: 'A curved lawn with bay trees and a white bench.' },
+  { src: '/img/alliums-van.jpg', alt: 'Purple alliums in front of the Darragh Connolly van.' },
+  { src: '/img/garden-bench-panorama.jpg', alt: 'A white bench before trellis and hydrangeas.' },
+  { src: '/img/lawn-stripes.jpg', alt: 'A freshly striped lawn.' },
+];
+
+const headline = 'Your garden, looked after all year.'.split(' ');
+const ticker = ['Lawn care', 'Hedging', 'Bulb planting', 'Pots & planters', 'Pruning', 'Mulching', 'Garden health', 'Weeding', 'Border care', 'Power washing'];
+
+const steps = [
+  {
+    title: 'We visit and listen',
+    text: 'Darragh walks the garden with you, talks about how you use it, and looks at what it needs now and through the year.',
+    image: '/img/bench-border.jpg',
+    tone: 'paper',
+  },
+  {
+    title: 'We plan your schedule',
+    text: 'Monthly, fortnightly or weekly visits, from 1.5 hours to a full day, always with a team of two gardeners.',
+    image: '/img/striped-lawn-bench.jpg',
+    tone: 'evergreen',
+  },
+  {
+    title: 'We keep it right, all year',
+    text: 'We bring all the tools, work efficiently and take the green waste away. You get to simply enjoy the garden.',
+    image: '/img/acer-garden.jpg',
+    tone: 'season',
+  },
+];
+
+const statement =
+  "We don't lay paving, paths or patios. We look after gardens, and that's all we do, so yours gets our full attention every single visit.".split(
+    ' ',
+  );
 ---
 
 <Base>
+  <!-- Hero -->
   <section class="hero" aria-labelledby="hero-title">
-    <div class="wrap hero-head">
-      <h1 id="hero-title">Your garden, looked after all year.</h1>
-      <div class="hero-side">
-        <p class="lede">
-          Darragh Connolly and his team care for gardens across Dublin and North Wicklow: regular maintenance,
-          seasonal interventions, lawn health and planted pots.
-        </p>
-        <div class="hero-actions">
-          <a class="btn btn-primary" href="/contact/">Get a quote <Icon name="arrow" /></a>
-          <a class="btn btn-ghost" href={contact.phoneHref}><Icon name="phone" /> {contact.phone}</a>
+    <div class="hero-copy">
+      <h1 id="hero-title" class="words">
+        {
+          headline.map((w, i) => (
+            <span class="w">
+              <span style={`--i:${i}`}>{w}</span>
+            </span>
+          ))
+        }
+      </h1>
+      <p class="lede hero-lede">
+        Darragh Connolly and his team care for gardens across Dublin and North Wicklow: regular maintenance, seasonal
+        interventions, lawn health and planted pots.
+      </p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="/contact/">Get a quote <Icon name="arrow" /></a>
+        <a class="btn btn-ghost" href={contact.phoneHref}><Icon name="phone" /> {contact.phone}</a>
+      </div>
+      <a class="now" href="#year-title">
+        <span class="now-dot" aria-hidden="true"></span>
+        <span><strong>This {thisMonth.name}:</strong> {thisMonth.work[0].toLowerCase()}</span>
+        <Icon name="arrow" />
+      </a>
+    </div>
+
+    <div class="hero-cols" aria-label="Gardens we look after">
+      <div class="col">
+        <div class="col-track">
+          {[...colA, ...colA].map((p, i) => <img src={p.src} alt={i < colA.length ? p.alt : ''} loading={i < 2 ? 'eager' : 'lazy'} />)}
+        </div>
+      </div>
+      <div class="col col-down">
+        <div class="col-track">
+          {[...colB, ...colB].map((p, i) => <img src={p.src} alt={i < colB.length ? p.alt : ''} loading={i < 2 ? 'eager' : 'lazy'} />)}
         </div>
       </div>
     </div>
-    <figure class="hero-plate">
-      <img
-        src="/img/garden-bench-panorama.jpg"
-        alt="A white bench set against trellis, clipped bay trees, white hydrangeas and a border of blue geraniums."
-        width="2160"
-        height="428"
-        fetchpriority="high"
-      />
-    </figure>
   </section>
+
+  <!-- Ticker -->
+  <div class="ticker marquee" aria-hidden="true" style="--speed: 50s; --gap: 2.5rem">
+    {
+      [0, 1].map(() => (
+        <div class="marquee-track">
+          {ticker.map((t, i) => (
+            <span class:list={['tick', { hollow: i % 2 === 1 }]}>
+              {t}
+              <svg viewBox="0 0 24 24" class="leaf"><path d="M5 19c0-8 5-13 14-14-1 9-6 14-14 14zM5 19l7-7" /></svg>
+            </span>
+          ))}
+        </div>
+      ))
+    }
+  </div>
 
   <YearRibbon />
 
+  <!-- Services bento -->
   <section class="services" aria-labelledby="services-title">
     <div class="wrap">
-      <div class="section-head">
+      <div class="section-head" data-reveal>
         <h2 id="services-title">How we look after a garden</h2>
-        <p class="lede">
-          Garden care is all we do. Most clients start with a visit or a Garden Intervention, then keep the garden
-          right with regular care.
-        </p>
+        <p class="lede">Garden care is all we do. Start with a visit or a Garden Intervention, then keep it right with regular care.</p>
       </div>
 
-      <article class="care">
-        <figure class="plate care-plate">
-          <img src={care.image} alt={care.imageAlt} width="648" height="648" loading="lazy" />
-        </figure>
-        <div class="care-body">
-          <h3><a href={`/services/${care.slug}/`}>{care.name}</a></h3>
-          <p>{care.intro}</p>
-          <div class="care-table">
-            <table>
-              <caption>Visit options</caption>
-              <thead>
-                <tr><th scope="col">Visit</th><th scope="col">Team</th></tr>
-              </thead>
-              <tbody>
-                {visitOptions.map((v) => <tr><td>{v.length}</td><td>{v.team}</td></tr>)}
-              </tbody>
-            </table>
-            <div class="care-freq">
-              <p class="care-freq-label">How often</p>
-              <p class="care-freq-list">Monthly<br />Fortnightly<br />Weekly</p>
+      <div class="bento">
+        <article class="tile tile-care" data-reveal>
+          <div class="care-top">
+            <img src={care.image} alt={care.imageAlt} loading="lazy" />
+            <div class="care-head">
+              <h3><a href={`/services/${care.slug}/`}>{care.name}</a></h3>
+              <p>{care.short}</p>
+              <ul class="freq">
+                <li>Monthly</li>
+                <li>Fortnightly</li>
+                <li>Weekly</li>
+              </ul>
             </div>
           </div>
-          <a class="more" href={`/services/${care.slug}/`}>What a maintenance visit includes <Icon name="arrow" /></a>
-        </div>
-      </article>
+          <ul class="visits">
+            {
+              visitOptions.map((v) => (
+                <li>
+                  <span class="v-len">{v.length}</span>
+                  <span class="v-team">{v.team}</span>
+                </li>
+              ))
+            }
+          </ul>
+          <a class="tile-link" href={`/services/${care.slug}/`}>What a visit includes <Icon name="arrow" /></a>
+        </article>
 
-      <ul class="entries">
         {
-          others.map((s) => (
-            <li class="entry">
-              <a class="entry-link" href={`/services/${s.slug}/`}>
-                <img src={s.image} alt="" width="360" height="360" loading="lazy" />
-                <span class="entry-text">
-                  <span class="entry-name">{s.name}</span>
-                  <span class="entry-short">{s.short}</span>
-                </span>
-                <Icon name="arrow" class="entry-arrow" />
-              </a>
-            </li>
+          [intervention, health, pots].map((s, i) => (
+            <a class:list={['tile', 'tile-photo', `tile-${s.slug}`]} href={`/services/${s.slug}/`} data-reveal style={`--d:${i + 1}`}>
+              <img src={s.image} alt="" loading="lazy" />
+              <span class="tile-body">
+                <span class="tile-name">{s.name}</span>
+                <span class="tile-short">{s.short}</span>
+              </span>
+              <span class="tile-go" aria-hidden="true">
+                <Icon name="arrow" />
+              </span>
+            </a>
           ))
         }
-      </ul>
-      <p class="also">Also: {alsoOffer.join(', ').toLowerCase().replace(/^./, (c) => c.toUpperCase())}.</p>
+
+        <div class="tile tile-also" data-reveal style="--d:2">
+          <p class="also-title">Also on the list</p>
+          <ul class="also-chips">
+            {alsoOffer.map((a) => <li>{a}</li>)}
+          </ul>
+          <a class="btn btn-leaf" href="/services/">All services <Icon name="arrow" /></a>
+        </div>
+      </div>
     </div>
   </section>
 
-  <section class="honest" aria-labelledby="honest-title">
-    <div class="wrap honest-grid">
-      <h2 id="honest-title">We don't lay paving, paths or patios.</h2>
-      <p>
-        We look after gardens, and that is all we do. It means your garden gets our full attention, and the work is
-        done thoroughly, to the highest standard, every visit.
+  <!-- How it works: stacking cards -->
+  <section class="steps" aria-labelledby="steps-title">
+    <div class="wrap">
+      <h2 id="steps-title" class="steps-title" data-reveal>Three steps to a garden you don't have to worry about</h2>
+      <ol class="stack">
+        {
+          steps.map((s, i) => (
+            <li class:list={['card', `tone-${s.tone}`]} style={`--i:${i}`}>
+              <div class="card-copy">
+                <span class="card-num">{i + 1}</span>
+                <h3>{s.title}</h3>
+                <p>{s.text}</p>
+              </div>
+              <img src={s.image} alt="" loading="lazy" />
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <!-- Statement: words light up on scroll -->
+  <section class="statement" aria-label="What we don't do">
+    <div class="wrap">
+      <p class="statement-text">
+        {statement.map((w) => <span class="sw">{w} </span>)}
       </p>
     </div>
   </section>
 
   <Proof />
 
+  <!-- About -->
   <section class="about" aria-labelledby="about-title">
     <div class="wrap about-grid">
-      <figure class="plate">
-        <img
-          src="/img/alliums-van.jpg"
-          alt="Purple alliums in front of the Darragh Connolly Garden Care van."
-          width="396"
-          height="396"
-          loading="lazy"
-        />
+      <figure class="plate about-plate" data-reveal>
+        <img src="/img/alliums-van.jpg" alt="Purple alliums in front of the Darragh Connolly Garden Care van." loading="lazy" />
       </figure>
-      <div class="about-body">
+      <div class="about-body" data-reveal style="--d:1">
         <h2 id="about-title">He'll look after your garden like it's his own.</h2>
         <p>
           Darragh's work is mainly in Dublin and North Wicklow. He carries out all work thoroughly, to the highest
-          standard possible, and takes pride in doing so. The business has grown through referrals from clients who
-          are happy with their gardens.
+          standard possible, and takes pride in doing so. The business has grown through referrals from clients who are
+          happy with their gardens.
         </p>
-        <a class="more" href="/about/">About Darragh <Icon name="arrow" /></a>
+        <a class="btn btn-ghost" href="/about/">About Darragh <Icon name="arrow" /></a>
       </div>
     </div>
   </section>
@@ -131,21 +226,112 @@ const [care, ...others] = services;
   <CallToAction />
 </Base>
 
+<script>
+  // Spotlight that follows the pointer across bento tiles.
+  document.querySelectorAll<HTMLElement>('.tile').forEach((tile) => {
+    tile.addEventListener('pointermove', (e) => {
+      const r = tile.getBoundingClientRect();
+      tile.style.setProperty('--mx', `${e.clientX - r.left}px`);
+      tile.style.setProperty('--my', `${e.clientY - r.top}px`);
+    });
+  });
+
+  // Statement: light each word as the paragraph scrolls through the viewport.
+  const text = document.querySelector<HTMLElement>('.statement-text');
+  if (text) {
+    const words = Array.from(text.querySelectorAll<HTMLElement>('.sw'));
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let ticking = false;
+    const update = () => {
+      ticking = false;
+      const r = text.getBoundingClientRect();
+      const start = innerHeight * 0.85;
+      const end = innerHeight * 0.3;
+      const p = reduce ? 1 : Math.min(1, Math.max(0, (start - r.top) / (start - end + r.height * 0.6)));
+      const lit = Math.round(p * words.length);
+      words.forEach((w, i) => w.classList.toggle('lit', i < lit));
+    };
+    addEventListener(
+      'scroll',
+      () => {
+        if (!ticking) {
+          ticking = true;
+          requestAnimationFrame(update);
+        }
+      },
+      { passive: true },
+    );
+    update();
+  }
+</script>
+
 <style>
-  .hero-head {
+  /* Hero */
+  .hero {
     display: grid;
-    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
-    gap: 1.5rem clamp(2rem, 5vw, 5rem);
-    align-items: end;
-    padding-block: clamp(2rem, 5vw, 4rem) clamp(1.5rem, 3vw, 2.5rem);
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    gap: clamp(2rem, 5vw, 5rem);
+    align-items: center;
+    max-width: calc(var(--max) + 4rem);
+    margin-inline: auto;
+    padding: clamp(1.5rem, 4vw, 3rem) var(--gutter) clamp(2rem, 4vw, 3rem);
+    min-height: min(calc(100svh - 5.75rem), 56rem);
+  }
+  .hero-copy {
+    display: grid;
+    gap: 1.75rem;
+    justify-items: start;
   }
   .hero h1 {
-    max-width: 11ch;
+    font-size: clamp(3.25rem, 7vw, 6.5rem);
+    font-stretch: 75%;
+    font-weight: 800;
+    line-height: 0.92;
+    letter-spacing: -0.03em;
+    max-width: 12ch;
   }
-  .hero-side {
-    display: grid;
-    gap: 1.5rem;
-    padding-bottom: 0.4rem;
+  .w {
+    display: inline-flex;
+    overflow: hidden;
+    padding-bottom: 0.06em;
+    margin-bottom: -0.06em;
+    margin-right: 0.16em;
+  }
+  .w > span {
+    display: inline-block;
+  }
+  .js .w > span {
+    animation: word-up 1000ms var(--ease-out) both;
+    animation-delay: calc(120ms + var(--i) * 80ms);
+  }
+  @keyframes word-up {
+    from {
+      transform: translateY(110%) rotate(4deg);
+    }
+  }
+  .hero-lede {
+    max-width: 34ch;
+  }
+  .js .hero-lede,
+  .js .hero-actions,
+  .js .now {
+    animation: fade-up 900ms var(--ease-out) both;
+  }
+  .js .hero-lede {
+    animation-delay: 550ms;
+  }
+  .js .hero-actions {
+    animation-delay: 650ms;
+  }
+  .js .now {
+    animation-delay: 750ms;
+  }
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+      filter: blur(6px);
+    }
   }
   .hero-actions {
     display: flex;
@@ -155,26 +341,127 @@ const [care, ...others] = services;
   .hero-actions .btn-ghost {
     font-variant-numeric: tabular-nums;
   }
-  .hero-plate {
-    margin: 0;
+  .now {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.5rem 0.9rem 0.5rem 0.75rem;
+    border-radius: 999px;
+    background: var(--season-soft);
+    color: var(--ink);
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: background-color 200ms;
   }
-  .hero-plate img {
+  .now strong {
+    color: var(--season-ink);
+  }
+  .now-dot {
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: 50%;
+    background: var(--season-ink);
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--season-ink) 60%, transparent);
+    animation: pulse 2.4s var(--ease-out) infinite;
+  }
+  @keyframes pulse {
+    70% {
+      box-shadow: 0 0 0 10px transparent;
+    }
+    100% {
+      box-shadow: 0 0 0 0 transparent;
+    }
+  }
+  .now :global(svg) {
+    transition: transform 220ms var(--ease-out);
+  }
+  .now:hover :global(svg) {
+    transform: translateX(3px);
+  }
+
+  .hero-cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    height: min(calc(100svh - 9rem), 48rem);
+    min-height: 30rem;
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+    -webkit-mask: linear-gradient(transparent, #000 10%, #000 90%, transparent);
+    mask: linear-gradient(transparent, #000 10%, #000 90%, transparent);
+  }
+  .col {
+    overflow: hidden;
+  }
+  .col-track {
+    display: grid;
+    gap: 1rem;
+    animation: col-up 60s linear infinite;
+  }
+  .col-down .col-track {
+    animation-direction: reverse;
+    animation-duration: 70s;
+  }
+  .hero-cols:hover .col-track {
+    animation-play-state: paused;
+  }
+  @keyframes col-up {
+    to {
+      transform: translateY(calc(-50% - 0.5rem));
+    }
+  }
+  .col img {
     width: 100%;
-    height: clamp(13rem, 24vw, 22rem);
+    aspect-ratio: 4 / 5;
     object-fit: cover;
-    object-position: 50% 40%;
+    border-radius: 20px;
+    background: var(--paper-2);
   }
 
-  @media (max-width: 760px) {
-    .hero-head {
+  @media (max-width: 860px) {
+    .hero {
       grid-template-columns: 1fr;
+      min-height: 0;
     }
-    .hero-plate img {
-      height: 15rem;
-      object-position: 55% 50%;
+    .hero-cols {
+      height: 24rem;
+      min-height: 0;
     }
   }
 
+  /* Ticker */
+  .ticker {
+    padding-block: clamp(1.5rem, 3vw, 2.5rem);
+    border-block: 1px solid var(--rule);
+    margin-bottom: clamp(1rem, 3vw, 2rem);
+  }
+  .tick {
+    display: inline-flex;
+    align-items: center;
+    gap: 2.5rem;
+    white-space: nowrap;
+    font-family: var(--display);
+    font-stretch: 75%;
+    font-weight: 800;
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+  .tick.hollow {
+    color: transparent;
+    -webkit-text-stroke: 1.5px var(--ink);
+  }
+  .leaf {
+    width: 0.6em;
+    height: 0.6em;
+    fill: var(--leaf);
+    stroke: var(--evergreen);
+    stroke-width: 1.4;
+    stroke-linejoin: round;
+  }
+
+  /* Services bento */
   .services {
     padding-block: clamp(4rem, 9vw, 7.5rem);
   }
@@ -183,80 +470,126 @@ const [care, ...others] = services;
     grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
     gap: 1.25rem clamp(2rem, 5vw, 5rem);
     align-items: end;
-    margin-bottom: clamp(2.5rem, 5vw, 4rem);
+    margin-bottom: clamp(2rem, 4vw, 3rem);
   }
   .section-head h2 {
     max-width: 12ch;
   }
+  .bento {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    grid-auto-rows: minmax(15rem, auto);
+    gap: 1rem;
+  }
+  .tile {
+    position: relative;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .tile::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(420px circle at var(--mx, -100px) var(--my, -100px), rgb(255 255 255 / 0.16), transparent 45%);
+    opacity: 0;
+    transition: opacity 300ms;
+    pointer-events: none;
+    z-index: 2;
+  }
+  .tile:hover::after {
+    opacity: 1;
+  }
 
-  .care {
+  .tile-care {
+    grid-column: 1 / 5;
+    grid-row: span 2;
+    background: #fbfbf7;
+    padding: clamp(1rem, 2vw, 1.5rem);
+    display: grid;
+    gap: 1.5rem;
+    align-content: start;
+    box-shadow: 0 1px 2px rgb(23 37 28 / 0.06), 0 18px 40px -24px rgb(23 37 28 / 0.25);
+  }
+  .tile-care::after {
+    background: radial-gradient(420px circle at var(--mx, -100px) var(--my, -100px), rgb(140 198 63 / 0.12), transparent 45%);
+  }
+  .care-top {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
-    gap: clamp(1.5rem, 4vw, 4rem);
-    align-items: start;
-    padding-bottom: clamp(2.5rem, 5vw, 4rem);
+    gap: clamp(1rem, 3vw, 2rem);
+    align-items: center;
   }
-  .care-plate img {
+  .care-top img {
     aspect-ratio: 1;
-    border-radius: 2px;
-  }
-  .care-body {
-    display: grid;
-    gap: 1.25rem;
-  }
-  .care-body h3 {
-    font-size: clamp(2rem, 3.6vw, 3rem);
-  }
-  .care-body h3 a {
-    text-decoration: none;
-  }
-  .care-body > p {
-    color: var(--ink-2);
-    max-width: 52ch;
-  }
-  .care-table {
-    display: grid;
-    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
-    gap: 2rem;
-    border-top: 2px solid var(--ink);
-    padding-top: 0.25rem;
-  }
-  table {
-    border-collapse: collapse;
+    object-fit: cover;
+    border-radius: 20px;
     width: 100%;
   }
-  caption,
-  .care-freq-label {
-    text-align: left;
-    font-weight: 650;
-    font-size: 0.95rem;
-    padding: 0.6rem 0;
+  .care-head {
+    display: grid;
+    gap: 1rem;
   }
-  thead {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip: rect(0 0 0 0);
+  .care-head h3 {
+    font-size: clamp(1.9rem, 3.2vw, 2.75rem);
   }
-  td {
-    padding: 0.5rem 0;
-    border-top: 1px solid var(--rule);
+  .care-head h3 a {
+    text-decoration: none;
   }
-  td:last-child {
-    text-align: right;
+  .care-head p {
     color: var(--ink-2);
   }
-  .care-freq-list {
-    font-family: var(--display);
-    font-stretch: 80%;
-    font-weight: 650;
-    font-size: 1.6rem;
-    line-height: 1.25;
-    border-top: 1px solid var(--rule);
-    padding-top: 0.5rem;
+  .freq {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
   }
-  .more {
+  .freq li {
+    padding: 0.4rem 0.8rem;
+    border-radius: 999px;
+    background: var(--evergreen);
+    color: var(--on-evergreen);
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+  .visits {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0.5rem;
+  }
+  .visits li {
+    background: var(--paper);
+    border-radius: 16px;
+    padding: 0.9rem 0.9rem 1rem;
+    display: grid;
+    gap: 0.25rem;
+    transition:
+      background-color 200ms,
+      transform 300ms var(--ease-out);
+  }
+  .visits li:hover {
+    background: var(--season-soft);
+    transform: translateY(-3px);
+  }
+  .v-len {
+    font-family: var(--display);
+    font-stretch: 78%;
+    font-weight: 750;
+    font-size: clamp(1.3rem, 2vw, 1.7rem);
+    line-height: 1;
+  }
+  .v-team {
+    font-size: 0.85rem;
+    color: var(--ink-2);
+  }
+  .tile-link {
     justify-self: start;
     display: inline-flex;
     align-items: center;
@@ -266,111 +599,280 @@ const [care, ...others] = services;
     border-bottom: 2px solid var(--leaf);
     padding-bottom: 0.15rem;
   }
-  .more :global(svg) {
-    transition: transform 220ms var(--ease-out);
-  }
-  .more:hover :global(svg) {
-    transform: translateX(4px);
-  }
 
-  .entries {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    border-top: 2px solid var(--ink);
-  }
-  .entry {
-    border-bottom: 1px solid var(--rule);
-  }
-  .entry-link {
-    display: grid;
-    grid-template-columns: clamp(5rem, 11vw, 8.5rem) minmax(0, 1fr) auto;
-    gap: clamp(1rem, 3vw, 2.5rem);
-    align-items: center;
-    padding-block: 1.1rem;
+  .tile-photo {
+    display: flex;
+    align-items: flex-end;
+    min-height: 17rem;
+    color: #fff;
     text-decoration: none;
   }
-  .entry-link img {
-    aspect-ratio: 1;
-    object-fit: cover;
+  .tile-photo img {
+    position: absolute;
+    inset: 0;
     width: 100%;
-    transition: transform 400ms var(--ease-out);
+    height: 100%;
+    object-fit: cover;
+    z-index: -2;
+    transition: transform 900ms var(--ease-out);
   }
-  .entry-text {
+  .tile-photo::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(180deg, rgb(12 26 17 / 0) 30%, rgb(12 26 17 / 0.82) 100%);
+  }
+  .tile-photo:hover img {
+    transform: scale(1.06);
+  }
+  .tile-body {
     display: grid;
     gap: 0.35rem;
+    padding: 1.4rem 4.5rem 1.4rem 1.4rem;
   }
-  .entry-name {
+  .tile-name {
     font-family: var(--display);
     font-stretch: 78%;
-    font-weight: 700;
-    font-size: clamp(1.6rem, 3.2vw, 2.6rem);
+    font-weight: 750;
+    font-size: clamp(1.6rem, 2.6vw, 2.2rem);
     line-height: 1;
     letter-spacing: -0.02em;
   }
-  .entry-short {
-    color: var(--ink-2);
-    max-width: 52ch;
+  .tile-short {
+    font-size: 0.98rem;
+    color: rgb(255 255 255 / 0.85);
+    max-width: 36ch;
   }
-  .entry-link :global(.entry-arrow) {
-    width: 1.8rem;
-    height: 1.8rem;
-    color: var(--leaf-ink);
-    transition: transform 260ms var(--ease-out);
+  .tile-go {
+    position: absolute;
+    right: 1.2rem;
+    bottom: 1.2rem;
+    width: 2.75rem;
+    height: 2.75rem;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: rgb(255 255 255 / 0.16);
+    border: 1px solid rgb(255 255 255 / 0.3);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition:
+      background-color 300ms,
+      color 300ms,
+      transform 400ms var(--ease-out);
   }
-  @media (hover: hover) {
-    .entry-link:hover :global(.entry-arrow) {
-      transform: translateX(6px);
-    }
-    .entry-link:hover img {
-      transform: scale(1.03);
-    }
+  .tile-photo:hover .tile-go {
+    background: var(--leaf);
+    color: var(--ink);
+    transform: rotate(-45deg);
   }
-  .also {
-    margin-top: 1.5rem;
-    color: var(--ink-2);
+  .tile-garden-intervention {
+    grid-column: 5 / 7;
   }
-
-  @media (max-width: 760px) {
-    .section-head,
-    .care,
-    .care-table {
-      grid-template-columns: 1fr;
-    }
-    .care-table {
-      gap: 0.5rem;
-    }
-    .entry-link :global(.entry-arrow) {
-      display: none;
-    }
-    .entry-link {
-      grid-template-columns: 5.5rem minmax(0, 1fr);
-    }
+  .tile-garden-health {
+    grid-column: 5 / 7;
   }
-
-  .honest {
+  .tile-pots-and-planters {
+    grid-column: 1 / 4;
+    min-height: 20rem;
+  }
+  .tile-also {
+    grid-column: 4 / 7;
     background: var(--evergreen);
     color: var(--on-evergreen);
-    padding-block: clamp(4rem, 9vw, 7rem);
-  }
-  .honest-grid {
+    padding: clamp(1.5rem, 3vw, 2.25rem);
     display: grid;
-    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
-    gap: 1.5rem clamp(2rem, 5vw, 5rem);
-    align-items: end;
+    gap: 1.25rem;
+    align-content: center;
+    justify-items: start;
   }
-  .honest h2 {
-    font-size: clamp(2.6rem, 6.4vw, 5.5rem);
-    max-width: 12ch;
+  .also-title {
+    font-family: var(--display);
+    font-stretch: 78%;
+    font-weight: 750;
+    font-size: clamp(1.8rem, 3vw, 2.5rem);
+    line-height: 1;
   }
-  .honest p {
-    color: var(--on-evergreen-2);
-    font-size: 1.2rem;
-    max-width: 38ch;
+  .also-chips {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .also-chips li {
+    padding: 0.55rem 1rem;
+    border-radius: 999px;
+    border: 1px solid rgb(255 255 255 / 0.2);
+    background: rgb(255 255 255 / 0.06);
+    font-weight: 550;
   }
 
+  @media (max-width: 960px) {
+    .bento {
+      grid-template-columns: 1fr 1fr;
+    }
+    .tile-care {
+      grid-column: 1 / -1;
+      grid-row: auto;
+    }
+    .tile-garden-intervention,
+    .tile-garden-health {
+      grid-column: span 1;
+    }
+    .tile-pots-and-planters,
+    .tile-also {
+      grid-column: 1 / -1;
+    }
+    .visits {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+  @media (max-width: 620px) {
+    .section-head,
+    .care-top {
+      grid-template-columns: 1fr;
+    }
+    .tile-garden-intervention,
+    .tile-garden-health {
+      grid-column: 1 / -1;
+    }
+    .visits {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  /* Stacking steps */
+  .steps {
+    padding-block: clamp(2rem, 5vw, 4rem) clamp(4rem, 9vw, 7rem);
+  }
+  .steps-title {
+    max-width: 16ch;
+    margin-bottom: clamp(2rem, 5vw, 3.5rem);
+  }
+  .stack {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: clamp(1.5rem, 4vw, 3rem);
+  }
+  .card {
+    position: sticky;
+    top: calc(6.5rem + var(--i) * 1.75rem);
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    gap: clamp(1.5rem, 4vw, 3rem);
+    align-items: center;
+    padding: clamp(1.25rem, 3vw, 2rem);
+    border-radius: var(--radius-lg);
+    min-height: clamp(20rem, 42vw, 28rem);
+    box-shadow: 0 -10px 40px -24px rgb(10 25 16 / 0.45);
+    transform-origin: 50% 0;
+  }
+  @supports (animation-timeline: view()) {
+    .card {
+      animation: settle linear both;
+      animation-timeline: view();
+      animation-range: exit-crossing 0% exit-crossing 60%;
+    }
+    @keyframes settle {
+      to {
+        transform: scale(0.94);
+        filter: brightness(0.92);
+      }
+    }
+  }
+  .card img {
+    width: 100%;
+    height: 100%;
+    max-height: 24rem;
+    object-fit: cover;
+    border-radius: 20px;
+  }
+  .card-copy {
+    display: grid;
+    gap: 1rem;
+    align-content: center;
+    padding: clamp(0.5rem, 2vw, 1.5rem);
+  }
+  .card-num {
+    width: 3rem;
+    height: 3rem;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    font-family: var(--display);
+    font-stretch: 80%;
+    font-weight: 800;
+    font-size: 1.4rem;
+    border: 1.5px solid currentColor;
+  }
+  .card h3 {
+    font-size: clamp(2rem, 4.2vw, 3.5rem);
+    max-width: 12ch;
+  }
+  .card p {
+    max-width: 40ch;
+    font-size: 1.15rem;
+  }
+  .tone-paper {
+    background: #fbfbf7;
+    color: var(--ink);
+  }
+  .tone-paper p {
+    color: var(--ink-2);
+  }
+  .tone-evergreen {
+    background: var(--evergreen);
+    color: var(--on-evergreen);
+  }
+  .tone-evergreen p {
+    color: var(--on-evergreen-2);
+  }
+  .tone-season {
+    background: var(--season);
+    color: var(--on-season);
+  }
+  .tone-season p {
+    color: var(--on-season-2);
+  }
+  @media (max-width: 760px) {
+    .card {
+      grid-template-columns: 1fr;
+      top: calc(5.5rem + var(--i) * 1.25rem);
+    }
+    .card img {
+      max-height: 13rem;
+    }
+  }
+
+  /* Statement */
+  .statement {
+    padding-block: clamp(4rem, 10vw, 8rem);
+  }
+  .statement-text {
+    font-family: var(--display);
+    font-stretch: 78%;
+    font-weight: 750;
+    font-size: clamp(2.2rem, 5.6vw, 4.75rem);
+    line-height: 1.02;
+    letter-spacing: -0.025em;
+    max-width: 22ch;
+  }
+  .sw {
+    color: color-mix(in srgb, var(--ink) 16%, transparent);
+    transition: color 350ms var(--ease-out);
+  }
+  .sw.lit {
+    color: var(--ink);
+  }
+
+  /* About */
   .about {
-    padding-block: clamp(4rem, 9vw, 7rem);
+    padding-block: clamp(3rem, 8vw, 6rem);
   }
   .about-grid {
     display: grid;
@@ -378,12 +880,14 @@ const [care, ...others] = services;
     gap: clamp(1.5rem, 5vw, 5rem);
     align-items: center;
   }
-  .about-grid img {
+  .about-plate img {
     aspect-ratio: 1;
+    border-radius: var(--radius-lg);
   }
   .about-body {
     display: grid;
     gap: 1.25rem;
+    justify-items: start;
   }
   .about-body h2 {
     max-width: 14ch;
@@ -393,9 +897,15 @@ const [care, ...others] = services;
     max-width: 52ch;
   }
   @media (max-width: 760px) {
-    .honest-grid,
     .about-grid {
       grid-template-columns: 1fr;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .col-track,
+    .now-dot {
+      animation: none;
     }
   }
 </style>

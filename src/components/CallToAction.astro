@@ -9,20 +9,18 @@ const { heading = 'Tell us about your garden.' } = Astro.props;
 ---
 
 <section class="cta" aria-labelledby="cta-title">
-  <div class="wrap cta-grid">
+  <div class="cta-card" data-reveal>
     <div class="cta-copy">
       <h2 id="cta-title">{heading}</h2>
-      <p>
-        Call Darragh for a chat, or send a few details and we'll arrange a visit. We work across {contact.area}.
-      </p>
+      <p>Call Darragh for a chat, or send a few details and we'll arrange a visit. We work across {contact.area}.</p>
     </div>
     <div class="cta-actions">
       <a class="cta-phone" href={contact.phoneHref}>
-        <Icon name="phone" />
+        <span class="cta-phone-icon"><Icon name="phone" /></span>
         <span>{contact.phone}</span>
       </a>
       <div class="cta-row">
-        <a class="btn btn-primary" href="/contact/">Request a quote <Icon name="arrow" /></a>
+        <a class="btn btn-leaf" href="/contact/">Request a quote <Icon name="arrow" /></a>
         <a class="cta-mail" href={`mailto:${contact.email}`}>{contact.email}</a>
       </div>
     </div>
@@ -31,25 +29,50 @@ const { heading = 'Tell us about your garden.' } = Astro.props;
 
 <style>
   .cta {
-    background: var(--season-soft);
-    padding-block: clamp(4rem, 9vw, 7rem);
-    transition: background-color 500ms var(--ease-out);
+    padding: clamp(3rem, 7vw, 5rem) clamp(0.5rem, 1.5vw, 1rem);
   }
-  .cta-grid {
+  .cta-card {
+    max-width: calc(var(--max) + 4rem);
+    margin-inline: auto;
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+    background: var(--season);
+    color: var(--on-season);
+    padding: clamp(2rem, 6vw, 5rem);
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     gap: 2rem clamp(2rem, 5vw, 5rem);
     align-items: end;
   }
+  .cta-card::before {
+    content: '';
+    position: absolute;
+    width: 60%;
+    aspect-ratio: 1;
+    right: -15%;
+    top: -40%;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, color-mix(in srgb, var(--on-season) 18%, transparent), transparent);
+    z-index: -1;
+    animation: drift 14s ease-in-out infinite alternate;
+  }
+  @keyframes drift {
+    to {
+      transform: translate(-30%, 40%);
+    }
+  }
   .cta h2 {
     max-width: 10ch;
+    font-size: clamp(2.6rem, 6vw, 5rem);
   }
   .cta-copy {
     display: grid;
     gap: 1.25rem;
   }
   .cta-copy p {
-    color: var(--ink-2);
+    color: var(--on-season-2);
     max-width: 44ch;
   }
   .cta-actions {
@@ -59,22 +82,34 @@ const { heading = 'Tell us about your garden.' } = Astro.props;
   .cta-phone {
     display: inline-flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 1rem;
     font-family: var(--display);
     font-stretch: 75%;
     font-weight: 800;
-    font-size: clamp(2.6rem, 6.5vw, 5.5rem);
+    font-size: clamp(2.4rem, 6vw, 5rem);
     line-height: 1;
     letter-spacing: -0.02em;
     font-variant-numeric: tabular-nums;
     text-decoration: none;
-    color: var(--season-ink);
     white-space: nowrap;
   }
-  .cta-phone :global(svg) {
-    width: 0.7em;
-    height: 0.7em;
-    stroke-width: 2.2;
+  .cta-phone-icon {
+    flex: none;
+    width: 0.95em;
+    height: 0.95em;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: var(--on-season);
+    color: var(--season);
+    transition: transform 400ms var(--ease-out);
+  }
+  .cta-phone-icon :global(svg) {
+    width: 45%;
+    height: 45%;
+  }
+  .cta-phone:hover .cta-phone-icon {
+    transform: rotate(-12deg) scale(1.06);
   }
   .cta-row {
     display: flex;
@@ -87,8 +122,13 @@ const { heading = 'Tell us about your garden.' } = Astro.props;
     overflow-wrap: anywhere;
   }
   @media (max-width: 860px) {
-    .cta-grid {
+    .cta-card {
       grid-template-columns: 1fr;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .cta-card::before {
+      animation: none;
     }
   }
 </style>

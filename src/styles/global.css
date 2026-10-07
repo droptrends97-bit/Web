@@ -28,6 +28,8 @@
   --gutter: clamp(1rem, 4vw, 3rem);
   --max: 82rem;
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --radius: 14px;
+  --radius-lg: 28px;
 }
 
 [data-season='winter'] {
@@ -265,4 +267,59 @@ a {
   width: 1.15em;
   height: 1.15em;
   flex: none;
+}
+
+/* Scroll reveal: content is visible without JS; .js enables the entrance. */
+.js [data-reveal] {
+  opacity: 0;
+  transform: translateY(28px);
+  filter: blur(6px);
+  transition:
+    opacity 900ms var(--ease-out),
+    transform 900ms var(--ease-out),
+    filter 900ms var(--ease-out);
+  transition-delay: calc(var(--d, 0) * 90ms);
+}
+.js [data-reveal].in {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
+
+/* Infinite marquee */
+.marquee {
+  display: flex;
+  overflow: hidden;
+  -webkit-mask: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  mask: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+.marquee-track {
+  display: flex;
+  flex: none;
+  gap: var(--gap, 3rem);
+  padding-right: var(--gap, 3rem);
+  animation: marquee var(--speed, 40s) linear infinite;
+}
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+@keyframes marquee {
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+.plate img {
+  border-radius: var(--radius);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js [data-reveal] {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+  .marquee-track {
+    animation: none;
+  }
 }

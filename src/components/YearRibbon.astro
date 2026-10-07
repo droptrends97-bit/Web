@@ -8,57 +8,100 @@ interface Props {
 const { heading = 'in the garden' } = Astro.props;
 const buildMonth = new Date().getMonth();
 const serviceName = (slug: string) => services.find((s) => s.slug === slug)?.name ?? '';
+
+// Dial geometry: twelve 30° segments, January at the top.
+const C = 200;
+const R1 = 192;
+const R0 = 136;
+const pt = (r: number, deg: number) => {
+  const a = ((deg - 90) * Math.PI) / 180;
+  return `${(C + r * Math.cos(a)).toFixed(2)} ${(C + r * Math.sin(a)).toFixed(2)}`;
+};
+const seg = (i: number) => {
+  const a0 = i * 30 - 15 + 1.2;
+  const a1 = i * 30 + 15 - 1.2;
+  return `M${pt(R1, a0)} A${R1} ${R1} 0 0 1 ${pt(R1, a1)} L${pt(R0, a1)} A${R0} ${R0} 0 0 0 ${pt(R0, a0)}Z`;
+};
+const label = (i: number) => pt((R0 + R1) / 2, i * 30).split(' ');
 ---
 
 <section class="year" data-season={months[buildMonth].season} aria-labelledby="year-title">
-  <div class="wrap">
-    <h2 id="year-title" class="visually-hidden">The gardener's year: what we do each month</h2>
-    <div class="strip" role="tablist" aria-label="Months of the year">
-      {
-        months.map((m, i) => (
-          <button
-            type="button"
-            role="tab"
-            class="tab"
-            id={`tab-${i}`}
-            data-index={i}
-            data-month-season={m.season}
-            aria-selected={i === buildMonth ? 'true' : 'false'}
-            aria-controls={`month-${i}`}
-            tabindex={i === buildMonth ? 0 : -1}
-          >
-            <span class="tab-num">{String(i + 1).padStart(2, '0')}</span>
-            <span class="tab-name">{m.short}</span>
-          </button>
-        ))
-      }
+  <div class="year-card">
+    <div class="dial-wrap" aria-hidden="true">
+      <svg class="dial" viewBox="0 0 400 400">
+        <g class="segs">
+          {months.map((_, i) => <path class="seg" data-index={i} d={seg(i)} />)}
+        </g>
+        <g class="hl" style={`transform: rotate(${buildMonth * 30}deg)`}>
+          <path d={seg(0)} />
+        </g>
+        <g class="labels">
+          {
+            months.map((m, i) => (
+              <text x={label(i)[0]} y={label(i)[1]} data-index={i} class:list={{ on: i === buildMonth }}>
+                {m.name[0]}
+              </text>
+            ))
+          }
+        </g>
+        <circle class="hub" cx="200" cy="200" r="118"></circle>
+      </svg>
+      <div class="hub-text">
+        <span class="hub-num">{String(buildMonth + 1).padStart(2, '0')}</span>
+        <span class="hub-season">{months[buildMonth].season}</span>
+      </div>
     </div>
 
-    <div class="panels">
-      {
-        months.map((m, i) => (
-          <div
-            class="panel"
-            id={`month-${i}`}
-            role="tabpanel"
-            aria-labelledby={`tab-${i}`}
-            hidden={i !== buildMonth}
-          >
-            <p class="panel-title">
-              <span class="panel-month">{m.name}</span>
-              <span class="panel-sub">{heading}</span>
-            </p>
-            <div class="panel-body">
-              <ul class="ticks">
-                {m.work.map((w) => <li>{w}</li>)}
+    <div class="year-main">
+      <h2 id="year-title">The gardener's year</h2>
+      <div class="strip-wrap">
+        <div class="strip" role="tablist" aria-label="Months of the year">
+          <span class="indicator" aria-hidden="true"></span>
+          {
+            months.map((m, i) => (
+              <button
+                type="button"
+                role="tab"
+                class="tab"
+                id={`tab-${i}`}
+                data-index={i}
+                data-month-season={m.season}
+                aria-selected={i === buildMonth ? 'true' : 'false'}
+                aria-controls={`month-${i}`}
+                aria-label={m.name}
+                tabindex={i === buildMonth ? 0 : -1}
+              >
+                {m.short}
+              </button>
+            ))
+          }
+        </div>
+      </div>
+
+      <div class="panels">
+        {
+          months.map((m, i) => (
+            <div class="panel" id={`month-${i}`} role="tabpanel" aria-labelledby={`tab-${i}`} hidden={i !== buildMonth}>
+              <p class="panel-title">
+                <span class="panel-month" aria-label={m.name}>
+                  {[...m.name].map((ch, k) => (
+                    <span class="ch" aria-hidden="true" style={`--k:${k}`}>{ch}</span>
+                  ))}
+                </span>
+                <span class="panel-sub">{heading}</span>
+              </p>
+              <ul class="chips">
+                {m.work.map((w, k) => (
+                  <li style={`--k:${k}`}>{w}</li>
+                ))}
               </ul>
               <a class="panel-link" href={`/services/${m.service}/`}>
                 {serviceName(m.service)} <Icon name="arrow" />
               </a>
             </div>
-          </div>
-        ))
-      }
+          ))
+        }
+      </div>
     </div>
   </div>
 </section>
@@ -69,8 +112,37 @@ const serviceName = (slug: string) => services.find((s) => s.slug === slug)?.nam
     const tabs = Array.from(root.querySelectorAll<HTMLButtonElement>('[role="tab"]'));
     const panels = Array.from(root.querySelectorAll<HTMLElement>('[role="tabpanel"]'));
     const strip = root.querySelector<HTMLElement>('.strip')!;
+    const scroller = strip.parentElement!;
+    const indicator = root.querySelector<HTMLElement>('.indicator')!;
+    const hl = root.querySelector<SVGGElement>('.hl')!;
+    const labels = Array.from(root.querySelectorAll<SVGTextElement>('.labels text'));
+    const hubNum = root.querySelector<HTMLElement>('.hub-num')!;
+    const hubSeason = root.querySelector<HTMLElement>('.hub-season')!;
+    let angle = 0;
+    let current = -1;
+
+    const place = () => {
+      const t = tabs[current];
+      indicator.style.width = `${t.offsetWidth}px`;
+      indicator.style.transform = `translateX(${t.offsetLeft}px)`;
+    };
 
     const select = (i: number, focus = false, instant = false) => {
+      if (current >= 0) {
+        // Rotate the shortest way round the year.
+        let delta = (i - current) * 30;
+        if (delta > 180) delta -= 360;
+        if (delta < -180) delta += 360;
+        angle += delta;
+      } else {
+        angle = i * 30;
+      }
+      current = i;
+      hl.style.transform = `rotate(${angle}deg)`;
+      labels.forEach((l, j) => l.classList.toggle('on', j === i));
+      hubNum.textContent = String(i + 1).padStart(2, '0');
+      hubSeason.textContent = tabs[i].dataset.monthSeason ?? '';
+
       tabs.forEach((t, j) => {
         const on = j === i;
         t.setAttribute('aria-selected', String(on));
@@ -85,9 +157,12 @@ const serviceName = (slug: string) => services.find((s) => s.slug === slug)?.nam
         }
       });
       root.dataset.season = tabs[i].dataset.monthSeason;
+      place();
       const t = tabs[i];
-      const left = t.offsetLeft - (strip.clientWidth - t.offsetWidth) / 2;
-      strip.scrollTo({ left, behavior: instant ? 'auto' : 'smooth' });
+      scroller.scrollTo({
+        left: t.offsetLeft - (scroller.clientWidth - t.offsetWidth) / 2,
+        behavior: instant ? 'auto' : 'smooth',
+      });
       if (focus) t.focus({ preventScroll: true });
     };
 
@@ -106,112 +181,194 @@ const serviceName = (slug: string) => services.find((s) => s.slug === slug)?.nam
         }
       });
     });
+    root.querySelectorAll<SVGPathElement>('.seg').forEach((el) => {
+      el.addEventListener('click', () => select(Number(el.dataset.index)));
+    });
+    addEventListener('resize', place);
 
     // The page may have been built in another month: follow the visitor's date.
     select(new Date().getMonth(), false, true);
+    requestAnimationFrame(() => root.classList.add('ready'));
   }
 </script>
 
 <style>
   .year {
+    padding: clamp(0.5rem, 1.5vw, 1rem);
+  }
+  .year-card {
+    max-width: calc(var(--max) + 4rem);
+    margin-inline: auto;
     background: var(--season);
     color: var(--on-season);
-    padding-block: clamp(1.25rem, 3vw, 2rem) clamp(2.5rem, 6vw, 4.5rem);
+    border-radius: var(--radius-lg);
+    padding: clamp(1.5rem, 4.5vw, 4rem);
+    display: grid;
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    gap: clamp(2rem, 5vw, 5rem);
+    align-items: center;
+    overflow: hidden;
+    position: relative;
+    isolation: isolate;
     transition:
-      background-color 500ms var(--ease-out),
-      color 500ms var(--ease-out);
+      background-color 600ms var(--ease-out),
+      color 600ms var(--ease-out);
+  }
+  .year-card::before {
+    content: '';
+    position: absolute;
+    inset: auto -20% -60% 20%;
+    height: 120%;
+    background: radial-gradient(closest-side, color-mix(in srgb, var(--on-season) 14%, transparent), transparent);
+    z-index: -1;
+    pointer-events: none;
   }
 
-  .strip {
+  .dial-wrap {
+    position: relative;
+    width: min(100%, 30rem);
+    justify-self: center;
+  }
+  .dial {
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+  .seg {
+    fill: color-mix(in srgb, var(--on-season) 12%, transparent);
+    cursor: pointer;
+    transition: fill 200ms;
+  }
+  .seg:hover {
+    fill: color-mix(in srgb, var(--on-season) 24%, transparent);
+  }
+  .hl {
+    transform-origin: 200px 200px;
+    pointer-events: none;
+  }
+  .ready .hl {
+    transition: transform 900ms cubic-bezier(0.34, 1.3, 0.5, 1);
+  }
+  .hl path {
+    fill: var(--on-season);
+    transition: fill 600ms;
+  }
+  .labels text {
+    font-family: var(--display);
+    font-stretch: 80%;
+    font-weight: 700;
+    font-size: 21px;
+    text-anchor: middle;
+    dominant-baseline: central;
+    fill: var(--on-season);
+    pointer-events: none;
+    transition: fill 300ms;
+  }
+  .labels text.on {
+    fill: var(--season);
+  }
+  .hub {
+    fill: color-mix(in srgb, var(--on-season) 7%, transparent);
+    stroke: color-mix(in srgb, var(--on-season) 22%, transparent);
+    stroke-width: 1;
+  }
+  .hub-text {
+    position: absolute;
+    inset: 0;
     display: grid;
-    grid-template-columns: repeat(12, minmax(4.25rem, 1fr));
-    border-top: 1px solid color-mix(in srgb, currentColor 35%, transparent);
+    place-content: center;
+    text-align: center;
+    pointer-events: none;
+  }
+  .hub-num {
+    font-family: var(--display);
+    font-stretch: 75%;
+    font-weight: 800;
+    font-size: clamp(4rem, 9vw, 7.5rem);
+    line-height: 0.85;
+    letter-spacing: -0.03em;
+    font-variant-numeric: tabular-nums;
+  }
+  .hub-season {
+    text-transform: capitalize;
+    font-weight: 600;
+    color: var(--on-season-2);
+    margin-top: 0.4rem;
+  }
+
+  .year-main {
+    min-width: 0;
+    display: grid;
+    gap: 1.75rem;
+  }
+  .year-main h2 {
+    font-size: clamp(1.25rem, 2vw, 1.5rem);
+    font-family: var(--text);
+    font-stretch: 100%;
+    font-weight: 650;
+    letter-spacing: 0;
+    color: var(--on-season-2);
+  }
+
+  .strip-wrap {
     overflow-x: auto;
     scrollbar-width: none;
-    scroll-snap-type: x proximity;
-    margin-inline: calc(var(--gutter) * -1);
-    padding-inline: var(--gutter);
+    margin-inline: -0.25rem;
   }
-  .strip::-webkit-scrollbar {
+  .strip-wrap::-webkit-scrollbar {
     display: none;
   }
-
+  .strip {
+    position: relative;
+    display: inline-flex;
+    gap: 0.15rem;
+    padding: 0.3rem;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--on-season) 10%, transparent);
+    margin-inline: 0.25rem;
+  }
+  .indicator {
+    position: absolute;
+    top: 0.3rem;
+    bottom: 0.3rem;
+    left: 0;
+    border-radius: 999px;
+    background: var(--on-season);
+    box-shadow: 0 6px 16px -8px rgb(0 0 0 / 0.5);
+    transition:
+      transform 520ms var(--ease-out),
+      width 520ms var(--ease-out),
+      background-color 600ms;
+  }
   .tab {
+    position: relative;
     appearance: none;
     background: none;
     border: 0;
-    color: inherit;
     font: inherit;
-    text-align: left;
-    padding: 0.85rem 0.6rem 0.9rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--on-season);
+    padding: 0.55rem 0.8rem;
+    border-radius: 999px;
     cursor: pointer;
-    scroll-snap-align: center;
-    display: grid;
-    gap: 0.1rem;
-    position: relative;
-    color: var(--on-season-2);
-    transition: color 200ms;
+    transition: color 300ms;
     -webkit-tap-highlight-color: transparent;
   }
-  .tab::before {
-    content: '';
-    position: absolute;
-    left: 0.6rem;
-    right: 0.6rem;
-    top: -1px;
-    height: 4px;
-    background: currentColor;
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 320ms var(--ease-out);
-  }
   .tab[aria-selected='true'] {
-    color: var(--on-season);
-  }
-  .tab[aria-selected='true']::before {
-    transform: scaleX(1);
-  }
-  @media (hover: hover) {
-    .tab:hover {
-      color: var(--on-season);
-    }
+    color: var(--season);
   }
   .tab:focus-visible {
-    outline-color: currentColor;
-    outline-offset: -3px;
-  }
-  .tab-num {
-    font-size: 0.8rem;
-    font-variant-numeric: tabular-nums;
-    font-weight: 600;
-  }
-  .tab-name {
-    font-family: var(--display);
-    font-stretch: 80%;
-    font-weight: 650;
-    font-size: 1.35rem;
-    line-height: 1;
+    outline-color: var(--on-season);
   }
 
   .panel {
     display: grid;
-    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
-    gap: 1.5rem clamp(2rem, 5vw, 5rem);
-    align-items: end;
-    padding-top: clamp(1.5rem, 4vw, 3rem);
+    gap: 1.5rem;
+    justify-items: start;
   }
   .panel[hidden] {
     display: none;
-  }
-  .panel.enter {
-    animation: panel-in 520ms var(--ease-out);
-  }
-  @keyframes panel-in {
-    from {
-      opacity: 0;
-      transform: translateY(10px);
-      filter: blur(3px);
-    }
   }
   .panel-title {
     display: grid;
@@ -221,38 +378,72 @@ const serviceName = (slug: string) => services.find((s) => s.slug === slug)?.nam
     font-family: var(--display);
     font-stretch: 75%;
     font-weight: 800;
-    font-size: clamp(3.5rem, 11vw, 9.5rem);
+    font-size: clamp(3.5rem, 9vw, 8rem);
     letter-spacing: -0.03em;
     font-variation-settings: 'opsz' 96;
+    display: flex;
+    overflow: hidden;
+    padding-bottom: 0.05em;
+  }
+  .ch {
+    display: inline-block;
+  }
+  .panel.enter .ch {
+    animation: rise 700ms var(--ease-out) both;
+    animation-delay: calc(var(--k) * 28ms);
+  }
+  @keyframes rise {
+    from {
+      transform: translateY(105%);
+    }
   }
   .panel-sub {
     font-family: var(--display);
     font-stretch: 85%;
     font-weight: 400;
-    font-size: clamp(1.5rem, 3vw, 2.4rem);
+    font-size: clamp(1.4rem, 2.6vw, 2rem);
     color: var(--on-season-2);
     padding-left: 0.2rem;
   }
-  .panel-body {
-    display: grid;
-    gap: 1.5rem;
-    padding-bottom: 0.6rem;
+  .chips {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
   }
-  .panel-body .ticks {
-    font-size: 1.125rem;
+  .chips li {
+    padding: 0.6rem 1rem;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--on-season) 12%, transparent);
+    border: 1px solid color-mix(in srgb, var(--on-season) 18%, transparent);
+    font-weight: 550;
   }
-  .panel-body .ticks :global(li::before) {
-    color: currentColor;
+  .panel.enter .chips li {
+    animation: chip 600ms var(--ease-out) both;
+    animation-delay: calc(200ms + var(--k) * 70ms);
+  }
+  @keyframes chip {
+    from {
+      opacity: 0;
+      transform: translateY(10px) scale(0.96);
+      filter: blur(4px);
+    }
   }
   .panel-link {
-    justify-self: start;
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
     font-weight: 650;
     text-decoration: none;
-    border-bottom: 2px solid currentColor;
-    padding-bottom: 0.15rem;
+    background: var(--on-season);
+    color: var(--season);
+    padding: 0.75rem 1.2rem;
+    border-radius: 999px;
+    transition:
+      background-color 600ms,
+      color 600ms;
   }
   .panel-link :global(svg) {
     transition: transform 220ms var(--ease-out);
@@ -261,10 +452,12 @@ const serviceName = (slug: string) => services.find((s) => s.slug === slug)?.nam
     transform: translateX(4px);
   }
 
-  @media (max-width: 760px) {
-    .panel {
+  @media (max-width: 860px) {
+    .year-card {
       grid-template-columns: 1fr;
-      align-items: start;
+    }
+    .dial-wrap {
+      width: min(78%, 22rem);
     }
   }
 </style>
