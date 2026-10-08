@@ -3,7 +3,6 @@ import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
 import Proof from '../components/Proof.astro';
 import CallToAction from '../components/CallToAction.astro';
-import GardenBackdrop from '../components/GardenBackdrop.astro';
 import { contact } from '../data/site';
 
 const facts = [
@@ -61,10 +60,10 @@ const belief = "Nature isn't just a background to our lives; it actively support
 ---
 
 <Base
+  garden
   title="About Darragh"
   description="Darragh Connolly has worked with gardens across Dublin and Wicklow for over 20 years, after qualifying from Writtle Horticultural College. Gardens as spaces of peace and well-being."
 >
-  <GardenBackdrop />
 
   <!-- Hero -->
   <section class="hero" aria-labelledby="about-hero">

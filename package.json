@@ -6,7 +6,7 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "bundle": "astro build && python3 scripts/bundle.py home && python3 scripts/bundle.py about"
+    "bundle": "astro build && python3 scripts/bundle.py site && python3 scripts/bundle.py home && python3 scripts/bundle.py about"
   },
   "dependencies": {
     "@fontsource-variable/bricolage-grotesque": "^5.3.0",

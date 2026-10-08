@@ -1,17 +1,20 @@
 ---
 import '../styles/global.css';
 import Icon from '../components/Icon.astro';
+import GardenBackdrop from '../components/GardenBackdrop.astro';
 import { contact, nav, services, months } from '../data/site';
 
 interface Props {
   title?: string;
   description?: string;
   callbar?: boolean;
+  garden?: boolean;
 }
 
 const {
   title,
   callbar = true,
+  garden = false,
   description = 'Garden care and maintenance across Dublin and North Wicklow. Regular visits, seasonal Garden Interventions, lawn and soil health, and designed pots and planters.',
 } = Astro.props;
 
@@ -96,6 +99,8 @@ const jsonLd = {
         </details>
       </div>
     </header>
+
+    {garden && <GardenBackdrop />}
 
     <main id="main">
       <slot />
