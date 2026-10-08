@@ -78,15 +78,15 @@ export const services: Service[] = [
   {
     slug: 'garden-health',
     name: 'Garden health',
-    short: 'Soil and lawn conditioning, spraying and feeding programmes.',
+    short: 'A three-visits-a-year programme: lawn, soil, feeding, and pest and disease care.',
     intro:
-      'Our garden health programmes look after what is underneath: the soil, the lawn and the plants themselves, so the garden grows strong rather than just looking tidy.',
+      "Darragh's Garden Health Programme gives a well-planted garden the ongoing specialist care it needs to stay vibrant, resilient and full of life.",
     image: '/img/striped-lawn-bench.jpg',
     imageAlt: 'A freshly striped lawn in front of a white bench and trellis.',
     body: [
-      'A garden that is fed and conditioned at the right times of year needs less rescuing. We plan a programme around your soil, your lawn and your planting.',
+      'The programme is carried out three times a year. Even if you already have a maintenance company, we can work alongside them.',
     ],
-    includes: ['Soil conditioning', 'Lawn conditioning and feeding', 'Spraying programmes', 'Seasonal feeding'],
+    includes: ['Lawn treatments', 'Soil conditioning', 'Feeding of plants', 'Pest and disease treatment'],
   },
   {
     slug: 'pots-and-planters',

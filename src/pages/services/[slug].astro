@@ -5,7 +5,7 @@ import CallToAction from '../../components/CallToAction.astro';
 import { services, visitOptions, months, contact, type Service } from '../../data/site';
 
 export function getStaticPaths() {
-  return services.filter((s) => !['pots-and-planters', 'garden-intervention'].includes(s.slug)).map((service) => ({ params: { slug: service.slug }, props: { service } }));
+  return services.filter((s) => !['pots-and-planters', 'garden-intervention', 'garden-health'].includes(s.slug)).map((service) => ({ params: { slug: service.slug }, props: { service } }));
 }
 
 const { service } = Astro.props as { service: Service };

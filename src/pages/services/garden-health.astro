@@ -1,0 +1,676 @@
+---
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import CallToAction from '../../components/CallToAction.astro';
+import { contact } from '../../data/site';
+
+const programme = [
+  {
+    title: 'Lawn treatments',
+    text: 'To keep your lawn lush, green and weed-free.',
+    icon: 'M3 20h18M5 20c0-4 1-7 2-9M9 20c0-5 .5-9 1.5-12M13 20c0-4 1-8 2.5-10M17 20c0-3 .5-6 2-8',
+  },
+  {
+    title: 'Soil conditioning',
+    text: 'Creating the perfect environment for strong, healthy root growth.',
+    icon: 'M3 9h18M3 14h18M3 19h18M12 9V4M9 6l3-2 3 2M7 14v.01M15 14v.01M11 19v.01M18 19v.01',
+  },
+  {
+    title: 'Feeding of plants',
+    text: 'Giving trees, shrubs and flowers the essential nutrients they need.',
+    icon: 'M12 21V11M12 11c0-4 3-7 7-7 0 4-3 7-7 7zM12 14c0-3-2.5-5.5-6-5.5 0 3 2.5 5.5 6 5.5z',
+  },
+  {
+    title: 'Pest and disease treatment',
+    text: 'Protecting your plants and ensuring long-term vitality.',
+    icon: 'M12 3l7 3v5c0 5-3 8.5-7 10-4-1.5-7-5-7-10V6l7-3zM9 12l2 2 4-4',
+  },
+];
+
+const why = [
+  { title: 'Tailored to your lifestyle', text: 'We create spaces that feel good and are easy to maintain.' },
+  { title: 'A natural approach', text: 'We work with nature, not against it.' },
+  { title: 'Well-being at the centre', text: 'Every design choice supports relaxation, mindfulness and peace.' },
+];
+
+const gallery = [
+  { src: '/img/gi-3.jpg', alt: 'Healthy panicle hydrangeas in flower.' },
+  { src: '/img/gi-7.jpg', alt: 'Pleached trees above a lush lawn.' },
+  { src: '/img/gi-6.jpg', alt: 'Red heuchera and crocosmia in a raised bed.' },
+  { src: '/img/gi-14.jpg', alt: 'Alliums and a silver birch in front of a yew hedge.' },
+  { src: '/img/gi-4.jpg', alt: 'White Annabelle hydrangeas.' },
+  { src: '/img/gi-8.jpg', alt: 'A tree fern against a dark fence.' },
+  { src: '/img/gi-13.jpg', alt: 'Purple alliums in front of the Darragh Connolly van.' },
+  { src: '/img/gi-9.jpg', alt: 'Red skimmia and ferns.' },
+];
+---
+
+<Base
+  garden
+  title="Garden Health"
+  description="Darragh's Garden Health Programme: lawn treatments, soil conditioning, feeding and pest and disease care, three times a year, for gardens across Dublin and Wicklow."
+>
+  <!-- Hero -->
+  <section class="hero" aria-labelledby="gh-title">
+    <div class="hero-card">
+      <img class="hero-img" src="/img/gh-hero.jpg" alt="A freshly striped lawn leading to a white bench, clipped bay trees and hydrangeas before a trellis." />
+      <div class="hero-copy">
+        <a class="crumb" href="/services/">Services</a>
+        <h1 id="gh-title" data-type data-speed="50">Your garden's wellness check-up.</h1>
+        <p class="hero-lede">Specialist care for gardens that deserve the very best.</p>
+        <div class="hero-actions">
+          <a class="btn btn-leaf" href="#gh-book">Book the programme <Icon name="arrow" /></a>
+          <a class="btn btn-glass" href={contact.phoneHref}><Icon name="phone" /> {contact.phone}</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Intro -->
+  <section class="wrap intro" aria-labelledby="gh-intro">
+    <h2 id="gh-intro" class="intro-big" data-reveal>
+      A well-designed, carefully planted garden is a pedigree, and like any pedigree it deserves the very best care.
+    </h2>
+    <div class="intro-body" data-reveal>
+      <p>
+        A healthy garden is the foundation of a truly beautiful outdoor space. When cared for properly, it will thrive and
+        flourish throughout the seasons, offering you endless hours of joy, relaxation and pleasure.
+      </p>
+      <p>
+        Darragh has designed a Garden Health Programme with exactly this in mind. Drawing on years of expertise, this
+        tailored programme gives your garden the ongoing care it needs to remain vibrant, resilient and full of life.
+      </p>
+    </div>
+  </section>
+
+  <!-- Programme -->
+  <section class="wrap programme" aria-labelledby="prog-title">
+    <h2 id="prog-title" data-type>What the programme includes</h2>
+    <ol class="prog-grid">
+      {
+        programme.map((p, i) => (
+          <li data-pop style={`--d:${i}`}>
+            <span class="prog-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d={p.icon} /></svg>
+            </span>
+            <span class="prog-num">{String(i + 1).padStart(2, '0')}</span>
+            <h3>{p.title}</h3>
+            <p>{p.text}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+
+  <!-- Three times a year -->
+  <section class="wrap rhythm" aria-labelledby="rhythm-title">
+    <div class="rhythm-card" data-reveal>
+      <div class="rhythm-copy">
+        <h2 id="rhythm-title">Three visits a year.</h2>
+        <p>
+          The programme is carried out three times a year, giving your garden regular, expert attention to keep it
+          healthy, happy and flourishing.
+        </p>
+      </div>
+      <ol class="visits" aria-label="Three programme visits a year">
+        {
+          [1, 2, 3].map((n) => (
+            <li style={`--n:${n}`}>
+              <span class="ring" aria-hidden="true">
+                <svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" /></svg>
+              </span>
+              <span class="visit-n">{n}</span>
+              <span class="visit-label">Visit {n}</span>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+    <div class="partner" data-pop>
+      <span class="partner-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><path d="M8 11l3 3 5-5M4 12a8 8 0 1 0 16 0 8 8 0 0 0-16 0" /></svg>
+      </span>
+      <div>
+        <h3>Already have a maintenance company?</h3>
+        <p>
+          No problem. We can work alongside your operator to deliver this programme and make sure your garden gets the
+          specialist care it deserves.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Why choose us -->
+  <section class="why" aria-labelledby="why-gh-title">
+    <div class="wrap why-grid">
+      <div class="why-copy">
+        <h2 id="why-gh-title" data-type>We're not just gardeners. We're wellness creators.</h2>
+        <p data-reveal>
+          Our approach is about helping you cultivate a space that restores, inspires and nurtures you. Whether you need a
+          full transformation or simple maintenance, we focus on creating gardens that work for your well-being.
+        </p>
+      </div>
+      <ul class="why-list">
+        {
+          why.map((w, i) => (
+            <li data-pop style={`--d:${i}`}>
+              <span class="tick" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7" /></svg></span>
+              <span>
+                <strong>{w.title}</strong>
+                {w.text}
+              </span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <div class="marquee gh-rail" style="--speed: 60s; --gap: 1rem" aria-label="Healthy gardens Darragh looks after">
+    {
+      [0, 1].map((k) => (
+        <ul class="marquee-track" aria-hidden={k > 0 ? 'true' : undefined}>
+          {gallery.map((g) => (
+            <li>
+              <img src={g.src} alt={k === 0 ? g.alt : ''} loading="lazy" />
+            </li>
+          ))}
+        </ul>
+      ))
+    }
+  </div>
+
+  <!-- Book -->
+  <section class="wrap book" id="gh-book" aria-labelledby="book-gh-title">
+    <h2 id="book-gh-title" data-reveal>Help your garden reach its true potential.</h2>
+    <div class="book-options">
+      <a class="book-opt" href={contact.phoneHref} data-pop>
+        <span class="book-ic"><Icon name="phone" /></span>
+        <span><small>Call Darragh</small>{contact.phone}</span>
+      </a>
+      <a class="book-opt" href={`mailto:${contact.email}?subject=Garden%20Health%20Programme`} data-pop style="--d:1">
+        <span class="book-ic"><Icon name="mail" /></span>
+        <span><small>Email</small>{contact.email}</span>
+      </a>
+    </div>
+    <p class="nopave" data-reveal>Sorry, but we don't lay paving, paths or patios.</p>
+  </section>
+
+  <CallToAction
+    heading="Call us today to get started."
+    text="Book the Garden Health Programme, or ask Darragh what your garden needs. We work across Dublin, North Wicklow and surrounding counties."
+  />
+</Base>
+
+<style>
+  /* Hero */
+  .hero {
+    padding: 0.75rem clamp(0.5rem, 1.5vw, 1rem) 0;
+  }
+  .hero-card {
+    position: relative;
+    max-width: calc(var(--max) + 4rem);
+    margin-inline: auto;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    isolation: isolate;
+    min-height: clamp(28rem, 44vw, 38rem);
+    display: flex;
+    align-items: flex-end;
+    color: #f4f6ee;
+  }
+  .hero-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 45%;
+    z-index: -2;
+    animation: settle-in 14s var(--ease-out) both;
+  }
+  @keyframes settle-in {
+    from {
+      transform: scale(1.12);
+    }
+  }
+  .hero-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(180deg, rgb(12 26 17 / 0) 30%, rgb(12 26 17 / 0.5) 58%, rgb(12 26 17 / 0.88) 100%);
+  }
+  .hero-copy {
+    padding: clamp(1.5rem, 5vw, 4rem);
+    display: grid;
+    gap: 1.25rem;
+    justify-items: start;
+    max-width: 56rem;
+  }
+  .crumb {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: #f4f6ee;
+    text-decoration: none;
+    padding: 0.35rem 0.8rem;
+    border-radius: 999px;
+    background: rgb(255 255 255 / 0.14);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+  .hero h1 {
+    font-size: clamp(2.9rem, 7vw, 6rem);
+    line-height: 0.96;
+    max-width: 12ch;
+  }
+  .hero-lede {
+    font-size: clamp(1.15rem, 1.8vw, 1.4rem);
+    color: #dfe5d8;
+  }
+  .js .hero-lede,
+  .js .hero-actions {
+    animation: rise-in 900ms var(--ease-out) both;
+  }
+  .js .hero-lede {
+    animation-delay: 1700ms;
+  }
+  .js .hero-actions {
+    animation-delay: 2000ms;
+  }
+  @keyframes rise-in {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+      filter: blur(6px);
+    }
+  }
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .btn-glass {
+    color: #f4f6ee;
+    background: rgb(255 255 255 / 0.12);
+    border: 1px solid rgb(255 255 255 / 0.3);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+
+  /* Intro */
+  .intro {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    gap: 1.5rem clamp(2rem, 6vw, 6rem);
+    padding-block: clamp(4rem, 9vw, 7rem) clamp(2rem, 5vw, 4rem);
+    align-items: end;
+  }
+  .intro-big {
+    font-weight: 500;
+    font-size: clamp(1.8rem, 3.6vw, 3rem);
+    line-height: 1.12;
+    letter-spacing: -0.045em;
+  }
+  .intro-body {
+    display: grid;
+    gap: 1rem;
+    color: var(--ink-2);
+    font-size: 1.1rem;
+  }
+  @media (max-width: 860px) {
+    .intro {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Programme */
+  .programme {
+    padding-block: clamp(2rem, 5vw, 4rem);
+  }
+  .programme h2 {
+    margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
+  }
+  .prog-grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1rem;
+  }
+  .prog-grid li {
+    position: relative;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.6rem 1.5rem 1.75rem;
+    display: grid;
+    gap: 0.6rem;
+    align-content: start;
+    box-shadow: var(--shadow);
+    transition: transform 400ms var(--ease-out);
+  }
+  .prog-grid li:hover {
+    transform: translateY(-6px);
+  }
+  .prog-icon {
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 18px;
+    display: grid;
+    place-items: center;
+    background: var(--evergreen);
+    color: var(--leaf);
+    margin-bottom: 0.75rem;
+  }
+  .prog-icon svg {
+    width: 1.75rem;
+    height: 1.75rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .prog-num {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--leaf-ink);
+    font-variant-numeric: tabular-nums;
+  }
+  .prog-grid h3 {
+    font-size: clamp(1.3rem, 2vw, 1.6rem);
+  }
+  .prog-grid p {
+    color: var(--ink-2);
+  }
+  @media (max-width: 960px) {
+    .prog-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (max-width: 520px) {
+    .prog-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Rhythm */
+  .rhythm {
+    padding-block: clamp(2rem, 5vw, 4rem);
+    display: grid;
+    gap: 1rem;
+  }
+  .rhythm-card {
+    background: var(--evergreen);
+    color: var(--on-evergreen);
+    border-radius: var(--radius-lg);
+    padding: clamp(1.75rem, 4vw, 3.5rem);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+    gap: 2rem clamp(2rem, 5vw, 5rem);
+    align-items: center;
+  }
+  .rhythm-copy {
+    display: grid;
+    gap: 1rem;
+  }
+  .rhythm-copy h2 {
+    font-size: clamp(2.2rem, 4.6vw, 3.75rem);
+  }
+  .rhythm-copy p {
+    color: var(--on-evergreen-2);
+    font-size: 1.1rem;
+    max-width: 44ch;
+  }
+  .visits {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+  .visits li {
+    position: relative;
+    display: grid;
+    justify-items: center;
+    gap: 0.6rem;
+  }
+  .ring {
+    width: 100%;
+    max-width: 9rem;
+    aspect-ratio: 1;
+    display: block;
+  }
+  .ring svg {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+  }
+  .ring circle {
+    fill: rgb(255 255 255 / 0.05);
+    stroke: var(--leaf);
+    stroke-width: 6;
+    stroke-linecap: round;
+    stroke-dasharray: 277;
+    stroke-dashoffset: 0;
+  }
+  .js .rhythm-card .ring circle {
+    stroke-dashoffset: 277;
+    transition: stroke-dashoffset 1400ms var(--ease-out);
+    transition-delay: calc(300ms + var(--n) * 350ms);
+  }
+  .js .rhythm-card.in .ring circle {
+    stroke-dashoffset: 0;
+  }
+  .visit-n {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    max-width: 9rem;
+    aspect-ratio: 1;
+    display: grid;
+    place-items: center;
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: clamp(2rem, 4vw, 3rem);
+    letter-spacing: -0.04em;
+  }
+  .visit-label {
+    font-weight: 600;
+    color: var(--on-evergreen-2);
+  }
+  .partner {
+    display: flex;
+    gap: 1.25rem;
+    align-items: flex-start;
+    background: #dfe8d3;
+    border-radius: var(--radius-lg);
+    padding: clamp(1.5rem, 3vw, 2.25rem);
+  }
+  .partner-icon {
+    flex: none;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: var(--card);
+    color: var(--leaf-ink);
+  }
+  .partner-icon svg {
+    width: 1.6rem;
+    height: 1.6rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .partner h3 {
+    font-size: clamp(1.3rem, 2.2vw, 1.75rem);
+    margin-bottom: 0.4rem;
+  }
+  .partner p {
+    color: var(--ink-2);
+    max-width: 62ch;
+  }
+  @media (max-width: 860px) {
+    .rhythm-card {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Why */
+  .why {
+    padding-block: clamp(4rem, 8vw, 6rem) clamp(2rem, 4vw, 3rem);
+  }
+  .why-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    gap: 2rem clamp(2rem, 6vw, 6rem);
+    align-items: center;
+  }
+  .why-copy {
+    display: grid;
+    gap: 1.25rem;
+  }
+  .why-copy h2 {
+    max-width: 14ch;
+  }
+  .why-copy p {
+    color: var(--ink-2);
+    font-size: 1.1rem;
+    max-width: 52ch;
+  }
+  .why-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.75rem;
+  }
+  .why-list li {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 1.1rem 1.25rem;
+    color: var(--ink-2);
+  }
+  .why-list strong {
+    display: block;
+    color: var(--ink);
+    font-size: 1.1rem;
+    margin-bottom: 0.15rem;
+  }
+  .tick {
+    flex: none;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: var(--leaf);
+  }
+  .tick svg {
+    width: 1.1rem;
+    height: 1.1rem;
+    fill: none;
+    stroke: var(--evergreen);
+    stroke-width: 2.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  @media (max-width: 860px) {
+    .why-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  .gh-rail {
+    padding-block: 1rem 2rem;
+  }
+  .gh-rail .marquee-track {
+    list-style: none;
+    margin: 0;
+  }
+  .gh-rail li {
+    flex: none;
+    width: clamp(14rem, 22vw, 19rem);
+  }
+  .gh-rail li:nth-child(even) {
+    margin-top: 2rem;
+  }
+  .gh-rail img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: 22px;
+  }
+
+  /* Book */
+  .book {
+    padding-block: clamp(3rem, 7vw, 5rem) 0;
+    scroll-margin-top: 6rem;
+    display: grid;
+    gap: 1.5rem;
+  }
+  .book h2 {
+    max-width: 18ch;
+  }
+  .book-options {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+  .book-opt {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.25rem 1.5rem;
+    border-radius: 22px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: clamp(1.1rem, 2vw, 1.4rem);
+    overflow-wrap: anywhere;
+    transition: transform 300ms var(--ease-out);
+  }
+  .book-opt:hover {
+    transform: translateY(-4px);
+  }
+  .book-opt small {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--ink-2);
+  }
+  .book-ic {
+    flex: none;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: var(--evergreen);
+    color: var(--leaf);
+  }
+  .nopave {
+    color: var(--ink-2);
+    font-weight: 550;
+  }
+  @media (max-width: 620px) {
+    .book-options {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
