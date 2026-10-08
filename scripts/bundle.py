@@ -75,7 +75,7 @@ def styles(html: str) -> list:
 
 
 # Extra pages carried in the single-file site, as (page id, built route).
-SITE_PAGES = [('about', 'about'), ('pots', 'services/pots-and-planters')]
+SITE_PAGES = [('about', 'about'), ('pots', 'services/pots-and-planters'), ('intervention', 'services/garden-intervention')]
 
 
 def page_css(ids):
@@ -88,7 +88,7 @@ def page_css(ids):
         rules.append(f"{on} [data-page='home'] {{ display: none; }}")
     rules.append("body:has([data-page='about']:target, [data-page='about'] :target) .nav a[href='#about'] "
                  "{ color: var(--on-evergreen); background: rgb(255 255 255 / 0.12); }")
-    rules.append("body:has([data-page='pots']:target, [data-page='pots'] :target) .sub summary "
+    rules.append("body:has([data-page='pots']:target, [data-page='pots'] :target, [data-page='intervention']:target, [data-page='intervention'] :target) .sub summary "
                  "{ color: var(--on-evergreen); background: rgb(255 255 255 / 0.12); }")
     return '<style>' + '\n'.join(rules) + '</style>'
 
@@ -96,7 +96,7 @@ def page_css(ids):
 def build_site() -> str:
     home = page_html('home')
     links = {
-        '/': '#home', '/about/': '#about', '/services/pots-and-planters/': '#pots',
+        '/': '#home', '/about/': '#about', '/services/pots-and-planters/': '#pots', '/services/garden-intervention/': '#intervention',
         '/services/': '#services-title', '/the-year/': '#year-title', '/gallery/': '#gallery-title',
         '/contact/': '#cta-title',
     }

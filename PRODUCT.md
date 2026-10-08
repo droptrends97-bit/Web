@@ -25,7 +25,7 @@ Garden care only, done by Darragh himself to a high standard, with a "wellness" 
 ## Capabilities and Constraints
 
 Services (from the current site):
-- **The Garden Intervention**: a one-off seasonal reset — plant cut-backs, weeding, mulching, power washing. Currently promoted as a special offer.
+- **The Garden Intervention**: for gardens landscaped 3–5+ years ago whose hard landscaping is sound but planting has lost its spark. Can include specimen plants, signature 'Plunge Planting' perennial schemes, topiary, pleached-tree screening, hedging, full soil reconditioning. Consultation €125, fully deductible from the final cost when the client goes ahead with planting. YouTube videos exist (Garden Intervention, planting design, bed revamps); URLs not yet known.
 - **Garden Care & Maintenance**: recurring visits after an initial visit; schedule monthly, fortnightly or weekly. Visit options: Full day, 4 hours, 3 hours, 2 hours, 1.5 hours, all with 2 gardeners. No prices published.
 - **What a maintenance visit includes**: pruning, weeding and general tidying; lawn edge care and light hedge trimming; border and bed maintenance; green waste removal (within reason). "We bring all the tools."
 - **Garden Health**: soil and lawn conditioning, spraying and feeding programmes.

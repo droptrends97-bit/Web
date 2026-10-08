@@ -59,16 +59,21 @@ export const services: Service[] = [
   {
     slug: 'garden-intervention',
     name: 'The Garden Intervention',
-    short: 'A one-off seasonal reset that brings a tired garden back to life.',
+    short: 'New life for planting that has lost its spark, with expert plant design.',
     intro:
-      'Whether it is a new garden or an old one, a Garden Intervention gets it back to a state you can enjoy, and that is easy to keep that way.',
-    image: '/img/alliums-van.jpg',
-    imageAlt: 'Purple alliums in full flower in front of the Darragh Connolly Garden Care van.',
+      'Perfect when your garden was designed and landscaped in the last 3 to 5 years (or more), the paving and paths are still in good condition, but the planting has lost its spark.',
+    image: '/img/gi-6.jpg',
+    imageAlt: 'A raised bed of red heuchera and orange crocosmia against a white wall.',
     body: [
-      'A Garden Intervention is a concentrated piece of work, usually at the turn of a season, that takes a garden from overgrown to cared for in one go.',
-      'It is the ideal starting point before regular maintenance, or a once-a-year refresh if you look after the garden yourself the rest of the time.',
+      "When a solid garden structure is paired with a carefully chosen palette of plants that thrive, the whole space comes alive. That's exactly what a Garden Intervention delivers.",
+      "With our experience and expertise in plant design, we'll transform your garden into the vibrant, stylish sanctuary you want.",
     ],
-    includes: ['Plant cut-backs', 'Weeding', 'Mulching', 'Power washing'],
+    includes: [
+      'Standout specimen plants',
+      'Signature Plunge Planting perennial schemes',
+      'Topiary and pleached trees',
+      'Full soil reconditioning',
+    ],
   },
   {
     slug: 'garden-health',
@@ -130,7 +135,7 @@ export const months: Month[] = [
   { name: 'February', short: 'Feb', season: 'winter', service: 'garden-intervention',
     work: ['Cutting back grasses and perennials', 'Mulching beds before spring', 'Booking spring Garden Interventions'] },
   { name: 'March', short: 'Mar', season: 'spring', service: 'garden-intervention',
-    work: ['Garden Intervention season: cut-backs, weeding, mulching', 'Power washing paths and patios', 'First lawn cuts and edging'] },
+    work: ['Garden Intervention season: new planting schemes', 'Soil reconditioning before planting', 'First lawn cuts and edging'] },
   { name: 'April', short: 'Apr', season: 'spring', service: 'garden-health',
     work: ['Spring lawn feeding and conditioning', 'Planting up spring pots', 'Regular maintenance visits begin'] },
   { name: 'May', short: 'May', season: 'spring', service: 'garden-care',

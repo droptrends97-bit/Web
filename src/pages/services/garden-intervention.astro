@@ -1,0 +1,608 @@
+---
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import CallToAction from '../../components/CallToAction.astro';
+import { contact } from '../../data/site';
+
+const signs = [
+  'Designed and landscaped 3 to 5 years ago (or more)',
+  'Paving and paths still in good condition',
+  'The planting has lost its spark',
+];
+
+const provide = [
+  { title: 'That standout specimen plant', text: "The one you've always wanted.", image: '/img/gi-3.jpg', alt: 'Lime-green panicle hydrangeas in full flower.' },
+  { title: 'Signature Plunge Planting', text: 'A full perennial planting scheme.', image: '/img/gi-6.jpg', alt: 'Red heuchera and orange crocosmia in a raised bed.' },
+  { title: 'Topiary', text: 'In a range of shapes and sizes.', image: '/img/gi-2.jpg', alt: 'Clipped cones and standard topiary trees.' },
+  { title: 'Pleached trees', text: 'Elegant screening from neighbours.', image: '/img/gi-7.jpg', alt: 'A row of pleached trees above a lawn and ornamental grasses.' },
+  { title: 'Hedging of all types', text: 'Structure, privacy and shelter.', image: '/img/gi-14.jpg', alt: 'Alliums and a silver birch in front of a dark yew hedge.' },
+  { title: 'Full soil reconditioning', text: 'A healthy base for new planting.', image: '/img/gi-11.jpg', alt: 'A freshly prepared bed with new shrubs and grasses being planted.' },
+];
+
+const gallery = [
+  { src: '/img/gi-13.jpg', alt: 'Purple alliums in front of the Darragh Connolly van.' },
+  { src: '/img/gi-1.jpg', alt: 'A trolley of heuchera and rudbeckia ready for planting.' },
+  { src: '/img/gi-4.jpg', alt: 'White Annabelle hydrangeas.' },
+  { src: '/img/gi-8.jpg', alt: 'A tree fern against a dark fence.' },
+  { src: '/img/gi-12.jpg', alt: 'A long new border planted with red-stemmed dogwoods.' },
+  { src: '/img/gi-5.jpg', alt: 'Hydrangeas and the Darragh Connolly van.' },
+  { src: '/img/gi-9.jpg', alt: 'Red skimmia and ferns at the foot of a dark planter.' },
+  { src: '/img/gi-10.jpg', alt: 'Ferns, box balls and flowering plants gathered for planting.' },
+];
+
+const youtube = 'https://www.youtube.com/results?search_query=Darragh+Connolly+Garden+Care+Garden+Intervention';
+---
+
+<Base
+  garden
+  title="The Garden Intervention"
+  description="Planting that has lost its spark? A Garden Intervention brings it back to life with expert plant design across Dublin and Wicklow. Consultation €125, fully deductible."
+>
+  <!-- Hero -->
+  <section class="hero" aria-labelledby="gi-title">
+    <div class="hero-card">
+      <div class="hero-mosaic">
+        <img src="/img/gi-6.jpg" alt="Red heuchera and orange crocosmia in a raised bed." />
+        <img src="/img/gi-7.jpg" alt="Pleached trees above a lawn and ornamental grasses." />
+        <img src="/img/gi-3.jpg" alt="Lime-green panicle hydrangeas." />
+      </div>
+      <div class="hero-copy">
+        <a class="crumb" href="/services/">Services</a>
+        <h1 id="gi-title" data-type data-speed="50">Is your garden ready for a refresh?</h1>
+        <p class="hero-lede">The Garden Intervention: new life for planting that has lost its spark.</p>
+        <div class="hero-actions">
+          <a class="btn btn-leaf" href="#gi-book">Book your Garden Intervention <Icon name="arrow" /></a>
+          <a class="btn btn-glass" href={contact.phoneHref}><Icon name="phone" /> {contact.phone}</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Is it right for you -->
+  <section class="wrap fit" aria-labelledby="fit-title">
+    <div class="fit-copy">
+      <h2 id="fit-title" data-type>Perfect when your garden has good bones</h2>
+      <p data-reveal>
+        When a solid garden structure is paired with a carefully chosen palette of plants that thrive, the whole space comes
+        alive. That's exactly what our Garden Intervention delivers.
+      </p>
+      <p data-reveal>
+        With our experience and expertise in plant design, we'll transform your garden into the vibrant, stylish sanctuary
+        you want. We know what works, and how to achieve the look you seek.
+      </p>
+    </div>
+    <div class="check-card" data-pop>
+      <p class="check-title">Sound familiar?</p>
+      <ul>
+        {
+          signs.map((s, i) => (
+            <li data-pop style={`--d:${i + 2}`}>
+              <span class="tick" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7" /></svg></span>
+              {s}
+            </li>
+          ))
+        }
+      </ul>
+      <p class="check-result">Then a Garden Intervention is for you.</p>
+    </div>
+  </section>
+
+  <!-- What we provide -->
+  <section class="wrap provide" aria-labelledby="provide-title">
+    <div class="section-head">
+      <h2 id="provide-title" data-type>What we can provide</h2>
+      <p class="lede">Every Intervention is designed around your garden. These are the tools we bring to it.</p>
+    </div>
+    <ol class="provide-grid">
+      {
+        provide.map((p, i) => (
+          <li class="pcard" data-pop style={`--d:${i}`}>
+            <img src={p.image} alt={p.alt} loading="lazy" />
+            <div class="pcard-body">
+              <span class="pcard-num">{String(i + 1).padStart(2, '0')}</span>
+              <h3>{p.title}</h3>
+              <p>{p.text}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+
+  <!-- Consultation price -->
+  <section class="wrap book" id="gi-book" aria-labelledby="book-title">
+    <div class="price-card" data-pop>
+      <div class="price-left">
+        <h2 id="book-title">Garden Intervention consultation</h2>
+        <p>
+          Darragh visits, walks the garden with you and puts together the planting plan. When you choose us for the planting,
+          the fee comes straight off the final cost.
+        </p>
+      </div>
+      <div class="price-right">
+        <p class="price"><span class="cur">€</span>125</p>
+        <p class="price-note">Fully deductible from the final cost</p>
+        <a class="btn btn-leaf" href={contact.phoneHref}><Icon name="phone" /> Book on {contact.phone}</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Gallery -->
+  <section class="gallery" aria-labelledby="gi-gallery-title">
+    <div class="wrap">
+      <h2 id="gi-gallery-title" data-type>Interventions in progress</h2>
+    </div>
+    <div class="marquee gi-rail" style="--speed: 55s; --gap: 1rem">
+      {
+        [0, 1].map((k) => (
+          <ul class="marquee-track" aria-hidden={k > 0 ? 'true' : undefined}>
+            {gallery.map((g) => (
+              <li>
+                <img src={g.src} alt={k === 0 ? g.alt : ''} loading="lazy" />
+              </li>
+            ))}
+          </ul>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- Video -->
+  <section class="wrap video" aria-labelledby="video-title">
+    <a class="video-card" href={youtube} target="_blank" rel="noopener" data-pop>
+      <img src="/img/gi-12.jpg" alt="" loading="lazy" />
+      <span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z" /></svg></span>
+      <span class="video-copy">
+        <h2 id="video-title">Watch a Garden Intervention</h2>
+        <span>Planting design, bed revamps and Interventions on the Darragh Connolly Garden Care YouTube channel.</span>
+      </span>
+    </a>
+  </section>
+
+  <CallToAction
+    heading="Bring your garden back to life."
+    text="Book your Garden Intervention today. Call Darragh, or send a few details and we'll arrange a consultation."
+  />
+</Base>
+
+<style>
+  /* Hero */
+  .hero {
+    padding: 0.75rem clamp(0.5rem, 1.5vw, 1rem) 0;
+  }
+  .hero-card {
+    position: relative;
+    max-width: calc(var(--max) + 4rem);
+    margin-inline: auto;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    isolation: isolate;
+    min-height: clamp(28rem, 44vw, 38rem);
+    display: flex;
+    align-items: flex-end;
+    color: #f4f6ee;
+    background: #23332a;
+  }
+  .hero-mosaic {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4px;
+  }
+  .hero-mosaic img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    animation: drift-up 16s ease-in-out infinite alternate;
+  }
+  .hero-mosaic img:nth-child(2) {
+    animation-delay: -5s;
+  }
+  .hero-mosaic img:nth-child(3) {
+    animation-delay: -10s;
+  }
+  @keyframes drift-up {
+    from {
+      transform: scale(1.08) translateY(2%);
+    }
+    to {
+      transform: scale(1.08) translateY(-2%);
+    }
+  }
+  @media (max-width: 620px) {
+    .hero-mosaic {
+      grid-template-columns: 1fr 1fr;
+    }
+    .hero-mosaic img:nth-child(3) {
+      display: none;
+    }
+  }
+  .hero-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(180deg, rgb(12 26 17 / 0) 25%, rgb(12 26 17 / 0.5) 55%, rgb(12 26 17 / 0.88) 100%);
+  }
+  .hero-copy {
+    padding: clamp(1.5rem, 5vw, 4rem);
+    display: grid;
+    gap: 1.25rem;
+    justify-items: start;
+    max-width: 56rem;
+  }
+  .crumb {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: #f4f6ee;
+    text-decoration: none;
+    padding: 0.35rem 0.8rem;
+    border-radius: 999px;
+    background: rgb(255 255 255 / 0.14);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+  .hero h1 {
+    font-size: clamp(2.9rem, 7vw, 6rem);
+    line-height: 0.96;
+    max-width: 12ch;
+  }
+  .hero-lede {
+    font-size: clamp(1.15rem, 1.8vw, 1.4rem);
+    color: #dfe5d8;
+    max-width: 40ch;
+  }
+  .js .hero-lede,
+  .js .hero-actions {
+    animation: rise-in 900ms var(--ease-out) both;
+  }
+  .js .hero-lede {
+    animation-delay: 1700ms;
+  }
+  .js .hero-actions {
+    animation-delay: 2000ms;
+  }
+  @keyframes rise-in {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+      filter: blur(6px);
+    }
+  }
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .btn-glass {
+    color: #f4f6ee;
+    background: rgb(255 255 255 / 0.12);
+    border: 1px solid rgb(255 255 255 / 0.3);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+
+  /* Fit */
+  .fit {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    gap: 2rem clamp(2rem, 6vw, 6rem);
+    align-items: center;
+    padding-block: clamp(4rem, 9vw, 7rem);
+  }
+  .fit-copy {
+    display: grid;
+    gap: 1.25rem;
+  }
+  .fit-copy h2 {
+    max-width: 13ch;
+  }
+  .fit-copy p {
+    color: var(--ink-2);
+    font-size: 1.15rem;
+    max-width: 52ch;
+  }
+  .check-card {
+    background: var(--evergreen);
+    color: var(--on-evergreen);
+    border-radius: var(--radius-lg);
+    padding: clamp(1.5rem, 3vw, 2.5rem);
+    display: grid;
+    gap: 1.25rem;
+    box-shadow: var(--shadow);
+    rotate: 1.5deg;
+  }
+  .check-title {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: clamp(1.6rem, 2.6vw, 2.1rem);
+    letter-spacing: -0.04em;
+  }
+  .check-card ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.6rem;
+  }
+  .check-card li {
+    display: flex;
+    gap: 0.85rem;
+    align-items: center;
+    padding: 0.85rem 1rem;
+    border-radius: 16px;
+    background: rgb(255 255 255 / 0.07);
+    border: 1px solid rgb(255 255 255 / 0.12);
+    font-weight: 550;
+  }
+  .tick {
+    flex: none;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: var(--leaf);
+  }
+  .tick svg {
+    width: 1.1rem;
+    height: 1.1rem;
+    fill: none;
+    stroke: var(--evergreen);
+    stroke-width: 2.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .check-result {
+    color: var(--leaf);
+    font-weight: 650;
+    font-size: 1.1rem;
+  }
+  @media (max-width: 860px) {
+    .fit {
+      grid-template-columns: 1fr;
+    }
+    .check-card {
+      rotate: 0deg;
+    }
+  }
+
+  /* Provide */
+  .provide {
+    padding-block: clamp(2rem, 5vw, 4rem);
+  }
+  .section-head {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    gap: 1rem clamp(2rem, 5vw, 5rem);
+    align-items: end;
+    margin-bottom: clamp(2rem, 4vw, 3rem);
+  }
+  .provide-grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+  }
+  .pcard {
+    position: relative;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    isolation: isolate;
+    min-height: 21rem;
+    display: flex;
+    align-items: flex-end;
+    color: #fff;
+  }
+  .pcard img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -2;
+    transition: transform 900ms var(--ease-out);
+  }
+  .pcard::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(180deg, rgb(12 26 17 / 0) 30%, rgb(12 26 17 / 0.88) 100%);
+  }
+  .pcard:hover img {
+    transform: scale(1.06);
+  }
+  .pcard-body {
+    padding: 1.4rem;
+    display: grid;
+    gap: 0.3rem;
+  }
+  .pcard-num {
+    font-size: 0.85rem;
+    font-weight: 650;
+    color: var(--leaf);
+    font-variant-numeric: tabular-nums;
+  }
+  .pcard h3 {
+    font-size: clamp(1.4rem, 2.2vw, 1.85rem);
+  }
+  .pcard p {
+    color: rgb(255 255 255 / 0.85);
+  }
+  @media (max-width: 960px) {
+    .provide-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (max-width: 620px) {
+    .section-head,
+    .provide-grid {
+      grid-template-columns: 1fr;
+    }
+    .pcard {
+      min-height: 17rem;
+    }
+  }
+
+  /* Price */
+  .book {
+    padding-block: clamp(4rem, 8vw, 6rem);
+    scroll-margin-top: 6rem;
+  }
+  .price-card {
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+    gap: 2rem clamp(2rem, 5vw, 5rem);
+    align-items: center;
+    background: var(--card);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+    border-radius: var(--radius-lg);
+    padding: clamp(1.75rem, 4vw, 3.5rem);
+  }
+  .price-left {
+    display: grid;
+    gap: 1rem;
+  }
+  .price-left p {
+    color: var(--ink-2);
+    font-size: 1.1rem;
+    max-width: 48ch;
+  }
+  .price-right {
+    display: grid;
+    gap: 0.75rem;
+    justify-items: start;
+    padding: clamp(1.25rem, 3vw, 2rem);
+    border-radius: 22px;
+    background: #dfe8d3;
+  }
+  .price {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: clamp(4rem, 9vw, 6.5rem);
+    line-height: 0.9;
+    letter-spacing: -0.05em;
+    color: var(--evergreen);
+  }
+  .cur {
+    font-size: 0.5em;
+    vertical-align: 0.75em;
+    margin-right: 0.05em;
+  }
+  .price-note {
+    font-weight: 600;
+    color: var(--leaf-ink);
+  }
+  @media (max-width: 860px) {
+    .price-card {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Gallery */
+  .gallery {
+    padding-block: clamp(1rem, 3vw, 2rem) clamp(3rem, 6vw, 5rem);
+  }
+  .gallery h2 {
+    margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
+  }
+  .gi-rail .marquee-track {
+    list-style: none;
+    margin: 0;
+  }
+  .gi-rail li {
+    flex: none;
+    width: clamp(16rem, 28vw, 24rem);
+  }
+  .gi-rail li:nth-child(odd) {
+    margin-top: 2rem;
+  }
+  .gi-rail img {
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+    border-radius: 22px;
+  }
+
+  /* Video */
+  .video {
+    padding-bottom: clamp(1rem, 3vw, 2rem);
+  }
+  .video-card {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: clamp(1rem, 3vw, 2rem);
+    min-height: 16rem;
+    padding: clamp(1.5rem, 4vw, 3rem);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    isolation: isolate;
+    color: #fff;
+    text-decoration: none;
+  }
+  .video-card img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -2;
+    transition: transform 900ms var(--ease-out);
+  }
+  .video-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(90deg, rgb(12 26 17 / 0.88), rgb(12 26 17 / 0.35));
+  }
+  .video-card:hover img {
+    transform: scale(1.04);
+  }
+  .play {
+    flex: none;
+    width: clamp(4rem, 8vw, 5.5rem);
+    height: clamp(4rem, 8vw, 5.5rem);
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: var(--leaf);
+    box-shadow: 0 0 0 0 rgb(140 198 63 / 0.6);
+    animation: ping 2.4s var(--ease-out) infinite;
+  }
+  @keyframes ping {
+    70% {
+      box-shadow: 0 0 0 18px transparent;
+    }
+  }
+  .play svg {
+    width: 45%;
+    height: 45%;
+    fill: var(--evergreen);
+    margin-left: 6%;
+  }
+  .video-copy {
+    display: grid;
+    gap: 0.4rem;
+    max-width: 40ch;
+  }
+  .video-copy h2 {
+    font-size: clamp(1.8rem, 3.4vw, 2.75rem);
+  }
+  .video-copy span {
+    color: rgb(255 255 255 / 0.85);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero-mosaic img,
+    .play {
+      animation: none;
+    }
+  }
+</style>
