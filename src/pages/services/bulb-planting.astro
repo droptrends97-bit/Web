@@ -1,0 +1,230 @@
+---
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import CallToAction from '../../components/CallToAction.astro';
+import { contact } from '../../data/site';
+
+const plans = [
+  { name: 'Excellent', bulbs: ['Early & late tulips', 'Alliums', 'Anemones'] },
+  { name: 'Superior', bulbs: ['Early & late tulips', 'Alliums', 'Globe alliums', 'Anemones', 'Thalia daffodils'] },
+  { name: 'Premier', bulbs: ['Early & late tulips', 'Alliums', 'Anemones', 'Globe alliums', 'Thalia daffodils', 'Scillas (early ground cover)', 'Hyacinth'] },
+  {
+    name: 'Super Premier',
+    popular: true,
+    bulbs: ['Early & late tulips', 'Alliums', 'Globe alliums', 'Thalia daffodils', 'Scillas (early ground cover)', 'Hyacinth', 'Fritillaries', 'Anemones', 'Another variety of tulip'],
+  },
+];
+
+const timeline = [
+  { when: 'Late winter', what: 'Scillas and early daffodils', c: '#c5d6dc' },
+  { when: 'Early spring', what: 'Thalia daffodils, hyacinths, anemones', c: '#f2e19a' },
+  { when: 'Spring', what: 'Early and late tulips, fritillaries', c: '#f0a7b8' },
+  { when: 'Early summer', what: 'Alliums and globe alliums, into June and July', c: '#b9a3e3' },
+];
+
+const steps = [
+  { title: 'You give the go-ahead', text: 'Pick a plan, and let us know if there is a colour you don’t like.' },
+  { title: 'We order and collate', text: 'Years of experience bring the right sizes, earlies and lates.' },
+  { title: 'We plant', text: 'Our Garden Concierge team looks after the planting for you.' },
+  { title: 'You enjoy', text: 'Sit back and watch them flourish through late winter and spring.' },
+];
+
+const gallery = Array.from({ length: 16 }, (_, i) => ({ src: `/img/bulb-${i + 1}.jpg`, alt: 'Spring bulbs planted by Darragh Connolly Garden Care.' }));
+---
+
+<Base
+  garden
+  title="Bulb Planting"
+  description="Bulb planting plans from Darragh Connolly Garden Care: tulips, alliums, daffodils and more, ordered, collated and planted for colour from late winter to July."
+>
+  <section class="hero" aria-labelledby="bulb-title">
+    <div class="hero-card">
+      <img class="hero-img" src="/img/bulb-tulips-lawn.jpg" alt="Pink and orange tulips flowering at the edge of a lawn." />
+      <div class="hero-copy">
+        <a class="crumb" href="/services/">Services</a>
+        <h1 id="bulb-title" data-type data-speed="55">Bulb planting.</h1>
+        <p class="hero-lede">Colour and life in your garden, from the depths of winter right up to late June and July.</p>
+        <div class="hero-actions">
+          <a class="btn btn-leaf" href="#bulb-plans">See the plans <Icon name="arrow" /></a>
+          <a class="btn btn-glass" href={contact.phoneHref}><Icon name="phone" /> {contact.phone}</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap intro" aria-labelledby="bulb-intro">
+    <h2 id="bulb-intro" class="intro-big" data-reveal>You only have to do the nice part.</h2>
+    <div class="intro-body" data-reveal>
+      <p>
+        We've devised a system for bulbs: give us the go-ahead and we'll order, collate and plant them. Then sit back and
+        watch them flourish, bringing joy through late winter and spring.
+      </p>
+      <p>Our colour scheme may change from year to year, so the only thing to tell us is if a colour isn't preferred.</p>
+    </div>
+  </section>
+
+  <section class="wrap season" aria-labelledby="season-title">
+    <h2 id="season-title" data-type>A longer season, in layers</h2>
+    <ol class="tl">
+      {
+        timeline.map((t, i) => (
+          <li data-pop style={`--d:${i}; --c:${t.c}`}>
+            <span class="bloom" aria-hidden="true"><svg viewBox="0 0 40 40"><g>{[0, 72, 144, 216, 288].map((a) => <ellipse cx="20" cy="10" rx="6" ry="9" transform={`rotate(${a} 20 20)`} />)}</g><circle cx="20" cy="20" r="5" /></svg></span>
+            <strong>{t.when}</strong>
+            <span>{t.what}</span>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+
+  <section class="plans" id="bulb-plans" aria-labelledby="plans-title">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 id="plans-title" data-type>Bulb planting plans</h2>
+        <p class="lede">Choose the best plan for your garden. Final planting costs vary from garden to garden.</p>
+      </div>
+      <ul class="plan-grid">
+        {
+          plans.map((p, i) => (
+            <li class:list={['plan', { popular: p.popular }]} data-pop style={`--d:${i}`}>
+              {p.popular && <span class="badge">Most popular</span>}
+              <h3>{p.name}</h3>
+              <p class="count">{p.bulbs.length} bulb types</p>
+              <ul class="bulbs">
+                {p.bulbs.map((b) => (
+                  <li>
+                    <span class="tick" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7" /></svg></span>
+                    {b}
+                  </li>
+                ))}
+              </ul>
+              <a class:list={['btn', p.popular ? 'btn-leaf' : 'btn-primary']} href={contact.phoneHref}>Book this plan <Icon name="arrow" /></a>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="note" data-reveal>
+        <strong>Good to know:</strong> tulips are treated as annuals because they aren't guaranteed to flower the following
+        year, so we recommend planting tulips each year and layering up the rest over the coming years.
+      </p>
+    </div>
+  </section>
+
+  <section class="wrap process" aria-labelledby="bulb-proc">
+    <h2 id="bulb-proc" data-type>How it works</h2>
+    <ol class="steps">
+      {
+        steps.map((s, i) => (
+          <li data-pop style={`--d:${i}`}>
+            <span class="num">{i + 1}</span>
+            <h3>{s.title}</h3>
+            <p>{s.text}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+
+  <section class="gallery" aria-labelledby="bulb-gallery">
+    <div class="wrap"><h2 id="bulb-gallery" data-type>Spring in gardens we look after</h2></div>
+    <div class="marquee bulb-rail" style="--speed: 75s; --gap: 1rem">
+      {
+        [0, 1].map((k) => (
+          <ul class="marquee-track" aria-hidden={k > 0 ? 'true' : undefined}>
+            {gallery.map((g) => <li><img src={g.src} alt={k === 0 ? g.alt : ''} loading="lazy" /></li>)}
+          </ul>
+        ))
+      }
+    </div>
+  </section>
+
+  <CallToAction
+    heading="Let's bring your spring garden to life."
+    text="Bulbs go in through autumn. Call Darragh to book your plan before the planting season ends."
+  />
+</Base>
+
+<style>
+  .hero { padding: 0.75rem clamp(0.5rem, 1.5vw, 1rem) 0; }
+  .hero-card { position: relative; max-width: calc(var(--max) + 4rem); margin-inline: auto; border-radius: var(--radius-lg); overflow: hidden; isolation: isolate; min-height: clamp(28rem, 44vw, 38rem); display: flex; align-items: flex-end; color: #f4f6ee; }
+  .hero-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 60% 60%; z-index: -2; animation: settle-in 14s var(--ease-out) both; }
+  @keyframes settle-in { from { transform: scale(1.12); } }
+  .hero-card::before { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgb(12 26 17 / 0) 25%, rgb(12 26 17 / 0.5) 55%, rgb(12 26 17 / 0.88) 100%); }
+  .hero-copy { padding: clamp(1.5rem, 5vw, 4rem); display: grid; gap: 1.25rem; justify-items: start; max-width: 56rem; }
+  .crumb { font-weight: 600; font-size: 0.95rem; color: #f4f6ee; text-decoration: none; padding: 0.35rem 0.8rem; border-radius: 999px; background: rgb(255 255 255 / 0.14); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+  .hero h1 { font-size: clamp(2.9rem, 7vw, 6rem); line-height: 0.96; }
+  .hero-lede { font-size: clamp(1.15rem, 1.8vw, 1.4rem); color: #dfe5d8; max-width: 42ch; }
+  .js .hero-lede, .js .hero-actions { animation: rise-in 900ms var(--ease-out) both; }
+  .js .hero-lede { animation-delay: 1200ms; }
+  .js .hero-actions { animation-delay: 1500ms; }
+  @keyframes rise-in { from { opacity: 0; transform: translateY(16px); filter: blur(6px); } }
+  .hero-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+  .btn-glass { color: #f4f6ee; background: rgb(255 255 255 / 0.12); border: 1px solid rgb(255 255 255 / 0.3); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+
+  .intro { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 1.5rem clamp(2rem, 6vw, 6rem); padding-block: clamp(4rem, 9vw, 7rem) clamp(2rem, 5vw, 3rem); align-items: end; }
+  .intro-big { font-weight: 500; font-size: clamp(2rem, 4vw, 3.4rem); line-height: 1.05; letter-spacing: -0.045em; }
+  .intro-body { display: grid; gap: 1rem; color: var(--ink-2); font-size: 1.1rem; }
+
+  .season { padding-block: clamp(2rem, 4vw, 3rem); }
+  .season h2 { margin-bottom: clamp(1.5rem, 3vw, 2.5rem); }
+  .tl { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; position: relative; }
+  .tl::before { content: ''; position: absolute; left: 2rem; right: 2rem; top: 2rem; height: 2px; background: var(--border); }
+  .tl li { position: relative; display: grid; gap: 0.35rem; }
+  .tl strong { font-size: 1.15rem; }
+  .tl span:last-child { color: var(--ink-2); }
+  .bloom { width: 4rem; height: 4rem; border-radius: 50%; display: grid; place-items: center; background: var(--card); border: 1px solid var(--border); box-shadow: var(--shadow); margin-bottom: 0.5rem; }
+  .bloom svg { width: 2.5rem; height: 2.5rem; animation: spin 18s linear infinite; }
+  .bloom ellipse { fill: var(--c); }
+  .bloom circle { fill: #e2b23a; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .plans { padding-block: clamp(4rem, 8vw, 6rem); scroll-margin-top: 6rem; }
+  .section-head { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 1rem clamp(2rem, 5vw, 5rem); align-items: end; margin-bottom: clamp(2rem, 4vw, 3rem); }
+  .plan-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; align-items: stretch; }
+  .plan { position: relative; display: flex; flex-direction: column; gap: 0.75rem; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.6rem 1.4rem; box-shadow: var(--shadow); transition: transform 400ms var(--ease-out); }
+  .plan:hover { transform: translateY(-6px); }
+  .plan.popular { background: var(--evergreen); color: var(--on-evergreen); border-color: var(--evergreen); }
+  .badge { position: absolute; top: -0.8rem; left: 1.4rem; padding: 0.3rem 0.8rem; border-radius: 999px; background: var(--leaf); color: var(--evergreen); font-weight: 700; font-size: 0.8rem; }
+  .plan h3 { font-size: clamp(1.6rem, 2.4vw, 2rem); }
+  .count { font-weight: 600; color: var(--leaf-ink); font-size: 0.95rem; }
+  .popular .count { color: var(--leaf); }
+  .bulbs { list-style: none; margin: 0.25rem 0 0.75rem; padding: 0; display: grid; gap: 0.5rem; flex: 1; align-content: start; }
+  .bulbs li { display: flex; gap: 0.6rem; align-items: flex-start; font-size: 0.98rem; }
+  .tick { flex: none; width: 1.4rem; height: 1.4rem; border-radius: 50%; display: grid; place-items: center; background: #dfe8d3; margin-top: 0.1rem; }
+  .popular .tick { background: var(--leaf); }
+  .tick svg { width: 0.85rem; height: 0.85rem; fill: none; stroke: var(--evergreen); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+  .plan .btn { width: 100%; }
+  .note { margin-top: 1.5rem; padding: 1.1rem 1.4rem; border-radius: 18px; background: #dfe8d3; color: var(--ink-2); max-width: 70ch; }
+  .note strong { color: var(--ink); }
+
+  .process { padding-block: clamp(1rem, 3vw, 2rem) clamp(3rem, 6vw, 4rem); }
+  .process h2 { margin-bottom: clamp(1.5rem, 3vw, 2.5rem); }
+  .steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; }
+  .steps li { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem; display: grid; gap: 0.5rem; align-content: start; }
+  .steps .num { width: 2.75rem; height: 2.75rem; border-radius: 50%; display: grid; place-items: center; background: var(--leaf); color: var(--evergreen); font-weight: 700; margin-bottom: 0.5rem; }
+  .steps h3 { font-size: clamp(1.3rem, 2vw, 1.6rem); }
+  .steps p { color: var(--ink-2); }
+
+  .gallery { padding-bottom: clamp(1rem, 3vw, 2rem); }
+  .gallery h2 { margin-bottom: clamp(1.5rem, 3vw, 2.5rem); }
+  .bulb-rail .marquee-track { list-style: none; margin: 0; }
+  .bulb-rail li { flex: none; width: clamp(14rem, 22vw, 19rem); }
+  .bulb-rail li:nth-child(even) { margin-top: 2rem; }
+  .bulb-rail img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; border-radius: 22px; }
+
+  @media (max-width: 1060px) {
+    .plan-grid { grid-template-columns: 1fr 1fr; gap: 1.5rem 1rem; }
+  }
+  @media (max-width: 760px) {
+    .intro, .section-head { grid-template-columns: 1fr; }
+    .tl, .steps { grid-template-columns: 1fr 1fr; }
+    .tl::before { display: none; }
+  }
+  @media (max-width: 520px) {
+    .plan-grid, .tl, .steps { grid-template-columns: 1fr; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .bloom svg { animation: none; }
+  }
+</style>
