@@ -48,6 +48,7 @@ Undecided: quote form backend (Netlify Forms / Formspree), newsletter provider, 
 ## Evidence on Hand
 
 - Real project photography of his own work (currently only as screenshots, `assets/source/` once extracted): formal garden with white Lutyens bench, trellis and lollipop bays; striped lawn; topiary and tulip planting at a granite-and-brick entrance; mixed borders with an acer; alliums in front of the branded van.
+- About page facts (from his current About page): 20+ years working in gardens across Dublin and Wicklow; qualified from Writtle Horticultural College, UK; personal interest in cold exposure and breathwork that led to his wellness approach; offers a free discovery call. Photos: Wicklow mountain (`public/img/mountain-peak.jpg`, `mountain-fields.jpg`), Darragh in snow (`public/img/darragh-snow.jpg`), all cropped from screenshots.
 - Accreditations: ALCI member (Association of Landscape Contractors of Ireland), National Guild of Master Craftsmen member, listed on Houzz and pickapro.ie.
 - Testimonials: a carousel of ~6; one seen in full: "Excellent general gardening & tidy up service from a professional and experienced team. Highly recommended." — John Fallon. The rest must be collected, not invented.
 - YouTube videos: "Do you maintain your own garden but need…" and "Garden Intervention March 2023" (channel: Darragh Connolly Garden Care).
