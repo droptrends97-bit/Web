@@ -1,9 +1,8 @@
-@import '@fontsource-variable/bricolage-grotesque/standard.css';
-@import '@fontsource-variable/schibsted-grotesk/wght.css';
+@import '@fontsource-variable/geist/wght.css';
 
 :root {
-  --paper: #eceee6;
-  --paper-2: #e0e4d8;
+  --paper: #f6f7f2;
+  --paper-2: #ebeee4;
   --ink: #17251c;
   --ink-2: #3c4b41;
   --rule: #c9cdbd;
@@ -22,8 +21,14 @@
   --season-soft: #ecdcd8;
   --season-ink: #5e1f2d;
 
-  --display: 'Bricolage Grotesque Variable', 'Arial Narrow', sans-serif;
-  --text: 'Schibsted Grotesk Variable', 'Helvetica Neue', Arial, sans-serif;
+  --display: 'Geist Variable', 'Helvetica Neue', Arial, sans-serif;
+  --text: 'Geist Variable', 'Helvetica Neue', Arial, sans-serif;
+  --card: #ffffff;
+  --border: #e3e7dc;
+  --shadow: 0 1px 2px rgb(23 37 28 / 0.05), 0 16px 40px -24px rgb(23 37 28 / 0.28);
+  /* Season accent that reads on evergreen. */
+  --accent: #eaa47f;
+  --on-accent: #2a130c;
 
   --gutter: clamp(1rem, 4vw, 3rem);
   --max: 82rem;
@@ -33,6 +38,8 @@
 }
 
 [data-season='winter'] {
+  --accent: #a9cdd9;
+  --on-accent: #0f2229;
   --season: #c5d6dc;
   --season-2: #b3c9d0;
   --on-season: #14262d;
@@ -41,6 +48,8 @@
   --season-ink: #2c5260;
 }
 [data-season='spring'] {
+  --accent: #f4b9c7;
+  --on-accent: #3a1620;
   --season: #f0c4cd;
   --season-2: #e9b1bd;
   --on-season: #3a1620;
@@ -49,6 +58,8 @@
   --season-ink: #8a2f45;
 }
 [data-season='summer'] {
+  --accent: #a6d65f;
+  --on-accent: #13240a;
   --season: #2d6131;
   --season-2: #37703b;
   --on-season: #f0f4e6;
@@ -75,6 +86,7 @@ body {
   font-family: var(--text);
   font-size: 1.125rem;
   line-height: 1.6;
+  letter-spacing: -0.01em;
   font-variant-numeric: lining-nums;
   -webkit-font-smoothing: antialiased;
 }
@@ -89,10 +101,9 @@ h1,
 h2,
 h3 {
   font-family: var(--display);
-  font-stretch: 78%;
-  font-weight: 700;
-  line-height: 0.98;
-  letter-spacing: -0.02em;
+  font-weight: 600;
+  line-height: 1.02;
+  letter-spacing: -0.04em;
   margin: 0;
   text-wrap: balance;
 }

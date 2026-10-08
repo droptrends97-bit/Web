@@ -18,7 +18,7 @@ def inline_css(css: str) -> str:
             return ''
         return block
     css = re.sub(r'@font-face\{[^}]*\}', face, css)
-    css = re.sub(r'url\((/[^)]+)\)', lambda m: f"url({data_uri(dist / m.group(1).lstrip('/'))})", css)
+    css = re.sub(r"url\(['\"]?(/_astro/[^'\")]+)['\"]?\)", lambda m: f"url({data_uri(dist / m.group(1).lstrip('/'))})", css)
     return css
 
 html = re.sub(r'<link rel="stylesheet" href="(/_astro/[^"]+)">',
@@ -26,19 +26,24 @@ html = re.sub(r'<link rel="stylesheet" href="(/_astro/[^"]+)">',
 html = re.sub(r'<script type="module" src="(/_astro/[^"]+)"></script>',
               lambda m: f"<script type=\"module\">{(dist / m.group(1).lstrip('/')).read_text()}</script>", html)
 
-# Images: each file is embedded once and assigned by a tiny script, since the page repeats photos.
-images = {}
-def img(m):
-    name = m.group(1)
-    images.setdefault(name, data_uri(dist / 'img' / name))
-    return f'data-img="{name}"'
-html = re.sub(r'src="/img/([^"]+)"', img, html)
+# Images: re-encoded to WebP (much smaller) and embedded directly, so they show without JavaScript.
+import subprocess, tempfile
+cache = Path(tempfile.gettempdir()) / 'dc-bundle-webp'
+cache.mkdir(exist_ok=True)
+_uris = {}
+def img_uri(rel: str) -> str:
+    if rel not in _uris:
+        src = dist / rel.lstrip('/')
+        if src.suffix.lower() in ('.jpg', '.jpeg', '.png'):
+            out_webp = cache / (src.stem + '.webp')
+            subprocess.run(['ffmpeg', '-loglevel', 'error', '-y', '-i', str(src), '-c:v', 'libwebp', '-quality', '80', str(out_webp)], check=True)
+            _uris[rel] = 'data:image/webp;base64,' + base64.b64encode(out_webp.read_bytes()).decode()
+        else:
+            _uris[rel] = data_uri(src)
+    return _uris[rel]
+html = re.sub(r'src="(/img/[^"]+)"', lambda m: f'src="{img_uri(m.group(1))}"', html)
+html = re.sub(r"url\(['\"]?(/img/[^'\")]+)['\"]?\)", lambda m: f"url({img_uri(m.group(1))})", html)
 html = re.sub(r'href="(/favicon\.svg)"', lambda m: f'href="{data_uri(dist / "favicon.svg")}"', html)
-import json
-loader = ("<script>(()=>{const I=" + json.dumps(images) +
-          ";document.querySelectorAll('img[data-img]').forEach(e=>{e.src=I[e.dataset.img]})})()</script>")
-html = html.replace('</body>', loader + '</body>')
-html = re.sub(r"url\((/img/[^)]+)\)", lambda m: f"url({data_uri(dist / m.group(1).lstrip('/'))})", html)
 
 # Internal pages become anchors on this single page.
 anchors = {

@@ -38,7 +38,12 @@ const { heading = 'Tell us about your garden.' } = Astro.props;
     isolation: isolate;
     overflow: hidden;
     border-radius: var(--radius-lg);
-    background: var(--season);
+    --on-season: #f4f6ee;
+    --on-season-2: #d5dccd;
+    --season: var(--evergreen);
+    background:
+      linear-gradient(100deg, rgb(13 30 20 / 0.92) 0%, rgb(13 30 20 / 0.78) 45%, rgb(13 30 20 / 0.35) 100%),
+      url('/img/garden-bench-panorama.jpg') center / cover;
     color: var(--on-season);
     padding: clamp(2rem, 6vw, 5rem);
     display: grid;
@@ -54,7 +59,7 @@ const { heading = 'Tell us about your garden.' } = Astro.props;
     right: -15%;
     top: -40%;
     border-radius: 50%;
-    background: radial-gradient(closest-side, color-mix(in srgb, var(--on-season) 18%, transparent), transparent);
+    background: radial-gradient(closest-side, color-mix(in srgb, var(--accent) 30%, transparent), transparent);
     z-index: -1;
     animation: drift 14s ease-in-out infinite alternate;
   }
@@ -84,11 +89,10 @@ const { heading = 'Tell us about your garden.' } = Astro.props;
     align-items: center;
     gap: 1rem;
     font-family: var(--display);
-    font-stretch: 75%;
-    font-weight: 800;
+    font-weight: 600;
     font-size: clamp(2.4rem, 6vw, 5rem);
     line-height: 1;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.04em;
     font-variant-numeric: tabular-nums;
     text-decoration: none;
     white-space: nowrap;
@@ -100,8 +104,8 @@ const { heading = 'Tell us about your garden.' } = Astro.props;
     border-radius: 50%;
     display: grid;
     place-items: center;
-    background: var(--on-season);
-    color: var(--season);
+    background: var(--accent);
+    color: var(--on-accent);
     transition: transform 400ms var(--ease-out);
   }
   .cta-phone-icon :global(svg) {

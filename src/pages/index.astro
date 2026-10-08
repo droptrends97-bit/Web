@@ -41,7 +41,7 @@ const steps = [
     title: 'We keep it right, all year',
     text: 'We bring all the tools, work efficiently and take the green waste away. You get to simply enjoy the garden.',
     image: '/img/acer-garden.jpg',
-    tone: 'season',
+    tone: 'soft',
   },
 ];
 
@@ -91,7 +91,7 @@ const statement =
       [0, 1].map(() => (
         <div class="marquee-track">
           {ticker.map((t, i) => (
-            <span class:list={['tick', { hollow: i % 2 === 1 }]}>
+            <span class="tick">
               {t}
               <svg viewBox="0 0 24 24" class="leaf"><path d="M5 19c0-8 5-13 14-14-1 9-6 14-14 14zM5 19l7-7" /></svg>
             </span>
@@ -214,6 +214,24 @@ const statement =
     </div>
   </section>
 
+  <section class="strip-photos" aria-labelledby="gallery-title">
+    <div class="wrap strip-head">
+      <h2 id="gallery-title" data-type>Gardens we look after</h2>
+      <a class="btn btn-ghost" href="/gallery/">See the gallery <Icon name="arrow" /></a>
+    </div>
+    <div class="marquee photo-rail" style="--speed: 60s; --gap: 1rem">
+      {
+        [0, 1].map((k) => (
+          <ul class="marquee-track" aria-hidden={k > 0 ? 'true' : undefined}>
+            {[...colA, ...colB].map((p) => (
+              <li><img src={p.src} alt={k === 0 ? p.alt : ''} loading="lazy" /></li>
+            ))}
+          </ul>
+        ))
+      }
+    </div>
+  </section>
+
   <CallToAction />
 
   <aside class="toast" role="status" aria-live="polite" hidden>
@@ -304,10 +322,9 @@ const statement =
   }
   .hero h1 {
     font-size: clamp(3.25rem, 7vw, 6.5rem);
-    font-stretch: 75%;
-    font-weight: 800;
+    font-weight: 600;
     line-height: 0.92;
-    letter-spacing: -0.03em;
+    letter-spacing: -0.045em;
     max-width: 12ch;
   }
   .hero-lede {
@@ -454,16 +471,15 @@ const statement =
     gap: 2.5rem;
     white-space: nowrap;
     font-family: var(--display);
-    font-stretch: 75%;
-    font-weight: 800;
-    font-size: clamp(2.5rem, 6vw, 5rem);
+    font-weight: 600;
+    font-size: clamp(2rem, 4.5vw, 3.75rem);
+    font-weight: 500;
     line-height: 1;
-    letter-spacing: -0.02em;
-    color: var(--ink);
+    letter-spacing: -0.045em;
+    color: color-mix(in srgb, var(--ink) 30%, transparent);
   }
-  .tick.hollow {
-    color: transparent;
-    -webkit-text-stroke: 1.5px var(--ink);
+  .tick:nth-child(3n + 1) {
+    color: var(--ink);
   }
   .leaf {
     width: 0.6em;
@@ -518,12 +534,13 @@ const statement =
   .tile-care {
     grid-column: 1 / 5;
     grid-row: span 2;
-    background: #fbfbf7;
+    background: var(--card);
+    border: 1px solid var(--border);
     padding: clamp(1rem, 2vw, 1.5rem);
     display: grid;
     gap: 1.5rem;
     align-content: start;
-    box-shadow: 0 1px 2px rgb(23 37 28 / 0.06), 0 18px 40px -24px rgb(23 37 28 / 0.25);
+    box-shadow: var(--shadow);
   }
   .tile-care::after {
     background: radial-gradient(420px circle at var(--mx, -100px) var(--my, -100px), rgb(140 198 63 / 0.12), transparent 45%);
@@ -593,8 +610,7 @@ const statement =
   }
   .v-len {
     font-family: var(--display);
-    font-stretch: 78%;
-    font-weight: 750;
+    font-weight: 600;
     font-size: clamp(1.3rem, 2vw, 1.7rem);
     line-height: 1;
   }
@@ -646,11 +662,10 @@ const statement =
   }
   .tile-name {
     font-family: var(--display);
-    font-stretch: 78%;
-    font-weight: 750;
+    font-weight: 600;
     font-size: clamp(1.6rem, 2.6vw, 2.2rem);
     line-height: 1;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.04em;
   }
   .tile-short {
     font-size: 0.98rem;
@@ -702,8 +717,7 @@ const statement =
   }
   .also-title {
     font-family: var(--display);
-    font-stretch: 78%;
-    font-weight: 750;
+    font-weight: 600;
     font-size: clamp(1.8rem, 3vw, 2.5rem);
     line-height: 1;
   }
@@ -818,8 +832,7 @@ const statement =
     place-items: center;
     border-radius: 50%;
     font-family: var(--display);
-    font-stretch: 80%;
-    font-weight: 800;
+    font-weight: 600;
     font-size: 1.4rem;
     border: 1.5px solid currentColor;
   }
@@ -832,7 +845,8 @@ const statement =
     font-size: 1.15rem;
   }
   .tone-paper {
-    background: #fbfbf7;
+    background: var(--card);
+    border: 1px solid var(--border);
     color: var(--ink);
   }
   .tone-paper p {
@@ -845,12 +859,12 @@ const statement =
   .tone-evergreen p {
     color: var(--on-evergreen-2);
   }
-  .tone-season {
-    background: var(--season);
-    color: var(--on-season);
+  .tone-soft {
+    background: #dfe8d3;
+    color: var(--ink);
   }
-  .tone-season p {
-    color: var(--on-season-2);
+  .tone-soft p {
+    color: var(--ink-2);
   }
   @media (max-width: 760px) {
     .card {
@@ -868,11 +882,10 @@ const statement =
   }
   .statement-text {
     font-family: var(--display);
-    font-stretch: 78%;
-    font-weight: 750;
+    font-weight: 600;
     font-size: clamp(2.2rem, 5.6vw, 4.75rem);
     line-height: 1.02;
-    letter-spacing: -0.025em;
+    letter-spacing: -0.04em;
     max-width: 22ch;
   }
   .sw {
@@ -913,6 +926,40 @@ const statement =
     .about-grid {
       grid-template-columns: 1fr;
     }
+  }
+
+  /* Photo rail */
+  .strip-photos {
+    padding-block: clamp(3rem, 7vw, 5.5rem) 0;
+  }
+  .strip-head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: end;
+    gap: 1rem 2rem;
+    margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
+  }
+  .photo-rail .marquee-track {
+    list-style: none;
+    margin: 0;
+  }
+  .photo-rail li {
+    flex: none;
+    width: clamp(14rem, 24vw, 20rem);
+  }
+  .photo-rail img {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    object-fit: cover;
+    border-radius: 22px;
+    transition: transform 600ms var(--ease-out);
+  }
+  .photo-rail li:nth-child(even) {
+    margin-top: 2.5rem;
+  }
+  .photo-rail li:hover img {
+    transform: scale(1.03) rotate(-0.6deg);
   }
 
   /* Toast */

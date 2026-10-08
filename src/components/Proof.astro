@@ -42,7 +42,9 @@ const logos = [
 <style>
   .proof {
     padding-block: clamp(4rem, 9vw, 7rem);
-    background: var(--paper-2);
+    background: var(--card);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
     border-radius: var(--radius-lg);
     margin-inline: clamp(0.5rem, 1.5vw, 1rem);
     overflow: hidden;
@@ -60,11 +62,10 @@ const logos = [
   }
   blockquote p {
     font-family: var(--display);
-    font-stretch: 82%;
     font-weight: 600;
     font-size: clamp(2rem, 4.4vw, 3.6rem);
     line-height: 1.05;
-    letter-spacing: -0.025em;
+    letter-spacing: -0.04em;
     text-wrap: balance;
   }
   figcaption {
@@ -88,7 +89,7 @@ const logos = [
     place-items: center;
     background: var(--evergreen);
     color: var(--leaf);
-    font-weight: 700;
+    font-weight: 600;
   }
 
   .logos-label {
@@ -104,7 +105,7 @@ const logos = [
     margin: 0;
   }
   .logos li {
-    background: #fff;
+    background: var(--paper);
     border-radius: 18px;
     height: 6.5rem;
     width: 12rem;
