@@ -76,25 +76,42 @@ def styles(html: str) -> list:
 
 ROUTER = """<script>
 (() => {
+  // Page switching that works even where the viewer blocks address/hash changes:
+  // every internal link is handled here directly.
   const pages = document.querySelectorAll('[data-page]');
   const titles = { home: document.title, about: 'About Darragh | Darragh Connolly Garden Care' };
-  const show = () => {
-    const hash = location.hash.slice(1);
-    const target = hash && document.getElementById(hash);
+  const go = (hash, smooth) => {
+    const id = hash && hash !== 'home' && hash !== 'about' ? hash : '';
+    const current = document.querySelector('[data-page]:not([hidden])');
+    const target = id ? (current && current.querySelector('#' + CSS.escape(id))) || document.getElementById(id) : null;
     const page = hash === 'about' ? 'about' : target ? target.closest('[data-page]')?.dataset.page || 'home' : 'home';
+    const changed = [...pages].some((p) => p.hidden === (p.dataset.page === page));
     pages.forEach((p) => (p.hidden = p.dataset.page !== page));
     document.title = titles[page];
-    document.querySelectorAll('.nav a').forEach((a) => {
-      const on = a.getAttribute('href') === '#about' ? page === 'about' : false;
+    document.querySelectorAll('.nav a, .menu-panel a').forEach((a) => {
+      const href = a.getAttribute('href');
+      const on = (href === '#about' && page === 'about') || (href === '#home' && page === 'home');
       on ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current');
     });
     document.querySelector('.menu')?.removeAttribute('open');
-    if (target && hash !== 'about') target.scrollIntoView();
-    else window.scrollTo(0, 0);
+    if (target) {
+      requestAnimationFrame(() => target.scrollIntoView({ behavior: changed || !smooth ? 'auto' : 'smooth', block: 'start' }));
+    } else {
+      window.scrollTo(0, 0);
+    }
     dispatchEvent(new Event('scroll'));
+    try { history.replaceState(null, '', '#' + (hash || 'home')); } catch (e) {}
   };
-  addEventListener('hashchange', show);
-  show();
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest && e.target.closest('a[href^="#"]');
+    if (!a) return;
+    const hash = a.getAttribute('href').slice(1);
+    if (hash === 'main') return; // skip link
+    e.preventDefault();
+    go(hash, true);
+  }, true);
+  addEventListener('hashchange', () => go(location.hash.slice(1), false));
+  go(location.hash.slice(1), false);
 })();
 </script>"""
 
