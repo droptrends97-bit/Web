@@ -1,0 +1,710 @@
+---
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import CallToAction from '../../components/CallToAction.astro';
+import { contact } from '../../data/site';
+
+const benefits = [
+  'Professionally designed displays',
+  'Installation included',
+  'Seasonal colour and interest',
+  'Pots for homes and businesses',
+  'Optional maintenance and refresh visits',
+];
+
+const displays = [
+  {
+    title: 'Front Door Pots',
+    text: 'Create a welcoming first impression with beautifully planted containers designed to suit your home.',
+    image: '/img/pots-front-door.jpg',
+    alt: 'Two clipped evergreens with red geraniums in textured grey planters either side of a modern front door.',
+    size: 'tall',
+  },
+  {
+    title: 'Patio & Terrace Displays',
+    text: 'Add colour, texture and life to outdoor spaces with coordinated pot collections.',
+    image: '/img/pots-balcony-acer-ferns.jpg',
+    alt: 'A terrace with an acer and two tree ferns in terracotta pots underplanted with purple flowers.',
+    size: 'wide',
+  },
+  {
+    title: 'Balcony Planting',
+    text: 'Perfect for apartments and compact outdoor spaces.',
+    image: '/img/pots-blue-hydrangea-trough.jpg',
+    alt: 'A long grey trough of blue hydrangeas and purple daisies on a balcony.',
+    size: 'tall',
+  },
+  {
+    title: 'Commercial Planters',
+    text: 'Professional displays for offices, cafés, restaurants and business entrances.',
+    image: '/img/pots-barrels.jpg',
+    alt: 'Two half-barrel planters with clipped evergreen shrubs against a pale brick wall.',
+    size: 'tall',
+  },
+  {
+    title: 'Seasonal Refreshes',
+    text: 'Keep your pots looking Blooming Amazing throughout the year with seasonal replanting and maintenance.',
+    image: '/img/pots-urn-white-hydrangea.jpg',
+    alt: 'A black cast-iron urn overflowing with white hydrangeas and purple petunias at a red-brick entrance.',
+    size: 'tall',
+  },
+];
+
+const steps = [
+  { title: 'Consultation', text: "We'll discuss your space, style and budget." },
+  { title: 'Design', text: "We'll select the right pots and plants for the location and season." },
+  { title: 'Installation', text: 'Everything is delivered, planted and positioned for maximum impact.' },
+  { title: 'Enjoy', text: 'Relax and enjoy the results, with optional seasonal refresh visits available.' },
+];
+
+const gallery = [
+  { src: '/img/pots-urn-white-hydrangea.jpg', alt: 'White hydrangeas and petunias in a black urn.' },
+  { src: '/img/pots-front-door.jpg', alt: 'Evergreen planters at a modern front door.' },
+  { src: '/img/topiary-tulips.jpg', alt: 'Lollipop topiary above pink tulips.' },
+  { src: '/img/pots-blue-hydrangea-trough.jpg', alt: 'Blue hydrangeas in a grey trough.' },
+  { src: '/img/pots-glazed-bowl.jpg', alt: 'Hydrangea and geraniums in a glossy black bowl.' },
+  { src: '/img/pots-olive-tree.jpg', alt: 'A cloud-pruned olive tree with lavender in a dark pot.' },
+  { src: '/img/pots-pink-hydrangea.jpg', alt: 'Pink hydrangeas and purple campanula in a long trough.' },
+  { src: '/img/pots-tree-ferns.jpg', alt: 'Tree ferns in terracotta pots on a terrace.' },
+  { src: '/img/pots-barrels.jpg', alt: 'Evergreen shrubs in half-barrels.' },
+  { src: '/img/pots-red-trough.jpg', alt: 'Red cyclamen and skimmia in a tall grey trough.' },
+  { src: '/img/pots-blue-trough.jpg', alt: 'Blue hydrangeas in a trough on a terrace.' },
+  { src: '/img/pots-camellia-urn.jpg', alt: 'Camellia, hellebores and primulas in a black urn.' },
+  { src: '/img/pots-tree-fern.jpg', alt: 'A tree fern underplanted with violas in a terracotta pot.' },
+];
+
+const heroPhotos = [
+  { src: '/img/pots-urn-white-hydrangea.jpg', alt: 'White hydrangeas spilling from a black urn at a red-brick entrance.' },
+  { src: '/img/pots-olive-tree.jpg', alt: 'A cloud-pruned olive tree in a dark glazed pot.' },
+  { src: '/img/pots-pink-hydrangea.jpg', alt: 'Pink hydrangeas in a long grey trough.' },
+];
+---
+
+<Base
+  garden
+  title="Pots & Planters"
+  description="Professionally designed seasonal pots and planters for entrances, patios, balconies and businesses across Dublin and Wicklow, with installation and seasonal refreshes."
+>
+  <!-- Hero -->
+  <section class="hero wrap" aria-labelledby="pots-title">
+    <div class="hero-copy">
+      <a class="crumb" href="/services/">Services</a>
+      <h1 id="pots-title" data-type data-speed="50">Pots &amp; planters for every season.</h1>
+      <p class="lede hero-lede">
+        Transform your entrance, patio, balcony or business with professionally designed seasonal pots and planters.
+      </p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="/contact/">Get a quote <Icon name="arrow" /></a>
+        <a class="btn btn-ghost" href={contact.phoneHref}><Icon name="phone" /> {contact.phone}</a>
+      </div>
+    </div>
+    <div class="hero-stack" aria-hidden="false">
+      {
+        heroPhotos.map((p, i) => (
+          <figure class={`stack-card s${i}`} data-pop style={`--d:${i + 2}`}>
+            <img src={p.src} alt={p.alt} />
+          </figure>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- Intro -->
+  <section class="wrap intro" aria-label="Introduction">
+    <p class="intro-text" data-reveal>
+      From striking front-door displays to colourful patio arrangements, we create container gardens that look fantastic
+      throughout the year.
+    </p>
+  </section>
+
+  <!-- Why choose -->
+  <section class="why" aria-labelledby="why-title">
+    <div class="wrap why-grid">
+      <figure class="why-photo" data-pop>
+        <img src="/img/topiary-tulips.jpg" alt="Two lollipop topiary trees above pink and red tulips at a granite entrance." loading="lazy" />
+      </figure>
+      <div class="why-copy">
+        <h2 id="why-title" data-type>Why choose pots and planters?</h2>
+        <p class="why-lead" data-reveal>
+          You want beautiful pots, but choosing the right plants, compost, containers and seasonal combinations can be
+          overwhelming. <strong>We take care of everything.</strong>
+        </p>
+        <ul class="benefits">
+          {
+            benefits.map((b, i) => (
+              <li data-pop style={`--d:${i}`}>
+                <span class="tick" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7" /></svg>
+                </span>
+                {b}
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Displays -->
+  <section class="wrap displays" aria-labelledby="displays-title">
+    <div class="section-head">
+      <h2 id="displays-title" data-type>Tailored displays for homes &amp; businesses</h2>
+      <p class="lede">From striking front-door displays to colourful patio arrangements, we create gardens that look fantastic throughout the year.</p>
+    </div>
+    <ul class="bento">
+      {
+        displays.map((d, i) => (
+          <li class={`tile tile-${d.size} t${i}`} data-pop style={`--d:${i}`}>
+            <img src={d.image} alt={d.alt} loading="lazy" />
+            <div class="tile-body">
+              <h3>{d.title}</h3>
+              <p>{d.text}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <!-- How it works -->
+  <section class="process" aria-labelledby="process-title">
+    <div class="wrap">
+      <h2 id="process-title" data-type>How it works</h2>
+      <ol class="steps">
+        {
+          steps.map((s, i) => (
+            <li data-pop style={`--d:${i}`}>
+              <span class="step-num">{i + 1}</span>
+              <h3>{s.title}</h3>
+              <p>{s.text}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <!-- Gallery -->
+  <section class="gallery" aria-labelledby="gallery-pots-title">
+    <div class="wrap gallery-head">
+      <div>
+        <h2 id="gallery-pots-title" data-type>Real pots. Real transformations.</h2>
+        <p class="lede">A gallery of great transformations says more than words ever can.</p>
+      </div>
+      <div class="gallery-btns">
+        <button class="gbtn" type="button" data-dir="-1" aria-label="Previous photos"><Icon name="arrow" class="flip" /></button>
+        <button class="gbtn" type="button" data-dir="1" aria-label="Next photos"><Icon name="arrow" /></button>
+      </div>
+    </div>
+    <ul class="rail" tabindex="0" aria-label="Pots and planters gallery, scroll sideways">
+      {
+        gallery.map((g) => (
+          <li>
+            <img src={g.src} alt={g.alt} loading="lazy" />
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <CallToAction
+    heading="Let your pots do the talking."
+    text="A few well-planted pots can completely transform how a space feels. Whether you need a single statement planter or a complete seasonal display, pots and planters bring colour, structure and year-round interest to your outdoor space."
+  />
+</Base>
+
+<script>
+  // Gallery arrows (the rail also swipes and scrolls on its own without JavaScript).
+  const rail = document.querySelector<HTMLElement>('.rail');
+  document.querySelectorAll<HTMLButtonElement>('.gbtn').forEach((b) =>
+    b.addEventListener('click', () => {
+      if (!rail) return;
+      rail.scrollBy({ left: Number(b.dataset.dir) * rail.clientWidth * 0.8, behavior: 'smooth' });
+    }),
+  );
+</script>
+
+<style>
+  /* Hero */
+  .hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    gap: 2rem clamp(2rem, 5vw, 5rem);
+    align-items: center;
+    padding-block: clamp(2rem, 5vw, 4rem) clamp(3rem, 6vw, 5rem);
+    min-height: min(calc(100svh - 5.75rem), 50rem);
+  }
+  .hero-copy {
+    display: grid;
+    gap: 1.5rem;
+    justify-items: start;
+  }
+  .crumb {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--ink-2);
+    text-decoration: none;
+    padding: 0.35rem 0.8rem;
+    border-radius: 999px;
+    background: var(--paper-2);
+  }
+  .hero h1 {
+    font-size: clamp(3rem, 7vw, 6rem);
+    line-height: 0.95;
+    max-width: 11ch;
+  }
+  .hero-lede {
+    max-width: 36ch;
+  }
+  .js .hero-lede,
+  .js .hero-actions {
+    animation: rise-in 900ms var(--ease-out) both;
+  }
+  .js .hero-lede {
+    animation-delay: 1500ms;
+  }
+  .js .hero-actions {
+    animation-delay: 1800ms;
+  }
+  @keyframes rise-in {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+      filter: blur(6px);
+    }
+  }
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .hero-stack {
+    position: relative;
+    height: clamp(26rem, 42vw, 36rem);
+  }
+  .stack-card {
+    position: absolute;
+    margin: 0;
+    width: 52%;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 30px 60px -30px rgb(10 25 16 / 0.55);
+    border: 6px solid #fff;
+  }
+  .stack-card img {
+    width: 100%;
+    aspect-ratio: 4 / 5.4;
+    object-fit: cover;
+    transition: transform 900ms var(--ease-out);
+  }
+  .stack-card:hover img {
+    transform: scale(1.05);
+  }
+  .s0 {
+    left: 0;
+    top: 8%;
+    rotate: -6deg;
+    z-index: 2;
+  }
+  .s1 {
+    left: 26%;
+    top: 0;
+    rotate: 2deg;
+    z-index: 3;
+  }
+  .s2 {
+    right: 0;
+    top: 14%;
+    rotate: 7deg;
+    z-index: 1;
+  }
+  .stack-card {
+    animation: bob 7s ease-in-out infinite alternate;
+  }
+  .s1 {
+    animation-delay: -2s;
+  }
+  .s2 {
+    animation-delay: -4s;
+  }
+  @keyframes bob {
+    to {
+      translate: 0 -10px;
+    }
+  }
+  @media (max-width: 860px) {
+    .hero {
+      grid-template-columns: 1fr;
+      min-height: 0;
+    }
+    .hero-stack {
+      height: clamp(20rem, 60vw, 28rem);
+    }
+    .stack-card {
+      width: 38%;
+    }
+    .s1 {
+      left: 31%;
+    }
+  }
+
+  /* Intro */
+  .intro {
+    padding-block: clamp(2rem, 5vw, 4rem);
+  }
+  .intro-text {
+    font-family: var(--display);
+    font-weight: 500;
+    font-size: clamp(1.8rem, 4vw, 3.25rem);
+    line-height: 1.12;
+    letter-spacing: -0.045em;
+    max-width: 24ch;
+  }
+
+  /* Why */
+  .why {
+    padding-block: clamp(3rem, 7vw, 6rem);
+  }
+  .why-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+    gap: clamp(2rem, 6vw, 6rem);
+    align-items: center;
+  }
+  .why-photo {
+    margin: 0;
+  }
+  .why-photo img {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+  }
+  .why-copy {
+    display: grid;
+    gap: 1.5rem;
+  }
+  .why-copy h2 {
+    max-width: 12ch;
+  }
+  .why-lead {
+    color: var(--ink-2);
+    font-size: 1.15rem;
+    max-width: 48ch;
+  }
+  .why-lead strong {
+    color: var(--ink);
+  }
+  .benefits {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.6rem;
+  }
+  .benefits li {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.85rem 1rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    font-weight: 550;
+    transition:
+      transform 300ms var(--ease-out),
+      box-shadow 300ms;
+  }
+  .benefits li:hover {
+    transform: translateX(6px);
+    box-shadow: var(--shadow);
+  }
+  .tick {
+    flex: none;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: var(--leaf);
+  }
+  .tick svg {
+    width: 1.1rem;
+    height: 1.1rem;
+    fill: none;
+    stroke: var(--evergreen);
+    stroke-width: 2.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  @media (max-width: 860px) {
+    .why-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Displays bento */
+  .displays {
+    padding-block: clamp(3rem, 7vw, 6rem);
+  }
+  .section-head {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    gap: 1rem clamp(2rem, 5vw, 5rem);
+    align-items: end;
+    margin-bottom: clamp(2rem, 4vw, 3rem);
+  }
+  .section-head h2 {
+    max-width: 14ch;
+  }
+  .bento {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    grid-auto-rows: 15rem;
+    gap: 1rem;
+  }
+  .tile {
+    position: relative;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    isolation: isolate;
+    display: flex;
+    align-items: flex-end;
+    color: #fff;
+  }
+  .tile img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -2;
+    transition: transform 900ms var(--ease-out);
+  }
+  .tile::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(180deg, rgb(12 26 17 / 0) 35%, rgb(12 26 17 / 0.85) 100%);
+  }
+  .tile:hover img {
+    transform: scale(1.06);
+  }
+  .tile-body {
+    padding: 1.4rem;
+    display: grid;
+    gap: 0.35rem;
+  }
+  .tile h3 {
+    font-size: clamp(1.4rem, 2.2vw, 1.9rem);
+  }
+  .tile p {
+    color: rgb(255 255 255 / 0.85);
+    font-size: 0.98rem;
+    max-width: 36ch;
+  }
+  .t0 {
+    grid-column: 1 / 3;
+    grid-row: span 2;
+  }
+  .t1 {
+    grid-column: 3 / 7;
+    grid-row: span 1;
+  }
+  .t2 {
+    grid-column: 3 / 5;
+    grid-row: span 2;
+  }
+  .t3 {
+    grid-column: 5 / 7;
+    grid-row: span 2;
+  }
+  .t4 {
+    grid-column: 1 / 3;
+    grid-row: span 1;
+  }
+  @media (max-width: 860px) {
+    .section-head {
+      grid-template-columns: 1fr;
+    }
+    .bento {
+      grid-template-columns: 1fr 1fr;
+      grid-auto-rows: 14rem;
+    }
+    .t0,
+    .t2,
+    .t3,
+    .t4 {
+      grid-column: span 1;
+      grid-row: span 1;
+    }
+    .t1 {
+      grid-column: 1 / -1;
+    }
+    .t4 {
+      grid-column: 1 / -1;
+    }
+  }
+  @media (max-width: 520px) {
+    .bento {
+      grid-template-columns: 1fr;
+      grid-auto-rows: 16rem;
+    }
+    .t0,
+    .t2,
+    .t3 {
+      grid-column: 1 / -1;
+    }
+  }
+
+  /* Process */
+  .process {
+    padding-block: clamp(3rem, 7vw, 6rem);
+  }
+  .process h2 {
+    margin-bottom: clamp(2rem, 4vw, 3rem);
+  }
+  .steps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1rem;
+    counter-reset: step;
+    position: relative;
+  }
+  .steps li {
+    background: var(--evergreen);
+    color: var(--on-evergreen);
+    border-radius: var(--radius-lg);
+    padding: 1.6rem 1.5rem 1.75rem;
+    display: grid;
+    gap: 0.6rem;
+    align-content: start;
+    position: relative;
+    transition: transform 400ms var(--ease-out);
+  }
+  .steps li:hover {
+    transform: translateY(-6px);
+  }
+  .steps li:nth-child(even) {
+    background: var(--card);
+    color: var(--ink);
+    border: 1px solid var(--border);
+  }
+  .steps li p {
+    color: var(--on-evergreen-2);
+  }
+  .steps li:nth-child(even) p {
+    color: var(--ink-2);
+  }
+  .step-num {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: var(--leaf);
+    color: var(--evergreen);
+    font-weight: 700;
+    font-size: 1.25rem;
+    margin-bottom: 0.75rem;
+  }
+  .steps h3 {
+    font-size: clamp(1.4rem, 2.2vw, 1.8rem);
+  }
+  @media (max-width: 960px) {
+    .steps {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (max-width: 520px) {
+    .steps {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Gallery */
+  .gallery {
+    padding-block: clamp(3rem, 7vw, 6rem) 0;
+  }
+  .gallery-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    gap: 1rem 2rem;
+    flex-wrap: wrap;
+    margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
+  }
+  .gallery-head h2 {
+    max-width: 14ch;
+    margin-bottom: 1rem;
+  }
+  .gallery-btns {
+    display: flex;
+    gap: 0.5rem;
+  }
+  .gbtn {
+    width: 3.25rem;
+    height: 3.25rem;
+    border-radius: 50%;
+    border: 1.5px solid var(--ink);
+    background: transparent;
+    color: var(--ink);
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    transition:
+      background-color 200ms,
+      color 200ms;
+  }
+  .gbtn:hover {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .gbtn :global(.flip) {
+    transform: rotate(180deg);
+  }
+  .rail {
+    list-style: none;
+    margin: 0;
+    padding: 0.5rem var(--gutter) 1.5rem;
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--gutter);
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .rail::-webkit-scrollbar {
+    display: none;
+  }
+  .rail li {
+    flex: none;
+    width: clamp(15rem, 24vw, 21rem);
+    scroll-snap-align: start;
+  }
+  .rail img {
+    width: 100%;
+    aspect-ratio: 4 / 5.4;
+    object-fit: cover;
+    border-radius: 22px;
+    transition: transform 600ms var(--ease-out);
+  }
+  .rail li:hover img {
+    transform: scale(1.03);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .stack-card {
+      animation: none;
+    }
+  }
+</style>

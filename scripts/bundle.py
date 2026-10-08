@@ -74,39 +74,56 @@ def styles(html: str) -> list:
     return re.findall(r'<style>.*?</style>', html, re.S)
 
 
-PAGE_CSS = """<style>
-/* Page switching with plain links and :target, so it works with JavaScript switched off. */
-[data-page='about'] { display: none; }
-body:has([data-page='about']:target, [data-page='about'] :target) [data-page='about'] { display: block; }
-body:has([data-page='about']:target, [data-page='about'] :target) [data-page='home'] { display: none; }
-body:has([data-page='about']:target, [data-page='about'] :target) .nav a[href='#about'] {
-  color: var(--on-evergreen); background: rgb(255 255 255 / 0.12);
-}
-[data-page] { scroll-margin-top: 0; }
-</style>"""
+# Extra pages carried in the single-file site, as (page id, built route).
+SITE_PAGES = [('about', 'about'), ('pots', 'services/pots-and-planters')]
+
+
+def page_css(ids):
+    """Page switching with plain links and :target, so it works with JavaScript switched off."""
+    rules = []
+    for pid in ids:
+        on = f"body:has([data-page='{pid}']:target, [data-page='{pid}'] :target)"
+        rules.append(f"[data-page='{pid}'] {{ display: none; }}")
+        rules.append(f"{on} [data-page='{pid}'] {{ display: block; }}")
+        rules.append(f"{on} [data-page='home'] {{ display: none; }}")
+    rules.append("body:has([data-page='about']:target, [data-page='about'] :target) .nav a[href='#about'] "
+                 "{ color: var(--on-evergreen); background: rgb(255 255 255 / 0.12); }")
+    rules.append("body:has([data-page='pots']:target, [data-page='pots'] :target) .sub summary "
+                 "{ color: var(--on-evergreen); background: rgb(255 255 255 / 0.12); }")
+    return '<style>' + '\n'.join(rules) + '</style>'
 
 
 def build_site() -> str:
-    home, about = page_html('home'), page_html('about')
+    home = page_html('home')
     links = {
-        '/': '#home', '/about/': '#about', '/services/': '#services-title', '/the-year/': '#year-title',
-        '/gallery/': '#gallery-title', '/contact/': '#cta-title',
+        '/': '#home', '/about/': '#about', '/services/pots-and-planters/': '#pots',
+        '/services/': '#services-title', '/the-year/': '#year-title', '/gallery/': '#gallery-title',
+        '/contact/': '#cta-title',
     }
-    home_main, about_main = main_inner(home), main_inner(about)
-    # IDs used on both pages: give the about copies their own names so its buttons stay on the about page.
-    home_ids = set(re.findall(r' id="([^"]+)"', home_main))
-    for dup in set(re.findall(r' id="([^"]+)"', about_main)) & home_ids:
-        about_main = about_main.replace(f' id="{dup}"', f' id="about-{dup}"')
-        about_main = about_main.replace(f'aria-labelledby="{dup}"', f'aria-labelledby="about-{dup}"')
-        about_main = about_main.replace(f'href="/contact/"', 'href="#about-cta-title"') if dup == 'cta-title' else about_main
-    combined = ('<div id="home" data-page="home">' + home_main + '</div>'
-                + '<div id="about" data-page="about">' + about_main + '</div>')
-    html = home.replace(home_main, combined, 1)
-    # Bring across the about page's own styles and scripts that the home page does not already have.
+    home_main = main_inner(home)
+    used_ids = set(re.findall(r' id="([^"]+)"', home_main))
+    blocks = ['<div id="home" data-page="home">' + home_main + '</div>']
     home_styles, home_scripts = set(styles(home)), set(module_scripts(home))
-    extra = [s for s in styles(about) if s not in home_styles]
-    html = html.replace('</head>', ''.join(extra) + PAGE_CSS + '</head>', 1)
-    extra_js = [s for s in module_scripts(about) if s not in home_scripts]
+    extra_css, extra_js = [], []
+    for pid, route in SITE_PAGES:
+        page = page_html(route)
+        inner = main_inner(page)
+        # IDs already used elsewhere get a page prefix so each page's buttons stay on that page.
+        for dup in set(re.findall(r' id="([^"]+)"', inner)) & used_ids:
+            inner = inner.replace(f' id="{dup}"', f' id="{pid}-{dup}"')
+            inner = inner.replace(f'aria-labelledby="{dup}"', f'aria-labelledby="{pid}-{dup}"')
+            if dup == 'cta-title':
+                inner = inner.replace('href="/contact/"', f'href="#{pid}-cta-title"')
+        used_ids |= set(re.findall(r' id="([^"]+)"', inner))
+        blocks.append(f'<div id="{pid}" data-page="{pid}">' + inner + '</div>')
+        for st in styles(page):
+            if st not in home_styles and st not in extra_css:
+                extra_css.append(st)
+        for js in module_scripts(page):
+            if js not in home_scripts and js not in extra_js:
+                extra_js.append(js)
+    html = home.replace(home_main, ''.join(blocks), 1)
+    html = html.replace('</head>', ''.join(extra_css) + page_css([p for p, _ in SITE_PAGES]) + '</head>', 1)
     html = html.replace('</body>', ''.join(extra_js) + '</body>', 1)
     return finish(html, links, '')
 

@@ -13,6 +13,18 @@ export const nav = [
   { href: '/contact/', label: 'Contact' },
 ];
 
+// The Services menu, mirroring the categories on the current site.
+export const serviceMenu = [
+  { href: '/services/pots-and-planters/', label: 'Pots & Planters' },
+  { href: '/services/garden-intervention/', label: 'The Garden Intervention' },
+  { href: '/services/garden-health/', label: 'Garden Health' },
+  { href: '/services/garden-care/', label: 'Garden Care & Maintenance' },
+  { href: '/services/', label: 'Hedging' },
+  { href: '/services/', label: 'Passionate About Pots' },
+  { href: '/services/', label: 'Bulb Planting' },
+  { href: '/services/', label: 'Wellness Planting' },
+];
+
 export type Service = {
   slug: string;
   name: string;
