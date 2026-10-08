@@ -24,7 +24,7 @@ def img_uri(rel: str) -> str:
         src = dist / rel.lstrip('/')
         if src.suffix.lower() in ('.jpg', '.jpeg', '.png'):
             out_webp = cache / (src.stem + '.webp')
-            subprocess.run(['ffmpeg', '-loglevel', 'error', '-y', '-i', str(src), '-vf', r'scale=min(1400\,iw):-2', '-c:v', 'libwebp', '-quality', '70', str(out_webp)], check=True)
+            subprocess.run(['ffmpeg', '-loglevel', 'error', '-y', '-i', str(src), '-vf', r'scale=min(1100\,iw):-2', '-c:v', 'libwebp', '-quality', '70', str(out_webp)], check=True)
             _uris[rel] = 'data:image/webp;base64,' + base64.b64encode(out_webp.read_bytes()).decode()
         else:
             _uris[rel] = data_uri(src)
