@@ -1,84 +1,719 @@
 ---
 import Base from '../layouts/Base.astro';
-import PageHead from '../components/PageHead.astro';
+import Icon from '../components/Icon.astro';
 import Proof from '../components/Proof.astro';
 import CallToAction from '../components/CallToAction.astro';
+import GardenBackdrop from '../components/GardenBackdrop.astro';
 import { contact } from '../data/site';
+
+const facts = [
+  { big: '20+', label: 'years working in gardens', count: 20 },
+  { big: 'Writtle', label: 'Horticultural College trained, UK' },
+  { big: 'Dublin', label: '& Wicklow, where most of the work is' },
+  { big: 'ALCI', label: '& Guild of Master Craftsmen member' },
+];
+
+const journey = [
+  {
+    when: 'Training',
+    title: 'Qualified at Writtle',
+    text: 'Darragh trained at Writtle Horticultural College in the UK before bringing that grounding home.',
+  },
+  {
+    when: '20+ years',
+    title: 'Gardens across Dublin & Wicklow',
+    text: 'Nurturing, maintaining and bringing gardens to life, and building the business on referrals from happy clients.',
+  },
+  {
+    when: 'A shift',
+    title: 'Clients wanted a sanctuary',
+    text: "They weren't just looking for a tidy garden or a nice layout. They wanted somewhere to breathe, slow down and feel at ease.",
+  },
+  {
+    when: 'Today',
+    title: 'Gardening for well-being',
+    text: 'Gardens that feel as good as they look: places of peace, connection and renewal.',
+  },
+];
+
+const help = [
+  {
+    title: 'Garden Intervention',
+    text: 'Breathing new life into tired spaces.',
+    href: '/services/garden-intervention/',
+    image: '/img/alliums-van.jpg',
+  },
+  {
+    title: 'Garden Health',
+    text: 'Ensuring balance, soil vitality and biodiversity.',
+    href: '/services/garden-health/',
+    image: '/img/striped-lawn-bench.jpg',
+  },
+  {
+    title: 'Maintenance for Wellness',
+    text: 'Keeping gardens stress-free and easy to enjoy.',
+    href: '/services/garden-care/',
+    image: '/img/bench-border.jpg',
+  },
+];
+
+const belief = "Nature isn't just a background to our lives; it actively supports our well-being.".split(' ');
 ---
 
-<Base title="About Darragh" description="Darragh Connolly looks after gardens across Dublin and North Wicklow, to the highest standard, and builds his business on referrals.">
-  <PageHead title="About Darragh" lede="Garden care, done thoroughly, by someone who takes pride in it." />
+<Base
+  title="About Darragh"
+  description="Darragh Connolly has worked with gardens across Dublin and Wicklow for over 20 years, after qualifying from Writtle Horticultural College. Gardens as spaces of peace and well-being."
+>
+  <GardenBackdrop />
 
-  <div class="wrap about">
-    <figure class="plate">
-      <img src="/img/acer-garden.jpg" alt="A copper acer framing a lawn and a border of pink roses." />
-    </figure>
-    <div class="about-text">
-      <p class="big">
-        Darragh's work is mainly in Dublin and North Wicklow. He regards himself as a person who carries out all work
-        thoroughly, to the highest standard possible, and takes pride in doing so.
-      </p>
-      <p>
-        He builds his business through client referral and satisfaction. He is purely focused on garden care and will
-        look after your garden like it's his own.
-      </p>
-      <p>
-        A garden should be more than a collection of plants. It should be a place of peace, renewal and connection with
-        nature. Whether you need a full intervention, a health check for the lawn and soil, or regular maintenance, we
-        help you create and keep a garden that adds to your well-being, not just your view.
-      </p>
-      <h2>Why clients choose us</h2>
-      <ul class="ticks">
-        <li><span><strong>Tailored to your lifestyle.</strong> Spaces that feel good and are easy to maintain.</span></li>
-        <li><span><strong>A natural approach.</strong> We work with nature, not against it.</span></li>
-        <li><span><strong>Well-being at the centre.</strong> Every choice supports relaxation and calm.</span></li>
-      </ul>
-      <p class="area">We work across {contact.area}.</p>
+  <!-- Hero -->
+  <section class="hero" aria-labelledby="about-hero">
+    <div class="hero-card">
+      <img class="hero-img" src="/img/mountain-peak.jpg" alt="A mountain in Wicklow under a bright sky." />
+      <div class="hero-copy">
+        <h1 id="about-hero" data-type data-speed="60">Hi, I'm Darragh.</h1>
+        <p class="hero-lede">
+          Transforming gardens into spaces of peace and well-being, across Dublin and Wicklow, for over 20 years.
+        </p>
+        <div class="hero-actions">
+          <a class="btn btn-leaf" href="/contact/">Book a free discovery call <Icon name="arrow" /></a>
+          <a class="btn btn-glass" href={contact.phoneHref}><Icon name="phone" /> {contact.phone}</a>
+        </div>
+      </div>
     </div>
-  </div>
+  </section>
+
+  <!-- Facts -->
+  <section class="wrap facts" aria-label="At a glance">
+    <ul>
+      {
+        facts.map((f, i) => (
+          <li data-pop style={`--d:${i}`}>
+            <span class="fact-big" data-count={f.count}>
+              {f.big}
+            </span>
+            <span class="fact-label">{f.label}</span>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <!-- Story -->
+  <section class="wrap story" aria-labelledby="story-title">
+    <div class="story-head">
+      <h2 id="story-title" data-type>Transforming gardens into spaces of peace</h2>
+    </div>
+    <div class="story-body" data-reveal>
+      <p class="story-lead">
+        For over 20 years, and after qualifying from Writtle Horticultural College in the UK, I've been working with
+        gardens: nurturing, maintaining and bringing them to life across Dublin and Wicklow.
+      </p>
+      <p>
+        I've always believed that a garden should be more than just a collection of plants. It should be a place that
+        feels good, restores balance and enhances well-being.
+      </p>
+      <p>
+        Over time, I noticed that many of my clients weren't just looking for a tidy garden or a nice layout. They wanted
+        a space where they could breathe, slow down and feel at ease: a true sanctuary. That realisation sparked a shift
+        in how I approach my work.
+      </p>
+    </div>
+  </section>
+
+  <!-- Timeline -->
+  <section class="wrap timeline" aria-labelledby="timeline-title">
+    <h2 id="timeline-title" class="visually-hidden">Darragh's path</h2>
+    <div class="tl-wrap">
+    <span class="tl-line" aria-hidden="true"><span class="tl-fill"></span></span>
+    <ol class="tl">
+      {
+        journey.map((j, i) => (
+          <li class="tl-item" data-reveal style={`--d:${i}`}>
+            <span class="tl-dot" aria-hidden="true"></span>
+            <span class="tl-when">{j.when}</span>
+            <h3>{j.title}</h3>
+            <p>{j.text}</p>
+          </li>
+        ))
+      }
+    </ol>
+    </div>
+  </section>
+
+  <!-- Wellness journey -->
+  <section class="journey" aria-labelledby="journey-title">
+    <div class="wrap journey-grid">
+      <figure class="journey-photo" data-pop>
+        <img src="/img/darragh-snow.jpg" alt="Darragh in a snowy forest, his hat and jacket covered in frost." loading="lazy" />
+        <figcaption>Out in the cold: where the idea took root.</figcaption>
+      </figure>
+      <div class="journey-copy">
+        <h2 id="journey-title" data-type>My journey into wellness gardening</h2>
+        <p>
+          Beyond my work in gardens, I've always been drawn to nature's ability to restore and strengthen us. Whether
+          it's through cold exposure, breathwork or simply spending time outdoors, I've experienced first-hand how the
+          natural world helps us feel calmer, more resilient and more present.
+        </p>
+        <p>
+          One experience that really shaped my perspective was a cold exposure session in the wild: standing waist-deep
+          in freezing water, my body tensed against the shock. But as I focused on my breath and the environment around
+          me, the wind in the trees and the grounding stillness of nature, I realised something.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="belief" aria-label="What Darragh believes">
+    <div class="wrap">
+      <p class="belief-text">
+        {belief.map((w) => <span class="sw">{w} </span>)}
+      </p>
+      <p class="belief-after" data-reveal>
+        That's when I started seeing gardens differently: not just as places to maintain, but as spaces that should work
+        for people's mental and physical well-being.
+      </p>
+    </div>
+  </section>
+
+  <figure class="fields" data-reveal>
+    <img src="/img/mountain-fields.jpg" alt="Walkers on a path through golden Wicklow fields." loading="lazy" />
+  </figure>
+
+  <!-- How I can help -->
+  <section class="wrap help" aria-labelledby="help-title">
+    <div class="help-head">
+      <h2 id="help-title" data-type>How I can help you</h2>
+      <p class="lede">I now focus on helping people create gardens that feel as good as they look.</p>
+    </div>
+    <ul class="help-grid">
+      {
+        help.map((h, i) => (
+          <li data-pop style={`--d:${i}`}>
+            <a href={h.href} class="help-card">
+              <img src={h.image} alt="" loading="lazy" />
+              <span class="help-body">
+                <span class="help-title">{h.title}</span>
+                <span class="help-text">{h.text}</span>
+              </span>
+              <span class="help-go" aria-hidden="true">
+                <Icon name="arrow" />
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+    <p class="help-close" data-reveal>
+      Every garden should be a place of peace, connection and renewal, and I'm here to help make that happen.
+    </p>
+  </section>
 
   <Proof />
-  <CallToAction />
+  <CallToAction heading="Ready to transform your garden into a sanctuary?" />
 </Base>
 
+<script>
+  // Count up numeric facts when they appear.
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll<HTMLElement>('[data-count]').forEach((el) => {
+    const target = Number(el.dataset.count);
+    if (!target || reduce) return;
+    const io = new IntersectionObserver(([e]) => {
+      if (!e.isIntersecting) return;
+      io.disconnect();
+      const start = performance.now();
+      const tick = (t: number) => {
+        const k = Math.min(1, (t - start) / 1400);
+        el.textContent = `${Math.round(target * (1 - Math.pow(1 - k, 3)))}+`;
+        if (k < 1) requestAnimationFrame(tick);
+      };
+      el.textContent = '0+';
+      requestAnimationFrame(tick);
+    });
+    io.observe(el);
+  });
+
+  // Timeline line fills as you scroll through it.
+  const tl = document.querySelector<HTMLElement>('.tl-wrap');
+  const fill = document.querySelector<HTMLElement>('.tl-fill');
+  // Belief sentence lights word by word.
+  const belief = document.querySelector<HTMLElement>('.belief-text');
+  const words = belief ? Array.from(belief.querySelectorAll<HTMLElement>('.sw')) : [];
+  let ticking = false;
+  const update = () => {
+    ticking = false;
+    if (tl && fill) {
+      const r = tl.getBoundingClientRect();
+      const p = Math.min(1, Math.max(0, (innerHeight * 0.7 - r.top) / r.height));
+      fill.style.setProperty('--p', String(reduce ? 1 : p));
+    }
+    if (belief) {
+      const r = belief.getBoundingClientRect();
+      const p = reduce ? 1 : Math.min(1, Math.max(0, (innerHeight * 0.85 - r.top) / (innerHeight * 0.5)));
+      const lit = Math.round(p * words.length);
+      words.forEach((w, i) => w.classList.toggle('lit', i < lit));
+    }
+  };
+  addEventListener(
+    'scroll',
+    () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(update);
+      }
+    },
+    { passive: true },
+  );
+  update();
+</script>
+
 <style>
-  .about {
+  /* Hero */
+  .hero {
+    padding: 0.75rem clamp(0.5rem, 1.5vw, 1rem) 0;
+  }
+  .hero-card {
+    position: relative;
+    max-width: calc(var(--max) + 4rem);
+    margin-inline: auto;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    min-height: clamp(26rem, 38vw, 34rem);
+    display: flex;
+    align-items: flex-end;
+    isolation: isolate;
+    color: #f4f6ee;
+  }
+  .hero-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 30%;
+    z-index: -2;
+    animation: slow-zoom 18s var(--ease-out) both;
+  }
+  @keyframes slow-zoom {
+    from {
+      transform: scale(1.12);
+    }
+  }
+  .hero-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(180deg, rgb(12 26 17 / 0) 20%, rgb(12 26 17 / 0.55) 60%, rgb(12 26 17 / 0.88) 100%);
+  }
+  .hero-copy {
+    padding: clamp(1.5rem, 5vw, 4rem);
+    display: grid;
+    gap: 1.25rem;
+    justify-items: start;
+    max-width: 52rem;
+  }
+  .hero h1 {
+    font-size: clamp(3.25rem, 8vw, 7rem);
+    line-height: 0.95;
+  }
+  .hero-lede {
+    font-size: clamp(1.15rem, 1.8vw, 1.4rem);
+    color: #dfe5d8;
+    max-width: 38ch;
+  }
+  .js .hero-lede,
+  .js .hero-actions {
+    animation: rise-in 900ms var(--ease-out) both;
+  }
+  .js .hero-lede {
+    animation-delay: 1100ms;
+  }
+  .js .hero-actions {
+    animation-delay: 1400ms;
+  }
+  @keyframes rise-in {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+      filter: blur(6px);
+    }
+  }
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .btn-glass {
+    color: #f4f6ee;
+    background: rgb(255 255 255 / 0.12);
+    border: 1px solid rgb(255 255 255 / 0.3);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    font-variant-numeric: tabular-nums;
+  }
+  .btn-glass:hover {
+    background: rgb(255 255 255 / 0.2);
+  }
+
+  /* Facts */
+  .facts ul {
+    list-style: none;
+    margin: clamp(-3.5rem, -5vw, -2rem) auto 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.75rem;
+    position: relative;
+    max-width: 68rem;
+  }
+  .facts li {
+    background: var(--card);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+    border-radius: 20px;
+    padding: 1.25rem 1.4rem;
+    display: grid;
+    gap: 0.3rem;
+  }
+  .fact-big {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: clamp(2rem, 3.4vw, 2.75rem);
+    line-height: 1;
+    letter-spacing: -0.045em;
+    color: var(--evergreen);
+    font-variant-numeric: tabular-nums;
+  }
+  .fact-label {
+    color: var(--ink-2);
+    font-size: 0.95rem;
+    line-height: 1.35;
+  }
+  @media (max-width: 860px) {
+    .facts ul {
+      grid-template-columns: 1fr 1fr;
+      margin-top: 1rem;
+    }
+  }
+
+  /* Story */
+  .story {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+    gap: 1.5rem clamp(2rem, 6vw, 6rem);
+    padding-block: clamp(4rem, 9vw, 7rem) clamp(2rem, 5vw, 3rem);
+  }
+  .story h2 {
+    max-width: 12ch;
+    position: sticky;
+    top: 7rem;
+  }
+  .story-body {
+    display: grid;
+    gap: 1.25rem;
+    color: var(--ink-2);
+    font-size: 1.15rem;
+  }
+  .story-lead {
+    font-family: var(--display);
+    font-weight: 500;
+    font-size: clamp(1.45rem, 2.4vw, 1.9rem);
+    line-height: 1.3;
+    letter-spacing: -0.03em;
+    color: var(--ink);
+  }
+  @media (max-width: 860px) {
+    .story {
+      grid-template-columns: 1fr;
+    }
+    .story h2 {
+      position: static;
+    }
+  }
+
+  /* Timeline */
+  .timeline {
+    padding-block: clamp(1rem, 3vw, 2rem) clamp(4rem, 8vw, 6rem);
+  }
+  .tl-wrap {
+    position: relative;
+  }
+  .tl {
+    list-style: none;
+    margin: 0 auto;
+    padding: 0;
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1rem;
+  }
+  .tl-line {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0.55rem;
+    height: 2px;
+    background: var(--border);
+  }
+  .tl-fill {
+    position: absolute;
+    inset: 0;
+    background: var(--leaf);
+    transform-origin: left;
+    transform: scaleX(var(--p, 0));
+    transition: transform 200ms linear;
+  }
+  .tl-item {
+    position: relative;
+    padding-top: 2.25rem;
+    display: grid;
+    gap: 0.5rem;
+    align-content: start;
+  }
+  .tl-dot {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1.2rem;
+    height: 1.2rem;
+    border-radius: 50%;
+    background: var(--card);
+    border: 3px solid var(--leaf);
+    box-shadow: 0 0 0 6px var(--paper);
+  }
+  .tl-when {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--leaf-ink);
+  }
+  .tl-item h3 {
+    font-size: clamp(1.3rem, 2vw, 1.6rem);
+  }
+  .tl-item p {
+    color: var(--ink-2);
+    font-size: 1rem;
+  }
+  @media (max-width: 860px) {
+    .tl {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+    .tl-wrap {
+      padding-left: 2.25rem;
+    }
+    .tl-line {
+      left: 0.55rem;
+      right: auto;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      height: auto;
+    }
+    .tl-fill {
+      transform-origin: top;
+      transform: scaleY(var(--p, 0));
+    }
+    .tl-item {
+      padding-top: 0;
+    }
+    .tl-dot {
+      left: -2.25rem;
+      top: 0.15rem;
+    }
+  }
+
+  /* Journey */
+  .journey {
+    padding-block: clamp(2rem, 5vw, 4rem);
+  }
+  .journey-grid {
     display: grid;
     grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
     gap: clamp(2rem, 6vw, 6rem);
-    padding-block: clamp(3rem, 7vw, 6rem);
-    align-items: start;
+    align-items: center;
   }
-  .about img {
+  .journey-photo {
+    margin: 0;
+    position: relative;
+  }
+  .journey-photo img {
+    width: 100%;
     aspect-ratio: 1;
     object-fit: cover;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
   }
-  .about-text {
+  .journey-photo figcaption {
+    position: absolute;
+    left: 1rem;
+    bottom: 1rem;
+    padding: 0.55rem 0.95rem;
+    border-radius: 999px;
+    background: rgb(255 255 255 / 0.85);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    font-size: 0.9rem;
+    font-weight: 550;
+  }
+  .journey-copy {
     display: grid;
     gap: 1.25rem;
   }
-  .about-text p {
-    max-width: 58ch;
+  .journey-copy h2 {
+    max-width: 14ch;
+  }
+  .journey-copy p {
     color: var(--ink-2);
-  }
-  .about-text .big {
-    font-family: var(--display);
-    font-weight: 500;
-    font-size: clamp(1.6rem, 2.8vw, 2.2rem);
-    line-height: 1.2;
-    color: var(--ink);
-    letter-spacing: -0.01em;
-  }
-  .about-text h2 {
-    font-size: clamp(1.8rem, 3.2vw, 2.5rem);
-    margin-top: 1.5rem;
-  }
-  .area {
-    font-weight: 600;
+    font-size: 1.1rem;
+    max-width: 58ch;
   }
   @media (max-width: 860px) {
-    .about {
+    .journey-grid {
       grid-template-columns: 1fr;
+    }
+  }
+
+  /* Belief */
+  .belief {
+    padding-block: clamp(4rem, 9vw, 7rem) clamp(2rem, 5vw, 4rem);
+  }
+  .belief-text {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: clamp(2.2rem, 5.4vw, 4.5rem);
+    line-height: 1.04;
+    letter-spacing: -0.045em;
+    max-width: 20ch;
+  }
+  .sw {
+    color: color-mix(in srgb, var(--ink) 16%, transparent);
+    transition: color 350ms var(--ease-out);
+  }
+  .sw.lit {
+    color: var(--ink);
+  }
+  .belief-after {
+    margin-top: 1.75rem;
+    color: var(--ink-2);
+    font-size: 1.2rem;
+    max-width: 52ch;
+  }
+  .fields {
+    margin: 0 clamp(0.5rem, 1.5vw, 1rem);
+  }
+  .fields img {
+    width: 100%;
+    max-width: calc(var(--max) + 4rem);
+    margin-inline: auto;
+    height: clamp(12rem, 26vw, 22rem);
+    object-fit: cover;
+    border-radius: var(--radius-lg);
+  }
+
+  /* Help */
+  .help {
+    padding-block: clamp(4rem, 9vw, 7rem);
+  }
+  .help-head {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 1rem clamp(2rem, 5vw, 5rem);
+    align-items: end;
+    margin-bottom: clamp(2rem, 4vw, 3rem);
+  }
+  .help-grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+  }
+  .help-card {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    min-height: 24rem;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    isolation: isolate;
+    color: #fff;
+    text-decoration: none;
+  }
+  .help-card img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -2;
+    transition: transform 900ms var(--ease-out);
+  }
+  .help-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(180deg, rgb(12 26 17 / 0) 35%, rgb(12 26 17 / 0.85) 100%);
+  }
+  .help-card:hover img {
+    transform: scale(1.06);
+  }
+  .help-body {
+    display: grid;
+    gap: 0.35rem;
+    padding: 1.5rem 4.5rem 1.5rem 1.5rem;
+  }
+  .help-title {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: clamp(1.5rem, 2.4vw, 2rem);
+    letter-spacing: -0.04em;
+    line-height: 1.05;
+  }
+  .help-text {
+    color: rgb(255 255 255 / 0.85);
+  }
+  .help-go {
+    position: absolute;
+    right: 1.25rem;
+    bottom: 1.25rem;
+    width: 2.75rem;
+    height: 2.75rem;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: rgb(255 255 255 / 0.16);
+    border: 1px solid rgb(255 255 255 / 0.3);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition:
+      background-color 300ms,
+      color 300ms,
+      transform 400ms var(--ease-out);
+  }
+  .help-card:hover .help-go {
+    background: var(--leaf);
+    color: var(--ink);
+    transform: rotate(-45deg);
+  }
+  .help-close {
+    margin-top: 2rem;
+    font-family: var(--display);
+    font-weight: 500;
+    font-size: clamp(1.3rem, 2.2vw, 1.75rem);
+    letter-spacing: -0.03em;
+    max-width: 40ch;
+  }
+  @media (max-width: 860px) {
+    .help-head,
+    .help-grid {
+      grid-template-columns: 1fr;
+    }
+    .help-card {
+      min-height: 18rem;
     }
   }
 </style>

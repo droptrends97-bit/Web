@@ -3,8 +3,11 @@ import base64, mimetypes, re, sys
 from pathlib import Path
 
 dist = Path('dist')
-out = Path(sys.argv[1] if len(sys.argv) > 1 else 'preview/darragh-connolly-home.html')
-html = (dist / 'index.html').read_text()
+# usage: bundle.py [page] ; page is 'home' (default) or a route folder such as 'about'
+page = sys.argv[1] if len(sys.argv) > 1 else 'home'
+FILES = {'home': 'darragh-connolly-home.html', 'about': 'darragh-connolly-about.html'}
+out = Path('preview') / FILES.get(page, f'darragh-connolly-{page}.html')
+html = (dist / ('index.html' if page == 'home' else f'{page}/index.html')).read_text()
 
 def data_uri(path: Path) -> str:
     mime = mimetypes.guess_type(path.name)[0] or ('font/woff2' if path.suffix == '.woff2' else 'application/octet-stream')
@@ -45,17 +48,18 @@ html = re.sub(r'src="(/img/[^"]+)"', lambda m: f'src="{img_uri(m.group(1))}"', h
 html = re.sub(r"url\(['\"]?(/img/[^'\")]+)['\"]?\)", lambda m: f"url({img_uri(m.group(1))})", html)
 html = re.sub(r'href="(/favicon\.svg)"', lambda m: f'href="{data_uri(dist / "favicon.svg")}"', html)
 
-# Internal pages become anchors on this single page.
+# Internal links: pages that have their own preview file link to it; the rest jump to the home page sections.
+home = FILES['home']
 anchors = {
-    '/': '#main', '/services/': '#services-title', '/the-year/': '#year-title', '/gallery/': '#services-title',
-    '/about/': '#about-title', '/contact/': '#cta-title',
+    '/': home, '/about/': FILES['about'], '/services/': f'{home}#services-title', '/the-year/': f'{home}#year-title',
+    '/gallery/': f'{home}#gallery-title', '/contact/': f'{home}#cta-title',
 }
 def link(m):
     url = m.group(1)
     if url in anchors:
         return f'href="{anchors[url]}"'
     if url.startswith('/services/'):
-        return 'href="#services-title"'
+        return f'href="{home}#services-title"'
     return m.group(0)
 html = re.sub(r'href="(/[^"]*)"', link, html)
 
