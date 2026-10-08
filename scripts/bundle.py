@@ -74,46 +74,16 @@ def styles(html: str) -> list:
     return re.findall(r'<style>.*?</style>', html, re.S)
 
 
-ROUTER = """<script>
-(() => {
-  // Page switching that works even where the viewer blocks address/hash changes:
-  // every internal link is handled here directly.
-  const pages = document.querySelectorAll('[data-page]');
-  const titles = { home: document.title, about: 'About Darragh | Darragh Connolly Garden Care' };
-  const go = (hash, smooth) => {
-    const id = hash && hash !== 'home' && hash !== 'about' ? hash : '';
-    const current = document.querySelector('[data-page]:not([hidden])');
-    const target = id ? (current && current.querySelector('#' + CSS.escape(id))) || document.getElementById(id) : null;
-    const page = hash === 'about' ? 'about' : target ? target.closest('[data-page]')?.dataset.page || 'home' : 'home';
-    const changed = [...pages].some((p) => p.hidden === (p.dataset.page === page));
-    pages.forEach((p) => (p.hidden = p.dataset.page !== page));
-    document.title = titles[page];
-    document.querySelectorAll('.nav a, .menu-panel a').forEach((a) => {
-      const href = a.getAttribute('href');
-      const on = (href === '#about' && page === 'about') || (href === '#home' && page === 'home');
-      on ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current');
-    });
-    document.querySelector('.menu')?.removeAttribute('open');
-    if (target) {
-      requestAnimationFrame(() => target.scrollIntoView({ behavior: changed || !smooth ? 'auto' : 'smooth', block: 'start' }));
-    } else {
-      window.scrollTo(0, 0);
-    }
-    dispatchEvent(new Event('scroll'));
-    try { history.replaceState(null, '', '#' + (hash || 'home')); } catch (e) {}
-  };
-  document.addEventListener('click', (e) => {
-    const a = e.target.closest && e.target.closest('a[href^="#"]');
-    if (!a) return;
-    const hash = a.getAttribute('href').slice(1);
-    if (hash === 'main') return; // skip link
-    e.preventDefault();
-    go(hash, true);
-  }, true);
-  addEventListener('hashchange', () => go(location.hash.slice(1), false));
-  go(location.hash.slice(1), false);
-})();
-</script>"""
+PAGE_CSS = """<style>
+/* Page switching with plain links and :target, so it works with JavaScript switched off. */
+[data-page='about'] { display: none; }
+body:has([data-page='about']:target, [data-page='about'] :target) [data-page='about'] { display: block; }
+body:has([data-page='about']:target, [data-page='about'] :target) [data-page='home'] { display: none; }
+body:has([data-page='about']:target, [data-page='about'] :target) .nav a[href='#about'] {
+  color: var(--on-evergreen); background: rgb(255 255 255 / 0.12);
+}
+[data-page] { scroll-margin-top: 0; }
+</style>"""
 
 
 def build_site() -> str:
@@ -122,15 +92,22 @@ def build_site() -> str:
         '/': '#home', '/about/': '#about', '/services/': '#services-title', '/the-year/': '#year-title',
         '/gallery/': '#gallery-title', '/contact/': '#cta-title',
     }
-    combined = ('<div data-page="home">' + main_inner(home) + '</div>'
-                + '<div data-page="about" hidden>' + main_inner(about) + '</div>')
-    html = home.replace(main_inner(home), combined, 1)
+    home_main, about_main = main_inner(home), main_inner(about)
+    # IDs used on both pages: give the about copies their own names so its buttons stay on the about page.
+    home_ids = set(re.findall(r' id="([^"]+)"', home_main))
+    for dup in set(re.findall(r' id="([^"]+)"', about_main)) & home_ids:
+        about_main = about_main.replace(f' id="{dup}"', f' id="about-{dup}"')
+        about_main = about_main.replace(f'aria-labelledby="{dup}"', f'aria-labelledby="about-{dup}"')
+        about_main = about_main.replace(f'href="/contact/"', 'href="#about-cta-title"') if dup == 'cta-title' else about_main
+    combined = ('<div id="home" data-page="home">' + home_main + '</div>'
+                + '<div id="about" data-page="about">' + about_main + '</div>')
+    html = home.replace(home_main, combined, 1)
     # Bring across the about page's own styles and scripts that the home page does not already have.
     home_styles, home_scripts = set(styles(home)), set(module_scripts(home))
     extra = [s for s in styles(about) if s not in home_styles]
-    html = html.replace('</head>', ''.join(extra) + '</head>', 1)
+    html = html.replace('</head>', ''.join(extra) + PAGE_CSS + '</head>', 1)
     extra_js = [s for s in module_scripts(about) if s not in home_scripts]
-    html = html.replace('</body>', ''.join(extra_js) + ROUTER + '</body>', 1)
+    html = html.replace('</body>', ''.join(extra_js) + '</body>', 1)
     return finish(html, links, '')
 
 

@@ -234,6 +234,43 @@ const plants: Plant[] = [
     }
   }
 
+  /* Without JavaScript (e.g. iPad file previews): show the trees, and where the
+     browser supports scroll-driven animation, swap stages by scroll position. */
+  :global(html:not(.js)) .plant[data-stage='0'] {
+    opacity: 0.85;
+    transform: none;
+  }
+  @supports (animation-timeline: scroll()) {
+    :global(html:not(.js)) .plant {
+      animation-timeline: scroll(root);
+      animation-fill-mode: both;
+      animation-timing-function: linear;
+      animation-duration: auto;
+    }
+    :global(html:not(.js)) .plant[data-stage='0'] {
+      animation-name: stage-0;
+    }
+    :global(html:not(.js)) .plant[data-stage='1'] {
+      animation-name: stage-1;
+    }
+    :global(html:not(.js)) .plant[data-stage='2'] {
+      animation-name: stage-2;
+    }
+  }
+  @keyframes stage-0 {
+    0%, 26% { opacity: 0.85; transform: none; }
+    32%, 100% { opacity: 0; transform: translateY(40%) scale(0.2); }
+  }
+  @keyframes stage-1 {
+    0%, 26% { opacity: 0; transform: translateY(40%) scale(0.2); }
+    34%, 58% { opacity: 0.85; transform: none; }
+    66%, 100% { opacity: 0; transform: translateY(40%) scale(0.2); }
+  }
+  @keyframes stage-2 {
+    0%, 60% { opacity: 0; transform: translateY(40%) scale(0.2); }
+    68%, 100% { opacity: 0.85; transform: none; }
+  }
+
   @media (max-width: 760px) {
     .garden {
       --scale: 0.5;
