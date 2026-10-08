@@ -20,7 +20,7 @@ export const serviceMenu = [
   { href: '/services/garden-health/', label: 'Garden Health' },
   { href: '/services/garden-care/', label: 'Maintenance for Wellness' },
   { href: '/services/hedging/', label: 'Hedging' },
-  { href: '/services/', label: 'Passionate About Pots' },
+  { href: '/services/passionate-about-pots/', label: 'Passionate About Pots' },
   { href: '/services/', label: 'Bulb Planting' },
   { href: '/services/', label: 'Wellness Planting' },
 ];

@@ -1,0 +1,272 @@
+---
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import CallToAction from '../../components/CallToAction.astro';
+import { contact } from '../../data/site';
+
+const torc = ['Dace', 'Asa', 'Box', 'Nia', 'Abria', 'Vali', 'Caradoc', 'Olin', 'Bed Pebble', 'Medea', 'Trough', 'Ove', 'Onara', 'Bench Pebble', 'Bow', 'Kari', 'Cara', 'Abbas', 'Jena'].map((name) => ({
+  name,
+  src: `/img/torc-${name.toLowerCase().replace(' ', '-')}.jpg`,
+}));
+
+const colours = [
+  ['Bone White', '#e9e4d8'], ['Black', '#1d1d1b'], ['Carbon', '#3a3b3c'], ['Light Grey', '#c4c6c3'],
+  ['Grey', '#8b8e8c'], ['Bronze', '#7a5a35'], ['Bronze Patina', '#6c6a45'], ['Copper', '#b0603a'],
+  ['Copper Patina', '#5f8a7a'], ['Rust', '#9c4a25'], ['Ox', '#6e2f22'], ['Sage', '#9aa78c'], ['Taupe', '#9b8b7a'],
+];
+
+const ndt = [
+  { src: '/img/ndt-1.jpg', alt: 'Stacked glazed NDT pots with a weathered finish.' },
+  { src: '/img/ndt-2.jpg', alt: 'Pink hydrangeas in red pots either side of a Georgian front door.' },
+  { src: '/img/ndt-3.jpg', alt: 'Pink hydrangeas and ferns in a tall grey planter.' },
+  { src: '/img/ndt-4.jpg', alt: 'Large terracotta pots with multi-stem trees.' },
+  { src: '/img/ndt-5.jpg', alt: 'Terracotta pots on display at Windyridge Garden Centre.' },
+  { src: '/img/ndt-6.jpg', alt: 'Pink hydrangea in a black glazed pot at a porch.' },
+];
+
+const steps = [
+  { title: 'Get in touch', text: 'Call, email or use the contact form.' },
+  { title: 'We visit', text: 'By appointment, we agree on the pots and planting for your space.' },
+  { title: 'We deliver', text: 'We order the pots and bring them to you.' },
+  { title: 'We plant', text: 'Once the locations are finalised, we plant them with structural and seasonal planting.' },
+];
+
+const seasons = [
+  { when: 'All year', what: 'Structural box' },
+  { when: 'Summer', what: 'A mix of geraniums' },
+  { when: 'Christmas', what: 'Red cyclamen' },
+];
+---
+
+<Base
+  garden
+  title="Passionate About Pots"
+  description="Statement pots from NDT Potteries and Torc Pots, chosen with you, delivered and planted seasonally by Darragh Connolly Garden Care in Dublin and Wicklow."
+>
+  <section class="hero" aria-labelledby="pap-title">
+    <div class="hero-card">
+      <img class="hero-img" src="/img/pap-hero.jpg" alt="A large pale Torc pot planted with grasses on a terrace beside pink roses and a bench at sunset." />
+      <div class="hero-copy">
+        <a class="crumb" href="/services/">Services</a>
+        <h1 id="pap-title" data-type data-speed="55">Passionate about pots.</h1>
+        <p class="hero-lede">Distinctive, durable pots that are built to last, chosen with you and planted for every season.</p>
+        <div class="hero-actions">
+          <a class="btn btn-leaf" href="#pap-torc">See the Torc range <Icon name="arrow" /></a>
+          <a class="btn btn-glass" href={contact.phoneHref}><Icon name="phone" /> {contact.phone}</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap intro" aria-labelledby="pap-intro">
+    <h2 id="pap-intro" class="intro-big" data-reveal>A selection of pots is always an invaluable investment for your garden.</h2>
+    <div class="intro-body" data-reveal>
+      <p>
+        At the end of a new design and build project, or when a garden is mature and established, the right pots finish
+        the space. Ours are distinctive and durable, suitable for gardens, outdoor areas, architectural and commercial
+        spaces.
+      </p>
+      <p>We recommend pots from <strong>NDT Potteries</strong> and <strong>Torc Pots</strong>, with whom we have an established relationship.</p>
+    </div>
+  </section>
+
+  <!-- NDT -->
+  <section class="ndt" aria-labelledby="ndt-title">
+    <div class="wrap ndt-grid">
+      <div class="ndt-copy">
+        <span class="maker">From the Netherlands</span>
+        <h2 id="ndt-title" data-type>NDT Potteries</h2>
+        <p data-reveal>Stocked at Windyridge Garden Centre in Killiney. The process is easy:</p>
+        <ol class="ndt-steps">
+          <li data-pop><span>1</span>We meet at Windyridge Garden Centre</li>
+          <li data-pop style="--d:1"><span>2</span>You pick out some pots</li>
+          <li data-pop style="--d:2"><span>3</span>We organise delivery and planting</li>
+        </ol>
+        <p class="enjoy" data-reveal>All you need to do is enjoy them.</p>
+      </div>
+      <ul class="ndt-photos">
+        {ndt.map((p, i) => <li data-pop style={`--d:${i}`}><img src={p.src} alt={p.alt} loading="lazy" /></li>)}
+      </ul>
+    </div>
+  </section>
+
+  <!-- Torc -->
+  <section class="wrap torc" id="pap-torc" aria-labelledby="torc-title">
+    <div class="torc-head">
+      <div>
+        <span class="maker">Hand-made in Jersey</span>
+        <h2 id="torc-title" data-type>Torc Pots</h2>
+      </div>
+      <div class="torc-intro" data-reveal>
+        <p>
+          Organic, contemporary designs shaped by hand, layer by layer, with finishes that develop a unique weathered
+          patina over time. Because of this, no two pots are ever quite the same.
+        </p>
+      </div>
+    </div>
+    <ul class="torc-grid">
+      {
+        torc.map((t, i) => (
+          <li data-pop style={`--d:${i % 4}`}>
+            <figure>
+              <img src={t.src} alt={`${t.name} Torc Pot.`} loading="lazy" />
+              <figcaption>
+                <span>{t.name}</span>
+                <small>Torc Pot</small>
+              </figcaption>
+            </figure>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <!-- Colours -->
+  <section class="wrap colours" aria-labelledby="col-title">
+    <div class="col-card" data-reveal>
+      <div class="col-copy">
+        <h2 id="col-title">Made in the colour you choose.</h2>
+        <p>Statement pots can be made in any of these finishes. We'll bring the full colour chart to your consultation.</p>
+      </div>
+      <ul class="swatches">
+        {
+          colours.map(([name, hex], i) => (
+            <li data-pop style={`--d:${i % 6}`}>
+              <span class="swatch" style={`background:${hex}`} />
+              {name}
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- Process -->
+  <section class="wrap process" aria-labelledby="proc-title">
+    <h2 id="proc-title" data-type>The process</h2>
+    <ol class="steps">
+      {
+        steps.map((s, i) => (
+          <li data-pop style={`--d:${i}`}>
+            <span class="num">{i + 1}</span>
+            <h3>{s.title}</h3>
+            <p>{s.text}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+
+  <!-- Seasons + tips -->
+  <section class="wrap tips" aria-labelledby="tips-title">
+    <div class="tips-grid">
+      <div class="season-card" data-reveal>
+        <h2 id="tips-title">Colour through the seasons</h2>
+        <ul>
+          {seasons.map((s) => <li><strong>{s.when}</strong><span>{s.what}</span></li>)}
+        </ul>
+        <p>Give us the go-ahead and we'll replant seamlessly through the year. All you do is water them. Win win.</p>
+      </div>
+      <div class="tip-card" data-pop>
+        <span class="tip-badge">Darragh's tip</span>
+        <p class="tip-big">Go for a few bigger pots rather than lots of small ones.</p>
+        <p>They add height to the garden, and bigger pots don't dry out as much.</p>
+      </div>
+    </div>
+  </section>
+
+  <CallToAction
+    heading="Let's pick your pots."
+    text="Call or email Darragh to arrange a visit, or meet at Windyridge Garden Centre to choose your NDT pots together."
+  />
+</Base>
+
+<style>
+  .hero { padding: 0.75rem clamp(0.5rem, 1.5vw, 1rem) 0; }
+  .hero-card { position: relative; max-width: calc(var(--max) + 4rem); margin-inline: auto; border-radius: var(--radius-lg); overflow: hidden; isolation: isolate; min-height: clamp(28rem, 44vw, 38rem); display: flex; align-items: flex-end; color: #f4f6ee; }
+  .hero-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 30% 50%; z-index: -2; animation: settle-in 14s var(--ease-out) both; }
+  @keyframes settle-in { from { transform: scale(1.12); } }
+  .hero-card::before { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgb(12 26 17 / 0) 25%, rgb(12 26 17 / 0.5) 55%, rgb(12 26 17 / 0.88) 100%); }
+  .hero-copy { padding: clamp(1.5rem, 5vw, 4rem); display: grid; gap: 1.25rem; justify-items: start; max-width: 56rem; }
+  .crumb { font-weight: 600; font-size: 0.95rem; color: #f4f6ee; text-decoration: none; padding: 0.35rem 0.8rem; border-radius: 999px; background: rgb(255 255 255 / 0.14); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+  .hero h1 { font-size: clamp(2.9rem, 7vw, 6rem); line-height: 0.96; max-width: 11ch; }
+  .hero-lede { font-size: clamp(1.15rem, 1.8vw, 1.4rem); color: #dfe5d8; max-width: 42ch; }
+  .js .hero-lede, .js .hero-actions { animation: rise-in 900ms var(--ease-out) both; }
+  .js .hero-lede { animation-delay: 1500ms; }
+  .js .hero-actions { animation-delay: 1800ms; }
+  @keyframes rise-in { from { opacity: 0; transform: translateY(16px); filter: blur(6px); } }
+  .hero-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+  .btn-glass { color: #f4f6ee; background: rgb(255 255 255 / 0.12); border: 1px solid rgb(255 255 255 / 0.3); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+
+  .intro { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 1.5rem clamp(2rem, 6vw, 6rem); padding-block: clamp(4rem, 9vw, 7rem) clamp(2rem, 5vw, 3rem); align-items: end; }
+  .intro-big { font-weight: 500; font-size: clamp(1.9rem, 3.6vw, 3rem); line-height: 1.1; letter-spacing: -0.045em; }
+  .intro-body { display: grid; gap: 1rem; color: var(--ink-2); font-size: 1.1rem; }
+  .intro-body strong { color: var(--ink); }
+
+  .maker { display: inline-block; font-size: 0.85rem; font-weight: 650; padding: 0.3rem 0.75rem; border-radius: 999px; background: #dfe8d3; color: var(--leaf-ink); margin-bottom: 0.75rem; }
+
+  .ndt { padding-block: clamp(3rem, 7vw, 5rem); }
+  .ndt-grid { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: 2rem clamp(2rem, 6vw, 5rem); align-items: center; }
+  .ndt-copy { display: grid; gap: 1rem; justify-items: start; }
+  .ndt-copy > p { color: var(--ink-2); font-size: 1.1rem; }
+  .ndt-steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.6rem; width: 100%; }
+  .ndt-steps li { display: flex; gap: 0.9rem; align-items: center; padding: 0.9rem 1rem; background: var(--card); border: 1px solid var(--border); border-radius: 16px; font-weight: 550; }
+  .ndt-steps span { flex: none; width: 2rem; height: 2rem; border-radius: 50%; display: grid; place-items: center; background: var(--evergreen); color: var(--leaf); font-weight: 650; }
+  .enjoy { font-family: var(--display); font-weight: 600; font-size: clamp(1.4rem, 2.4vw, 1.9rem) !important; letter-spacing: -0.04em; color: var(--ink) !important; }
+  .ndt-photos { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.6rem; }
+  .ndt-photos li { border-radius: 18px; overflow: hidden; aspect-ratio: 3 / 4; }
+  .ndt-photos li:nth-child(even) { transform: translateY(1.5rem); }
+  .ndt-photos img { width: 100%; height: 100%; object-fit: cover; transition: transform 800ms var(--ease-out); }
+  .ndt-photos li:hover img { transform: scale(1.06); }
+
+  .torc { padding-block: clamp(4rem, 8vw, 6rem) clamp(2rem, 4vw, 3rem); scroll-margin-top: 6rem; }
+  .torc-head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 1rem clamp(2rem, 5vw, 5rem); align-items: end; margin-bottom: clamp(2rem, 4vw, 3rem); }
+  .torc-intro p { color: var(--ink-2); font-size: 1.1rem; }
+  .torc-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; }
+  .torc-grid figure { margin: 0; position: relative; border-radius: 20px; overflow: hidden; aspect-ratio: 1; }
+  .torc-grid img { width: 100%; height: 100%; object-fit: cover; transition: transform 900ms var(--ease-out); }
+  .torc-grid figure:hover img { transform: scale(1.07); }
+  .torc-grid figcaption { position: absolute; left: 0.75rem; bottom: 0.75rem; padding: 0.5rem 0.85rem; border-radius: 14px; background: rgb(255 255 255 / 0.88); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); display: grid; line-height: 1.15; }
+  .torc-grid figcaption span { font-weight: 650; }
+  .torc-grid figcaption small { font-size: 0.78rem; color: var(--ink-2); }
+
+  .colours { padding-block: clamp(2rem, 5vw, 4rem); }
+  .col-card { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: 2rem clamp(2rem, 5vw, 5rem); align-items: center; background: var(--evergreen); color: var(--on-evergreen); border-radius: var(--radius-lg); padding: clamp(1.75rem, 4vw, 3.5rem); }
+  .col-copy h2 { font-size: clamp(2rem, 4vw, 3.25rem); margin-bottom: 1rem; }
+  .col-copy p { color: var(--on-evergreen-2); font-size: 1.1rem; }
+  .swatches { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(8.5rem, 1fr)); gap: 0.6rem; }
+  .swatches li { display: flex; align-items: center; gap: 0.6rem; padding: 0.5rem 0.75rem 0.5rem 0.5rem; border-radius: 999px; background: rgb(255 255 255 / 0.07); border: 1px solid rgb(255 255 255 / 0.12); font-size: 0.92rem; font-weight: 550; transition: transform 300ms var(--ease-out); }
+  .swatches li:hover { transform: scale(1.05); }
+  .swatch { flex: none; width: 1.75rem; height: 1.75rem; border-radius: 50%; box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.25); }
+
+  .process { padding-block: clamp(3rem, 6vw, 5rem) clamp(1rem, 3vw, 2rem); }
+  .process h2 { margin-bottom: clamp(1.5rem, 3vw, 2.5rem); }
+  .steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; }
+  .steps li { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem; display: grid; gap: 0.5rem; align-content: start; box-shadow: var(--shadow); }
+  .steps .num { width: 2.75rem; height: 2.75rem; border-radius: 50%; display: grid; place-items: center; background: var(--leaf); color: var(--evergreen); font-weight: 700; margin-bottom: 0.5rem; }
+  .steps h3 { font-size: clamp(1.3rem, 2vw, 1.6rem); }
+  .steps p { color: var(--ink-2); }
+
+  .tips { padding-block: clamp(2rem, 4vw, 3rem); }
+  .tips-grid { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 1rem; }
+  .season-card { background: #dfe8d3; border-radius: var(--radius-lg); padding: clamp(1.5rem, 3vw, 2.5rem); display: grid; gap: 1rem; }
+  .season-card h2 { font-size: clamp(1.7rem, 3vw, 2.4rem); }
+  .season-card ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.5rem; }
+  .season-card li { display: flex; justify-content: space-between; gap: 1rem; padding: 0.8rem 1rem; background: var(--card); border-radius: 14px; }
+  .season-card li span { color: var(--ink-2); }
+  .season-card > p { color: var(--ink-2); }
+  .tip-card { background: var(--evergreen); color: var(--on-evergreen); border-radius: var(--radius-lg); padding: clamp(1.5rem, 3vw, 2.5rem); display: grid; gap: 1rem; align-content: center; rotate: -1.5deg; }
+  .tip-badge { justify-self: start; font-size: 0.85rem; font-weight: 650; padding: 0.3rem 0.75rem; border-radius: 999px; background: var(--leaf); color: var(--evergreen); }
+  .tip-big { font-family: var(--display); font-weight: 600; font-size: clamp(1.5rem, 2.6vw, 2.1rem); line-height: 1.1; letter-spacing: -0.04em; }
+  .tip-card p:last-child { color: var(--on-evergreen-2); }
+
+  @media (max-width: 960px) {
+    .torc-grid { grid-template-columns: repeat(3, 1fr); }
+    .steps { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 760px) {
+    .intro, .ndt-grid, .torc-head, .col-card, .tips-grid { grid-template-columns: 1fr; }
+    .torc-grid { grid-template-columns: 1fr 1fr; }
+    .tip-card { rotate: 0deg; }
+  }
+</style>
