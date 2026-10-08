@@ -1,0 +1,232 @@
+---
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import CallToAction from '../../components/CallToAction.astro';
+import { contact } from '../../data/site';
+
+const benefits = [
+  { title: 'Privacy', text: 'A natural barrier that shields your property from the view of passers-by.', icon: 'M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12zM4 4l16 16' },
+  { title: 'Windbreak', text: 'Reduces wind speeds and helps protect your property from wind damage.', icon: 'M3 8h11a3 3 0 1 0-3-3M3 12h15a3 3 0 1 1-3 3M3 16h7' },
+  { title: 'Noise reduction', text: 'Absorbs noise from nearby roads, for a quieter home and garden.', icon: 'M4 9v6h4l5 4V5L8 9H4zM17 9a4 4 0 0 1 0 6M20 6a8 8 0 0 1 0 12' },
+  { title: 'Wildlife habitat', text: 'Food, shelter and nesting for birds, insects and small mammals.', icon: 'M16 7h.01M3.5 18H12a6 6 0 0 0 6-6V6.5A3.5 3.5 0 0 0 11 6.5V9L3.5 18zM18 7l3 1-3 1' },
+  { title: 'Aesthetics', text: 'A lush, green backdrop that lifts the whole garden.', icon: 'M12 21V11M12 11c0-4 3-7 7-7 0 4-3 7-7 7zM12 14c0-3-2.5-5.5-6-5.5 0 3 2.5 5.5 6 5.5z' },
+  { title: 'Property value', text: 'Better curb appeal and a desirable feature for buyers.', icon: 'M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z' },
+];
+
+const plants = [
+  { name: 'Beech', latin: 'Fagus sylvatica', type: 'Deciduous', text: 'Often used in formal gardens for its neat appearance and attractive foliage.', image: '/img/hg-8.jpg' },
+  { name: 'Yew', latin: 'Taxus baccata', type: 'Evergreen', text: 'Dense foliage that shapes into formal hedges and regrows from old wood. From 30cm to 3m and higher.', image: '/img/hg-17.jpg' },
+  { name: 'Privet', latin: 'Ligustrum spp.', type: 'Evergreen', text: 'Hardy and fast-growing, and tolerates pruning well.', image: '/img/hg-24.jpg' },
+  { name: 'Laurel', latin: "Prunus laurocerasus 'Genolia'", type: 'Evergreen', text: 'Fast growth, attractive foliage and year-round privacy.', image: '/img/hg-12.jpg' },
+  { name: 'Hornbeam', latin: 'Carpinus betulus', type: 'Deciduous', text: 'Fast-growing, keeping a neat, formal look with regular pruning.', image: '/img/hg-5.jpg' },
+  { name: 'Box', latin: 'Buxus sempervirens', type: 'Evergreen', text: 'Slow-growing and compact, ideal for low hedges and topiary.', image: '/img/hg-10.jpg' },
+];
+
+const pleached = ['Hornbeam', 'Evergreen oaks', 'Photinia', 'Elaeagnus', 'Holly'];
+
+const gallery = [3, 4, 7, 13, 14, 16, 18, 19, 21, 23, 26, 27, 11, 1].map((n) => ({
+  src: `/img/hg-${n}.jpg`,
+  alt: 'A hedge planted and maintained by Darragh Connolly Garden Care.',
+}));
+---
+
+<Base
+  garden
+  title="Hedging"
+  description="Hedging design and installation across Dublin and Wicklow: beech, yew, laurel, hornbeam, box and pleached trees, planted to the height you need."
+>
+  <section class="hero" aria-labelledby="hg-title">
+    <div class="hero-card">
+      <img class="hero-img" src="/img/hedge-hero.jpg" alt="A row of pleached trees forming a green screen above a clipped box hedge and red-brick wall." />
+      <div class="hero-copy">
+        <a class="crumb" href="/services/">Services</a>
+        <h1 id="hg-title" data-type data-speed="50">Hedging, designed and planted.</h1>
+        <p class="hero-lede">Define your boundaries, gain privacy and shelter, and give your garden a living frame.</p>
+        <div class="hero-actions">
+          <a class="btn btn-leaf" href="#hg-plants">Choose your hedge <Icon name="arrow" /></a>
+          <a class="btn btn-glass" href={contact.phoneHref}><Icon name="phone" /> {contact.phone}</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap intro" aria-labelledby="hg-intro">
+    <h2 id="hg-intro" class="intro-big" data-reveal>Formal or informal, clipped or colourful.</h2>
+    <p class="intro-body" data-reveal>
+      Hedges are usually planted to define property boundaries and provide privacy, or to give shelter from prevailing
+      winds. They can be formal, such as clipped box, yew and beech, or informal with colourful foliage or flowers, like
+      viburnum or hawthorn.
+    </p>
+  </section>
+
+  <section class="wrap benefits" aria-labelledby="ben-title">
+    <h2 id="ben-title" data-type>What a mature hedge gives you</h2>
+    <ul class="ben-grid">
+      {
+        benefits.map((b, i) => (
+          <li data-pop style={`--d:${i}`}>
+            <span class="ben-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d={b.icon} /></svg></span>
+            <h3>{b.title}</h3>
+            <p>{b.text}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <section class="wrap plants" id="hg-plants" aria-labelledby="plants-title">
+    <div class="section-head">
+      <h2 id="plants-title" data-type>Hedges we plant regularly</h2>
+      <p class="lede">These are just a few options. The right plant depends on your needs and growing conditions.</p>
+    </div>
+    <ul class="plant-grid">
+      {
+        plants.map((p, i) => (
+          <li class="plant" data-pop style={`--d:${i}`}>
+            <img src={p.image} alt={`${p.name} hedge.`} loading="lazy" />
+            <div class="plant-body">
+              <span class="tag">{p.type}</span>
+              <h3>{p.name}</h3>
+              <p class="latin">{p.latin}</p>
+              <p>{p.text}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <section class="wrap height" aria-labelledby="height-title">
+    <div class="height-card" data-reveal>
+      <div class="bars" aria-hidden="true">
+        {[22, 40, 62, 88].map((h, i) => <span style={`--h:${h}%; --i:${i}`} />)}
+      </div>
+      <div>
+        <h2 id="height-title">Planted to the height you need.</h2>
+        <p>
+          All hedges can be planted small, but we'd recommend planting to the height required, because it takes time to
+          grow. Once it's in at the right height, it's just a case of maintaining it.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="pleach" aria-labelledby="pleach-title">
+    <div class="wrap pleach-grid">
+      <figure class="pleach-photo" data-pop>
+        <img src="/img/hg-3.jpg" alt="Pleached trees forming an elevated green wall above a stone wall." loading="lazy" />
+      </figure>
+      <div class="pleach-copy">
+        <h2 id="pleach-title" data-type>Pleached hedges: a green wall in the air</h2>
+        <p data-reveal>
+          Pleached trees are trained to form a screen of branches and foliage on a single, straight stem. Planted in rows at
+          set distances, they create an elevated green wall, a great natural alternative to high fencing.
+        </p>
+        <ul class="pleach-list">
+          {pleached.map((p, i) => <li data-pop style={`--d:${i}`}>{p}</li>)}
+        </ul>
+        <p class="small" data-reveal>Each has its own character. The choice depends on what you prefer; they all do a great job.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="gallery" aria-labelledby="hg-gallery">
+    <div class="wrap"><h2 id="hg-gallery" data-type>Hedges we've planted</h2></div>
+    <div class="marquee hg-rail" style="--speed: 70s; --gap: 1rem">
+      {
+        [0, 1].map((k) => (
+          <ul class="marquee-track" aria-hidden={k > 0 ? 'true' : undefined}>
+            {gallery.map((g) => <li><img src={g.src} alt={k === 0 ? g.alt : ''} loading="lazy" /></li>)}
+          </ul>
+        ))
+      }
+    </div>
+  </section>
+
+  <CallToAction
+    heading="Let's start creating your sanctuary."
+    text="Book a free discovery call with Darragh to talk about the right hedge for your garden."
+  />
+</Base>
+
+<style>
+  .hero { padding: 0.75rem clamp(0.5rem, 1.5vw, 1rem) 0; }
+  .hero-card {
+    position: relative; max-width: calc(var(--max) + 4rem); margin-inline: auto; border-radius: var(--radius-lg);
+    overflow: hidden; isolation: isolate; min-height: clamp(28rem, 44vw, 38rem); display: flex; align-items: flex-end; color: #f4f6ee;
+  }
+  .hero-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 40%; z-index: -2; animation: settle-in 14s var(--ease-out) both; }
+  @keyframes settle-in { from { transform: scale(1.12); } }
+  .hero-card::before { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgb(12 26 17 / 0) 25%, rgb(12 26 17 / 0.5) 55%, rgb(12 26 17 / 0.88) 100%); }
+  .hero-copy { padding: clamp(1.5rem, 5vw, 4rem); display: grid; gap: 1.25rem; justify-items: start; max-width: 56rem; }
+  .crumb { font-weight: 600; font-size: 0.95rem; color: #f4f6ee; text-decoration: none; padding: 0.35rem 0.8rem; border-radius: 999px; background: rgb(255 255 255 / 0.14); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+  .hero h1 { font-size: clamp(2.9rem, 7vw, 6rem); line-height: 0.96; max-width: 12ch; }
+  .hero-lede { font-size: clamp(1.15rem, 1.8vw, 1.4rem); color: #dfe5d8; max-width: 42ch; }
+  .js .hero-lede, .js .hero-actions { animation: rise-in 900ms var(--ease-out) both; }
+  .js .hero-lede { animation-delay: 1600ms; }
+  .js .hero-actions { animation-delay: 1900ms; }
+  @keyframes rise-in { from { opacity: 0; transform: translateY(16px); filter: blur(6px); } }
+  .hero-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+  .btn-glass { color: #f4f6ee; background: rgb(255 255 255 / 0.12); border: 1px solid rgb(255 255 255 / 0.3); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+
+  .intro { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 1.5rem clamp(2rem, 6vw, 6rem); padding-block: clamp(4rem, 9vw, 7rem) clamp(2rem, 5vw, 3rem); align-items: end; }
+  .intro-big { font-weight: 500; font-size: clamp(1.9rem, 3.8vw, 3.2rem); line-height: 1.1; letter-spacing: -0.045em; }
+  .intro-body { color: var(--ink-2); font-size: 1.15rem; }
+
+  .benefits { padding-block: clamp(2rem, 5vw, 4rem); }
+  .benefits h2 { margin-bottom: clamp(1.5rem, 3vw, 2.5rem); }
+  .ben-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+  .ben-grid li { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem; display: grid; gap: 0.5rem; align-content: start; box-shadow: var(--shadow); transition: transform 400ms var(--ease-out); }
+  .ben-grid li:hover { transform: translateY(-6px); }
+  .ben-icon { width: 3.25rem; height: 3.25rem; border-radius: 16px; display: grid; place-items: center; background: var(--evergreen); color: var(--leaf); margin-bottom: 0.5rem; }
+  .ben-icon svg { width: 1.6rem; height: 1.6rem; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .ben-grid h3 { font-size: clamp(1.3rem, 2vw, 1.6rem); }
+  .ben-grid p { color: var(--ink-2); }
+
+  .plants { padding-block: clamp(3rem, 7vw, 5rem); scroll-margin-top: 6rem; }
+  .section-head { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 1rem clamp(2rem, 5vw, 5rem); align-items: end; margin-bottom: clamp(2rem, 4vw, 3rem); }
+  .plant-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+  .plant { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow); display: grid; grid-template-rows: auto 1fr; }
+  .plant img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; transition: transform 800ms var(--ease-out); }
+  .plant:hover img { transform: scale(1.05); }
+  .plant-body { padding: 1.25rem 1.4rem 1.5rem; display: grid; gap: 0.35rem; align-content: start; position: relative; background: var(--card); }
+  .tag { justify-self: start; font-size: 0.8rem; font-weight: 650; padding: 0.25rem 0.65rem; border-radius: 999px; background: #dfe8d3; color: var(--leaf-ink); margin-bottom: 0.25rem; }
+  .plant h3 { font-size: clamp(1.5rem, 2.4vw, 1.9rem); }
+  .latin { font-style: italic; color: var(--ink-2); font-size: 0.95rem; }
+  .plant-body p:last-child { color: var(--ink-2); }
+
+  .height { padding-block: clamp(1rem, 3vw, 2rem); }
+  .height-card { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: 2rem clamp(2rem, 5vw, 5rem); align-items: center; background: var(--evergreen); color: var(--on-evergreen); border-radius: var(--radius-lg); padding: clamp(1.75rem, 4vw, 3.5rem); }
+  .height-card h2 { font-size: clamp(2rem, 4vw, 3.25rem); margin-bottom: 1rem; }
+  .height-card p { color: var(--on-evergreen-2); font-size: 1.1rem; max-width: 46ch; }
+  .bars { display: flex; align-items: flex-end; gap: 0.75rem; height: 12rem; border-bottom: 2px solid rgb(255 255 255 / 0.2); }
+  .bars span { flex: 1; height: var(--h); border-radius: 14px 14px 4px 4px; background: linear-gradient(var(--leaf), #4e8a4b); transform-origin: bottom; }
+  .js .height-card .bars span { transform: scaleY(0); transition: transform 1100ms cubic-bezier(0.34, 1.4, 0.64, 1); transition-delay: calc(300ms + var(--i) * 180ms); }
+  .js .height-card.in .bars span { transform: none; }
+
+  .pleach { padding-block: clamp(4rem, 8vw, 6rem); }
+  .pleach-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 2rem clamp(2rem, 6vw, 6rem); align-items: center; }
+  .pleach-photo { margin: 0; }
+  .pleach-photo img { width: 100%; aspect-ratio: 4 / 3.4; object-fit: cover; border-radius: var(--radius-lg); box-shadow: var(--shadow); }
+  .pleach-copy { display: grid; gap: 1.25rem; }
+  .pleach-copy h2 { max-width: 14ch; }
+  .pleach-copy p { color: var(--ink-2); font-size: 1.1rem; max-width: 52ch; }
+  .pleach-list { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .pleach-list li { padding: 0.65rem 1.1rem; border-radius: 999px; background: var(--evergreen); color: var(--on-evergreen); font-weight: 600; }
+  .small { font-size: 1rem !important; }
+
+  .gallery { padding-bottom: clamp(1rem, 3vw, 2rem); }
+  .gallery h2 { margin-bottom: clamp(1.5rem, 3vw, 2.5rem); }
+  .hg-rail .marquee-track { list-style: none; margin: 0; }
+  .hg-rail li { flex: none; width: clamp(15rem, 25vw, 22rem); }
+  .hg-rail li:nth-child(even) { margin-top: 2rem; }
+  .hg-rail img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; border-radius: 22px; }
+
+  @media (max-width: 960px) {
+    .ben-grid, .plant-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 760px) {
+    .intro, .section-head, .height-card, .pleach-grid, .ben-grid, .plant-grid { grid-template-columns: 1fr; }
+    .bars { height: 8rem; }
+  }
+</style>
