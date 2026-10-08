@@ -1,0 +1,258 @@
+---
+// A decorative garden that grows along the screen edges as the visitor scrolls:
+// trees near the top, then bushes, then flowers and ornaments. Purely decorative.
+
+type Plant = { stage: 0 | 1 | 2; side: 'left' | 'right'; x: string; h: string; vb: string; body: string };
+
+const tree = {
+  lollipop: {
+    vb: '0 0 100 230',
+    body: `<rect x="46" y="85" width="8" height="145" rx="3" fill="var(--bark)"/>
+      <circle cx="50" cy="58" r="46" fill="var(--g1)"/>
+      <circle cx="36" cy="42" r="20" fill="var(--g2)" opacity=".55"/>`,
+  },
+  conifer: {
+    vb: '0 0 100 270',
+    body: `<rect x="45" y="225" width="10" height="45" rx="3" fill="var(--bark)"/>
+      <path d="M50 0 92 118H8z" fill="var(--g1)"/>
+      <path d="M50 58 97 182H3z" fill="var(--g1)"/>
+      <path d="M50 116 100 236H0z" fill="var(--g2)"/>`,
+  },
+  broadleaf: {
+    vb: '0 0 170 250',
+    body: `<path d="M78 250V150l-22-28 6-4 20 22V96h6v52l22-26 5 5-27 31v92z" fill="var(--bark)"/>
+      <circle cx="85" cy="88" r="62" fill="var(--g2)"/>
+      <circle cx="42" cy="118" r="40" fill="var(--g1)"/>
+      <circle cx="128" cy="112" r="42" fill="var(--g1)"/>
+      <circle cx="98" cy="58" r="26" fill="var(--g3)" opacity=".35"/>`,
+  },
+};
+
+const bush = {
+  cloud: {
+    vb: '0 0 190 120',
+    body: `<circle cx="42" cy="82" r="38" fill="var(--g2)"/>
+      <circle cx="96" cy="60" r="56" fill="var(--g1)"/>
+      <circle cx="150" cy="84" r="36" fill="var(--g2)"/>
+      <rect x="10" y="96" width="170" height="24" rx="12" fill="var(--g1)"/>`,
+  },
+  hedge: {
+    vb: '0 0 210 110',
+    body: `<rect x="0" y="12" width="210" height="98" rx="24" fill="var(--g1)"/>
+      <rect x="0" y="12" width="210" height="34" rx="17" fill="var(--g2)" opacity=".7"/>`,
+  },
+  balls: {
+    vb: '0 0 170 100',
+    body: `<circle cx="36" cy="68" r="32" fill="var(--g1)"/>
+      <circle cx="88" cy="58" r="42" fill="var(--g2)"/>
+      <circle cx="140" cy="70" r="30" fill="var(--g1)"/>
+      <circle cx="80" cy="40" r="14" fill="var(--g3)" opacity=".35"/>`,
+  },
+};
+
+const allium = (x: number, top: number, r: number) =>
+  `<path d="M${x} 210V${top}" stroke="var(--g2)" stroke-width="3.5" stroke-linecap="round"/>
+   <circle cx="${x}" cy="${top}" r="${r}" fill="var(--purple)"/>
+   <circle cx="${x - r * 0.35}" cy="${top - r * 0.35}" r="${r * 0.35}" fill="#fff" opacity=".18"/>`;
+const tulip = (x: number, top: number, c: string) =>
+  `<path d="M${x} 160V${top}" stroke="var(--g2)" stroke-width="3.5" stroke-linecap="round"/>
+   <path d="M${x - 13} ${top} C${x - 14} ${top - 24} ${x + 14} ${top - 24} ${x + 13} ${top} L${x + 8} ${top - 26} L${x} ${top - 12} L${x - 8} ${top - 26}Z" fill="${c}"/>`;
+const daisy = (x: number, top: number) =>
+  `<path d="M${x} 130V${top}" stroke="var(--g2)" stroke-width="3" stroke-linecap="round"/>
+   ${[0, 45, 90, 135].map((a) => `<ellipse cx="${x}" cy="${top}" rx="15" ry="5" fill="#fff" transform="rotate(${a} ${x} ${top})"/>`).join('')}
+   <circle cx="${x}" cy="${top}" r="6" fill="var(--sun)"/>`;
+
+const flower = {
+  alliums: {
+    vb: '0 0 130 210',
+    body: `<path d="M20 210c10-40 26-60 40-70-6 30-14 50-40 70zM110 210c-10-36-24-54-38-62 6 28 14 46 38 62z" fill="var(--g2)"/>
+      ${allium(32, 72, 19)}${allium(66, 34, 24)}${allium(98, 92, 17)}`,
+  },
+  tulips: {
+    vb: '0 0 130 160',
+    body: `${tulip(24, 70, 'var(--pink)')}${tulip(56, 46, 'var(--sun)')}${tulip(86, 64, 'var(--pink)')}${tulip(112, 84, 'var(--copper)')}
+      <path d="M0 160c18-30 34-42 50-46-10 22-26 36-50 46zM130 160c-18-28-32-40-48-44 10 22 24 34 48 44z" fill="var(--g2)"/>`,
+  },
+  daisies: {
+    vb: '0 0 120 130',
+    body: `${daisy(26, 58)}${daisy(64, 34)}${daisy(98, 66)}`,
+  },
+  pot: {
+    vb: '0 0 110 190',
+    body: `<rect x="51" y="70" width="8" height="70" rx="3" fill="var(--bark)"/>
+      <circle cx="55" cy="54" r="40" fill="var(--g1)"/>
+      <circle cx="42" cy="40" r="16" fill="var(--g2)" opacity=".55"/>
+      <path d="M18 136h74l-9 54H27z" fill="var(--pot)"/>
+      <rect x="12" y="128" width="86" height="14" rx="5" fill="var(--pot-2)"/>`,
+  },
+  birdbath: {
+    vb: '0 0 130 160',
+    body: `<path d="M8 50h114c-4 22-26 34-57 34S12 72 8 50z" fill="var(--stone)"/>
+      <ellipse cx="65" cy="50" rx="57" ry="9" fill="var(--water)"/>
+      <path d="M54 84h22l-4 56H58z" fill="var(--stone)"/>
+      <rect x="32" y="138" width="66" height="22" rx="6" fill="var(--stone-2)"/>
+      <path d="M86 40c0-9 7-15 15-15 5 0 9 2 11 6l9 1-8 4c0 8-7 12-15 12H86z" fill="var(--g1)"/>`,
+  },
+  can: {
+    vb: '0 0 170 120',
+    body: `<path d="M118 60 166 22l4 6-44 44z" fill="var(--zinc-2)"/>
+      <rect x="160" y="12" width="10" height="20" rx="3" transform="rotate(-40 165 22)" fill="var(--zinc-2)"/>
+      <path d="M38 24c0-14 64-14 64 0" fill="none" stroke="var(--zinc-2)" stroke-width="8" stroke-linecap="round"/>
+      <rect x="22" y="34" width="100" height="86" rx="14" fill="var(--zinc)"/>
+      <rect x="22" y="52" width="100" height="8" fill="var(--zinc-2)" opacity=".6"/>`,
+  },
+};
+
+const plants: Plant[] = [
+  // Trees
+  { stage: 0, side: 'left', x: '-3vw', h: '64vh', ...tree.conifer },
+  { stage: 0, side: 'left', x: '4vw', h: '40vh', ...tree.lollipop },
+  { stage: 0, side: 'right', x: '-7vw', h: '58vh', ...tree.broadleaf },
+  { stage: 0, side: 'right', x: '5vw', h: '36vh', ...tree.lollipop },
+  // Bushes
+  { stage: 1, side: 'left', x: '-5vw', h: '26vh', ...bush.cloud },
+  { stage: 1, side: 'left', x: '7vw', h: '17vh', ...bush.balls },
+  { stage: 1, side: 'right', x: '-7vw', h: '24vh', ...bush.hedge },
+  { stage: 1, side: 'right', x: '8vw', h: '16vh', ...bush.balls },
+  // Flowers and ornaments
+  { stage: 2, side: 'left', x: '-1vw', h: '32vh', ...flower.alliums },
+  { stage: 2, side: 'left', x: '7vw', h: '19vh', ...flower.birdbath },
+  { stage: 2, side: 'left', x: '14vw', h: '13vh', ...flower.daisies },
+  { stage: 2, side: 'right', x: '-1vw', h: '30vh', ...flower.pot },
+  { stage: 2, side: 'right', x: '7vw', h: '20vh', ...flower.tulips },
+  { stage: 2, side: 'right', x: '15vw', h: '12vh', ...flower.can },
+];
+---
+
+<div class="garden" aria-hidden="true" data-stage="0">
+  {
+    plants.map((p, i) => (
+      <div
+        class="plant"
+        data-stage={p.stage}
+        style={`${p.side}: ${p.x}; --h: ${p.h}; --d: ${i % 4}; --sway: ${(i % 3) + 4}s; --tilt: ${i % 2 ? -1 : 1};`}
+      >
+        <svg viewBox={p.vb} class="sway" set:html={p.body} />
+      </div>
+    ))
+  }
+</div>
+
+<script>
+  const garden = document.querySelector<HTMLElement>('.garden');
+  if (garden) {
+    let ticking = false;
+    const update = () => {
+      ticking = false;
+      const max = document.documentElement.scrollHeight - innerHeight;
+      const p = max > 0 ? scrollY / max : 0;
+      const stage = p < 0.3 ? 0 : p < 0.64 ? 1 : 2;
+      if (garden.dataset.stage !== String(stage)) garden.dataset.stage = String(stage);
+    };
+    addEventListener(
+      'scroll',
+      () => {
+        if (!ticking) {
+          ticking = true;
+          requestAnimationFrame(update);
+        }
+      },
+      { passive: true },
+    );
+    addEventListener('resize', update);
+    update();
+    // Let the first trees grow in after the page settles.
+    requestAnimationFrame(() => setTimeout(() => garden.classList.add('ready'), 400));
+  }
+</script>
+
+<style>
+  .garden {
+    --g1: #2f5f3c;
+    --g2: #4e8a4b;
+    --g3: #8cc63f;
+    --bark: #6d5240;
+    --purple: #8e6cc8;
+    --pink: #e98fa8;
+    --sun: #f2c94c;
+    --copper: #d9895e;
+    --pot: #c07a55;
+    --pot-2: #a96443;
+    --stone: #c8cbc1;
+    --stone-2: #b3b7ab;
+    --water: #b9d8e2;
+    --zinc: #8fa7ad;
+    --zinc-2: #6f878d;
+    position: fixed;
+    inset: auto 0 0 0;
+    height: 100svh;
+    z-index: -1;
+    pointer-events: none;
+    overflow: hidden;
+    /* Full at the screen edges, faded before the content column. */
+    --edge: linear-gradient(90deg, #000 0, #000 5vw, transparent 15vw, transparent calc(100% - 15vw), #000 calc(100% - 5vw), #000 100%);
+    -webkit-mask-image: var(--edge);
+    mask-image: var(--edge);
+  }
+  .plant {
+    position: absolute;
+    height: calc(var(--h) * var(--scale, 1));
+    bottom: -2px;
+    opacity: 0;
+    transform: translateY(40%) scale(0.2);
+    transform-origin: 50% 100%;
+    transition:
+      transform 420ms cubic-bezier(0.5, 0, 0.75, 0),
+      opacity 300ms;
+  }
+  .plant svg {
+    display: block;
+    height: 100%;
+    width: auto;
+    overflow: visible;
+  }
+  .ready[data-stage='0'] .plant[data-stage='0'],
+  .ready[data-stage='1'] .plant[data-stage='1'],
+  .ready[data-stage='2'] .plant[data-stage='2'] {
+    opacity: 0.85;
+    transform: none;
+    transition:
+      transform 1100ms cubic-bezier(0.34, 1.56, 0.64, 1),
+      opacity 400ms;
+    transition-delay: calc(350ms + var(--d) * 140ms);
+  }
+  .sway {
+    transform-origin: 50% 100%;
+    animation: sway var(--sway) ease-in-out infinite alternate;
+  }
+  @keyframes sway {
+    from {
+      transform: rotate(calc(var(--tilt) * -1.6deg));
+    }
+    to {
+      transform: rotate(calc(var(--tilt) * 1.6deg));
+    }
+  }
+
+  @media (max-width: 760px) {
+    .garden {
+      --scale: 0.5;
+      opacity: 0.6;
+      --edge: linear-gradient(90deg, #000 0, transparent 22vw, transparent 78vw, #000 100%);
+    }
+  }
+  @media (min-width: 1600px) {
+    .garden {
+      --edge: linear-gradient(90deg, #000 0, #000 9vw, transparent 17vw, transparent calc(100% - 17vw), #000 calc(100% - 9vw), #000 100%);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .plant,
+    .ready .plant {
+      transition: opacity 1ms !important;
+    }
+    .sway {
+      animation: none;
+    }
+  }
+</style>

@@ -4,6 +4,7 @@ import Icon from '../components/Icon.astro';
 import YearRibbon from '../components/YearRibbon.astro';
 import Proof from '../components/Proof.astro';
 import CallToAction from '../components/CallToAction.astro';
+import GardenBackdrop from '../components/GardenBackdrop.astro';
 import { contact, services, alsoOffer, visitOptions, months } from '../data/site';
 
 const [care, intervention, health, pots] = services;
@@ -52,6 +53,7 @@ const statement =
 ---
 
 <Base>
+  <GardenBackdrop />
   <!-- Hero -->
   <section class="hero" aria-labelledby="hero-title">
     <div class="hero-copy">
