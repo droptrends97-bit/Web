@@ -67,11 +67,11 @@ const count = (c: Cat) => photos.filter((p) => p.cat === c).length;
     <h1 id="gal-title" data-type data-speed="50">Gardens we look after.</h1>
     <div class="hero-side">
       <p class="lede" data-reveal>
-        {photos.length} photos from gardens across Dublin and Wicklow. Tap any photo to see it larger.
+        <span data-count>{photos.length}</span> photos from gardens across Dublin and Wicklow. Tap any photo to see it larger.
       </p>
       <ul class="stats">
         {cats.slice(1).map((c, i) => (
-          <li data-pop style={`--d:${i}`}><strong>{count(c.id as Cat)}</strong>{c.label}</li>
+          <li data-pop style={`--d:${i}`}><strong data-count>{count(c.id as Cat)}</strong>{c.label}</li>
         ))}
       </ul>
     </div>

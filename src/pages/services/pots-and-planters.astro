@@ -101,7 +101,7 @@ const heroPhotos = [
     <div class="hero-stack" aria-hidden="false">
       {
         heroPhotos.map((p, i) => (
-          <figure class={`stack-card s${i}`} data-pop style={`--d:${i + 2}`}>
+          <figure class={`stack-card s${i}`} style={`--i:${i}`}>
             <img src={p.src} alt={p.alt} />
           </figure>
         ))
@@ -319,13 +319,10 @@ const heroPhotos = [
     z-index: 1;
   }
   .stack-card {
-    animation: bob 7s ease-in-out infinite alternate;
-  }
-  .s1 {
-    animation-delay: -2s;
-  }
-  .s2 {
-    animation-delay: -4s;
+    animation:
+      deal 900ms cubic-bezier(0.2, 1.25, 0.35, 1) both,
+      bob 7s ease-in-out infinite alternate;
+    animation-delay: calc(500ms + var(--i) * 420ms), calc(2.4s + var(--i) * 1.5s);
   }
   @keyframes bob {
     to {

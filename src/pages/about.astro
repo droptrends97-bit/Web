@@ -88,7 +88,7 @@ const belief = "Nature isn't just a background to our lives; it actively support
       {
         facts.map((f, i) => (
           <li data-pop style={`--d:${i}`}>
-            <span class="fact-big" data-count={f.count}>
+            <span class="fact-big" data-count={f.count ? '' : undefined}>
               {f.big}
             </span>
             <span class="fact-label">{f.label}</span>
@@ -213,26 +213,7 @@ const belief = "Nature isn't just a background to our lives; it actively support
 </Base>
 
 <script>
-  // Count up numeric facts when they appear.
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  document.querySelectorAll<HTMLElement>('[data-count]').forEach((el) => {
-    const target = Number(el.dataset.count);
-    if (!target || reduce) return;
-    const io = new IntersectionObserver(([e]) => {
-      if (!e.isIntersecting) return;
-      io.disconnect();
-      const start = performance.now();
-      const tick = (t: number) => {
-        const k = Math.min(1, (t - start) / 1400);
-        el.textContent = `${Math.round(target * (1 - Math.pow(1 - k, 3)))}+`;
-        if (k < 1) requestAnimationFrame(tick);
-      };
-      el.textContent = '0+';
-      requestAnimationFrame(tick);
-    });
-    io.observe(el);
-  });
-
   // Timeline line fills as you scroll through it.
   const tl = document.querySelector<HTMLElement>('.tl-wrap');
   const fill = document.querySelector<HTMLElement>('.tl-fill');

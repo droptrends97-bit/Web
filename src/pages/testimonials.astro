@@ -19,14 +19,14 @@ const ticker = reviews.map((r) => r.quote.split(/[.!]/)[0]);
     <div class="hero-copy">
       <h1 id="t-title" data-type data-speed="50">In their own words.</h1>
       <p class="lede" data-reveal>
-        Darragh's business has grown through referrals. Here's what {reviews.length} clients across Dublin say about the gardens he looks
+        Darragh's business has grown through referrals. Here's what <span data-count>{reviews.length}</span> clients across Dublin say about the gardens he looks
         after.
       </p>
     </div>
     <div class="hero-stack" aria-hidden="true">
       {
         reviews.slice(0, 4).map((r, i) => (
-          <figure class={`stk s${i}`} data-pop style={`--d:${i + 1}`}>
+          <figure class={`stk s${i}`} style={`--i:${i}`}>
             <img src={r.img} alt="" />
           </figure>
         ))
@@ -107,12 +107,12 @@ const ticker = reviews.map((r) => r.quote.split(/[.!]/)[0]);
   .hero-copy { display: grid; gap: 1.25rem; justify-items: start; }
   .hero h1 { font-size: clamp(3rem, 7.5vw, 6.5rem); line-height: 0.95; max-width: 9ch; }
   .hero-stack { position: relative; height: clamp(22rem, 36vw, 30rem); }
-  .stk { position: absolute; margin: 0; width: 46%; border-radius: 24px; overflow: hidden; border: 6px solid #fff; box-shadow: 0 30px 60px -30px rgb(10 25 16 / 0.55); animation: bob 7s ease-in-out infinite alternate; }
+  .stk { position: absolute; margin: 0; width: 46%; border-radius: 24px; overflow: hidden; border: 6px solid #fff; box-shadow: 0 30px 60px -30px rgb(10 25 16 / 0.55); animation: deal 900ms cubic-bezier(0.2, 1.25, 0.35, 1) both, bob 7s ease-in-out infinite alternate; animation-delay: calc(400ms + var(--i) * 380ms), calc(2.6s + var(--i) * 1.4s); }
   .stk img { width: 100%; aspect-ratio: 1; object-fit: cover; }
   .s0 { left: 0; top: 10%; rotate: -7deg; z-index: 2; }
-  .s1 { left: 28%; top: 0; rotate: 3deg; z-index: 4; animation-delay: -2s; }
-  .s2 { right: 0; top: 18%; rotate: 8deg; z-index: 3; animation-delay: -4s; }
-  .s3 { left: 20%; bottom: 0; rotate: -2deg; z-index: 1; width: 40%; animation-delay: -6s; }
+  .s1 { left: 28%; top: 0; rotate: 3deg; z-index: 4; }
+  .s2 { right: 0; top: 18%; rotate: 8deg; z-index: 3; }
+  .s3 { left: 20%; bottom: 0; rotate: -2deg; z-index: 1; width: 40%; }
   @keyframes bob { to { translate: 0 -10px; } }
 
   .quotes-band { padding-block: 1.25rem; border-block: 1px solid var(--border); margin-block: clamp(1rem, 3vw, 2rem); }

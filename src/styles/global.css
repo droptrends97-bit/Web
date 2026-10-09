@@ -388,3 +388,36 @@ a {
     animation: none;
   }
 }
+
+/* A photo dealt onto a pile: drops from above, overshoots, settles. */
+@keyframes deal {
+  0% {
+    opacity: 0;
+    transform: translate(18%, -55%) rotate(-14deg) scale(1.18);
+    box-shadow: 0 60px 90px -30px rgb(10 25 16 / 0.6);
+  }
+  45% {
+    opacity: 1;
+  }
+  100% {
+    transform: none;
+  }
+}
+
+[data-count] {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Tilt cards follow the pointer (set by script). */
+.tilt {
+  transition: transform 500ms var(--ease-out);
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stack-card,
+  .stk {
+    animation: none !important;
+  }
+}
