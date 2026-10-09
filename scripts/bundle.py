@@ -75,7 +75,7 @@ def styles(html: str) -> list:
 
 
 # Extra pages carried in the single-file site, as (page id, built route).
-SITE_PAGES = [('about', 'about'), ('pots', 'services/pots-and-planters'), ('intervention', 'services/garden-intervention'), ('health', 'services/garden-health'), ('care', 'services/garden-care'), ('hedging', 'services/hedging'), ('passion', 'services/passionate-about-pots'), ('bulbs', 'services/bulb-planting')]
+SITE_PAGES = [('about', 'about'), ('pots', 'services/pots-and-planters'), ('intervention', 'services/garden-intervention'), ('health', 'services/garden-health'), ('care', 'services/garden-care'), ('hedging', 'services/hedging'), ('passion', 'services/passionate-about-pots'), ('bulbs', 'services/bulb-planting'), ('reviews', 'testimonials')]
 
 
 def page_css(ids):
@@ -86,6 +86,8 @@ def page_css(ids):
         rules.append(f"[data-page='{pid}'] {{ display: none; }}")
         rules.append(f"{on} [data-page='{pid}'] {{ display: block; }}")
         rules.append(f"{on} [data-page='home'] {{ display: none; }}")
+    rules.append("body:has([data-page='reviews']:target, [data-page='reviews'] :target) .nav a[href='#reviews'] "
+                 "{ color: var(--on-evergreen); background: rgb(255 255 255 / 0.12); }")
     rules.append("body:has([data-page='about']:target, [data-page='about'] :target) .nav a[href='#about'] "
                  "{ color: var(--on-evergreen); background: rgb(255 255 255 / 0.12); }")
     rules.append("body:has([data-page='pots']:target, [data-page='pots'] :target, [data-page='intervention']:target, [data-page='intervention'] :target, [data-page='health']:target, [data-page='health'] :target, [data-page='care']:target, [data-page='care'] :target, [data-page='hedging']:target, [data-page='hedging'] :target, [data-page='passion']:target, [data-page='passion'] :target, [data-page='bulbs']:target, [data-page='bulbs'] :target) .sub summary "
@@ -96,7 +98,7 @@ def page_css(ids):
 def build_site() -> str:
     home = page_html('home')
     links = {
-        '/': '#home', '/about/': '#about', '/services/pots-and-planters/': '#pots', '/services/garden-intervention/': '#intervention', '/services/garden-health/': '#health', '/services/garden-care/': '#care', '/services/hedging/': '#hedging', '/services/passionate-about-pots/': '#passion', '/services/bulb-planting/': '#bulbs',
+        '/': '#home', '/about/': '#about', '/services/pots-and-planters/': '#pots', '/services/garden-intervention/': '#intervention', '/services/garden-health/': '#health', '/services/garden-care/': '#care', '/services/hedging/': '#hedging', '/services/passionate-about-pots/': '#passion', '/services/bulb-planting/': '#bulbs', '/testimonials/': '#reviews',
         '/services/': '#services-title', '/the-year/': '#year-title', '/gallery/': '#gallery-title',
         '/contact/': '#cta-title',
     }

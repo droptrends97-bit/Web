@@ -9,6 +9,7 @@ export const nav = [
   { href: '/services/', label: 'Services' },
   { href: '/the-year/', label: 'The year' },
   { href: '/gallery/', label: 'Gallery' },
+  { href: '/testimonials/', label: 'Testimonials' },
   { href: '/about/', label: 'About' },
   { href: '/contact/', label: 'Contact' },
 ];
@@ -172,4 +173,25 @@ export const gallery = [
   { src: '/img/striped-lawn-bench.jpg', alt: 'A striped lawn leading to a white bench.' },
   { src: '/img/tulips-paving.jpg', alt: 'Tulip planting along a granite kerb.' },
   { src: '/img/lawn-stripes.jpg', alt: 'Close view of a freshly striped lawn.', wide: true },
+];
+
+export const reviews = [
+  { name: 'Honor Finucane', place: 'Dún Laoghaire, Co. Dublin', tag: 'Clear-up & planting', img: '/img/rev-1.jpg',
+    quote: "I would highly recommend the work of Darragh Connolly. My garden was completely overrun and he cleaned it, cut back the brambles and took all the rubbish away. It was also planted with a great array of plants. It is so great to be able to use the space again. We now do a scheduled garden care programme and wouldn't have it any other way." },
+  { name: 'J Keaney', place: 'Monkstown, Co. Dublin', tag: 'Autumn/winter tidy-up', img: '/img/rev-2.jpg',
+    quote: "Darragh Connolly Garden Care did an autumn/winter tidy-up in both front and back gardens. They did a wonderful job, cutting everything back, shaping all bushes and trees, weeding and weed control. We haven't had to do a thing to the garden since." },
+  { name: 'M Walshe', place: 'Dalkey, Co. Dublin', tag: 'Five years of care', img: '/img/rev-3.jpg',
+    quote: 'We have used the services of Darragh Connolly Garden Care for the past five years. What we really liked about the company initially was the upfront pricing and what you are getting for your money. They work so hard at getting the correct results and you can really see the results now with our gorgeous garden, which is admired by all.' },
+  { name: 'O Smyth', place: 'Blackrock, Co. Dublin', tag: 'Garden restoration', img: '/img/rev-4.jpg',
+    quote: "I have no hesitation in recommending the services of Darragh Connolly. He recently completed some work on my garden and has restored it to its former glory. I found him to be extremely reliable and accommodating, and his work was of the highest standard. It's great to have the use of my garden again. Now I just need to maintain it!" },
+  { name: 'F Stacey', place: 'Dalkey, Co. Dublin', tag: 'Scheduled garden care', img: '/img/rev-5.jpg',
+    quote: 'Thank you for carrying out the work in our garden a couple of weeks ago. You did exactly what we asked you to do, plus the extra work we decided to add while you were here. We are now ever so pleased with the scheduled garden care programme, as all we have to do now is look at the garden and enjoy it!' },
+  { name: 'P Cotterell', place: 'Shankill, Co. Dublin', tag: 'Garden work', img: '/img/rev-6.jpg',
+    quote: 'I would have no hesitation in recommending Darragh Connolly and his crew to carry out work in your garden. They came on the day agreed and did a wonderful job in our garden. He and his team are very efficient in their work and leave everything tidy. I was really impressed with their excellent work.' },
+  { name: 'A Kavanagh', place: 'Foxrock, Co. Dublin', tag: 'Annual lawn programme', img: '/img/rev-7.jpg',
+    quote: 'Darragh has been looking after our lawn for 2 years now. He does an annual programme which involves several treatments throughout the year. Our lawn looks great year round, at a reasonable cost to us.' },
+  { name: 'N Tubridy', place: 'Donnybrook, Dublin 4', tag: 'Small urban garden', img: '/img/rev-8.jpg',
+    quote: 'I was delighted with the work done by Darragh Connolly on my small urban garden. Everything was done quickly and efficiently, with no fuss and no mess. Will definitely use the company again.' },
+  { name: 'T Crowley', place: 'Dalkey, Co. Dublin', tag: 'Award-winning garden', img: '/img/rev-9.jpg',
+    quote: "I am delighted with the work that Darragh Connolly did for us. It was to the highest standard, finished on time and within budget. I can't believe my garden won an award, it is just wonderful!" },
 ];
