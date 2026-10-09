@@ -58,6 +58,7 @@ const jsonLd = {
       const r = document.documentElement;
       r.dataset.season = JSON.parse(seasons)[new Date().getMonth()];
       r.classList.add('js');
+      if (!CSS.supports('animation-timeline: view()')) r.classList.add('js-io');
     </script>
   </head>
   <body>
@@ -214,7 +215,8 @@ const jsonLd = {
         },
         { threshold: 0.6 },
       );
-      document.querySelectorAll('[data-count]').forEach((el) => countIO.observe(el));
+      if (document.documentElement.classList.contains('js-io'))
+        document.querySelectorAll('[data-count]').forEach((el) => countIO.observe(el));
 
       // Scroll progress line under the menu (fallback where scroll timelines aren't supported).
       const bar = document.querySelector<HTMLElement>('.progress span');
@@ -243,86 +245,6 @@ const jsonLd = {
           });
       }
 
-      // Typewriter for [data-type] headings: the text is in the HTML, JS only hides and reveals it.
-      const typeIt = (el: HTMLElement) => {
-        const text = el.textContent ?? '';
-        el.setAttribute('aria-label', text);
-        el.textContent = '';
-        const chars = [...text].map((c) => {
-          const s = document.createElement('span');
-          s.className = 'tc';
-          s.textContent = c;
-          s.setAttribute('aria-hidden', 'true');
-          el.append(s);
-          return s;
-        });
-        const caret = document.createElement('span');
-        caret.className = 'caret';
-        caret.setAttribute('aria-hidden', 'true');
-        el.prepend(caret);
-        const speed = Number(el.dataset.speed) || 34;
-        let i = 0;
-        const step = () => {
-          if (i < chars.length) {
-            const c = chars[i++];
-            c.classList.add('on');
-            c.after(caret);
-            setTimeout(step, speed + (/[,.?]/.test(c.textContent ?? '') ? 260 : Math.random() * 30));
-          } else {
-            setTimeout(() => caret.classList.add('done'), 1400);
-          }
-        };
-        step();
-      };
-
-      // Split text into spans (words, optionally letters) without losing it for screen readers.
-      const split = (el: HTMLElement, letters: boolean) => {
-        const text = (el.textContent ?? '').trim();
-        el.setAttribute('aria-label', text);
-        el.textContent = '';
-        let n = 0;
-        text.split(/\s+/).forEach((word, w, all) => {
-          const ws = document.createElement('span');
-          ws.className = letters ? 'iw' : 'wr';
-          ws.setAttribute('aria-hidden', 'true');
-          if (letters) {
-            [...word].forEach((ch) => {
-              const c = document.createElement('span');
-              c.className = 'ic';
-              c.textContent = ch;
-              c.style.setProperty('--i', String(n++));
-              ws.append(c);
-            });
-          } else {
-            const inner = document.createElement('span');
-            inner.textContent = word;
-            inner.style.setProperty('--i', String(n++));
-            ws.append(inner);
-          }
-          el.append(ws);
-          if (w < all.length - 1) el.append(' ');
-        });
-        return n;
-      };
-
-      // Hero headlines are "written": each letter flows in from a soft blur, then a swash draws beneath.
-      const inkWrite = (el: HTMLElement) => {
-        const n = split(el, true);
-        el.style.setProperty('--n', String(n));
-        const swash = document.createElement('span');
-        swash.className = 'swash';
-        swash.setAttribute('aria-hidden', 'true');
-        swash.innerHTML = '<svg viewBox="0 0 300 24" preserveAspectRatio="none"><path d="M4 16C60 6 120 4 180 9s90 8 116-2"/></svg>';
-        el.append(swash);
-        el.classList.add('ink', 'go');
-      };
-
-      // Section titles: words rise from behind an invisible line.
-      const rise = (el: HTMLElement) => {
-        split(el, false);
-        el.classList.add('rise', 'go');
-      };
-
       // Groups of cards and points enter one by one; the style comes from data-stagger.
       const scatter = [[-40, 30, -12], [50, -20, 10], [-20, -40, 6], [30, 40, -8], [0, 50, 14], [-50, 0, -6]];
       document.querySelectorAll<HTMLElement>('[data-stagger]').forEach((group) => {
@@ -342,23 +264,18 @@ const jsonLd = {
           for (const e of entries) {
             if (!e.isIntersecting) continue;
             const el = e.target as HTMLElement;
-            if (el.hasAttribute('data-type')) {
-              if (el.dataset.type === 'type') typeIt(el);
-              else if (el.tagName === 'H1') inkWrite(el);
-              else rise(el);
-            } else el.classList.add('in');
+            el.classList.add('in', 'go');
             io.unobserve(el);
           }
         },
         { rootMargin: '0px 0px -8% 0px', threshold: 0.12 },
       );
-      document
-        .querySelectorAll<HTMLElement>(
-          reduce
-            ? '[data-reveal], [data-pop], [data-stagger], [data-curtain]'
-            : '[data-reveal], [data-pop], [data-type], [data-stagger], [data-curtain]',
-        )
-        .forEach((el) => io.observe(el));
+      // Browsers with scroll-driven CSS animate these on their own; the rest get this fallback.
+      if (document.documentElement.classList.contains('js-io')) {
+        document
+          .querySelectorAll<HTMLElement>('[data-reveal], [data-pop], .rise, [data-stagger], [data-curtain]')
+          .forEach((el) => io.observe(el));
+      }
     </script>
   </body>
 </html>
@@ -710,7 +627,7 @@ const jsonLd = {
     background: var(--evergreen);
     color: var(--on-evergreen-2);
     padding-top: clamp(4rem, 8vw, 6rem);
-    overflow: hidden;
+    overflow: clip;
   }
   .footer-grid {
     display: grid;

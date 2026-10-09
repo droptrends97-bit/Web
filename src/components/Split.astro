@@ -1,0 +1,33 @@
+---
+// Splits a heading into words (or letters) at build time, so its entrance can run
+// in plain CSS even where JavaScript is switched off. Screen readers get the parent's aria-label.
+interface Props {
+  text: string;
+  letters?: boolean;
+}
+const { text, letters = false } = Astro.props;
+let n = 0;
+const words = text.trim().split(/\s+/).map((w) => ({ w, chars: [...w].map((c) => ({ c, i: n++ })), i: letters ? 0 : n++ }));
+---
+
+{
+  words.map((word, k) =>
+    letters ? (
+      <Fragment>
+        <span class="iw" aria-hidden="true">
+          {word.chars.map((ch) => (
+            <span class="ic" style={`--i:${ch.i}`}>{ch.c}</span>
+          ))}
+        </span>
+        {k < words.length - 1 && ' '}
+      </Fragment>
+    ) : (
+      <Fragment>
+        <span class="wr" aria-hidden="true">
+          <span style={`--i:${k}`}>{word.w}</span>
+        </span>
+        {k < words.length - 1 && ' '}
+      </Fragment>
+    ),
+  )
+}

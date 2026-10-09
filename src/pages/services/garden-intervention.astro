@@ -1,4 +1,5 @@
 ---
+import Split from '../../components/Split.astro';
 import Base from '../../layouts/Base.astro';
 import Icon from '../../components/Icon.astro';
 import CallToAction from '../../components/CallToAction.astro';
@@ -48,7 +49,7 @@ const youtube = 'https://www.youtube.com/results?search_query=Darragh+Connolly+G
       </div>
       <div class="hero-copy">
         <a class="crumb" href="/services/">Services</a>
-        <h1 id="gi-title" data-type data-speed="50">Is your garden ready for a refresh?</h1>
+        <h1 id="gi-title" class="ink" style="--n:29" aria-label={"Is your garden ready for a refresh?"}><Split text={"Is your garden ready for a refresh?"} letters /><span class="swash" aria-hidden="true"><svg viewBox="0 0 300 24" preserveAspectRatio="none"><path d="M4 16C60 6 120 4 180 9s90 8 116-2" /></svg></span></h1>
         <p class="hero-lede">The Garden Intervention: new life for planting that has lost its spark.</p>
         <div class="hero-actions">
           <a class="btn btn-leaf" href="#gi-book">Book your Garden Intervention <Icon name="arrow" /></a>
@@ -61,7 +62,7 @@ const youtube = 'https://www.youtube.com/results?search_query=Darragh+Connolly+G
   <!-- Is it right for you -->
   <section class="wrap fit" aria-labelledby="fit-title">
     <div class="fit-copy">
-      <h2 id="fit-title" data-type>Perfect when your garden has good bones</h2>
+      <h2 id="fit-title" class="rise" aria-label={"Perfect when your garden has good bones"}><Split text={"Perfect when your garden has good bones"} /></h2>
       <p data-reveal>
         When a solid garden structure is paired with a carefully chosen palette of plants that thrive, the whole space comes
         alive. That's exactly what our Garden Intervention delivers.
@@ -90,7 +91,7 @@ const youtube = 'https://www.youtube.com/results?search_query=Darragh+Connolly+G
   <!-- What we provide -->
   <section class="wrap provide" aria-labelledby="provide-title">
     <div class="section-head">
-      <h2 id="provide-title" data-type>What we can provide</h2>
+      <h2 id="provide-title" class="rise" aria-label={"What we can provide"}><Split text={"What we can provide"} /></h2>
       <p class="lede">Every Intervention is designed around your garden. These are the tools we bring to it.</p>
     </div>
     <ol class="provide-grid" data-stagger="flip">
@@ -120,7 +121,7 @@ const youtube = 'https://www.youtube.com/results?search_query=Darragh+Connolly+G
         </p>
       </div>
       <div class="price-right">
-        <p class="price"><span class="cur">€</span><span data-count>125</span></p>
+        <p class="price"><span class="cur">€</span><span data-count style="--to:125">125</span></p>
         <p class="price-note">Fully deductible from the final cost</p>
         <a class="btn btn-leaf" href={contact.phoneHref}><Icon name="phone" /> Book on {contact.phone}</a>
       </div>
@@ -130,7 +131,7 @@ const youtube = 'https://www.youtube.com/results?search_query=Darragh+Connolly+G
   <!-- Gallery -->
   <section class="gallery" aria-labelledby="gi-gallery-title">
     <div class="wrap">
-      <h2 id="gi-gallery-title" data-type>Interventions in progress</h2>
+      <h2 id="gi-gallery-title" class="rise" aria-label={"Interventions in progress"}><Split text={"Interventions in progress"} /></h2>
     </div>
     <div class="marquee gi-rail" style="--speed: 55s; --gap: 1rem">
       {
@@ -175,7 +176,7 @@ const youtube = 'https://www.youtube.com/results?search_query=Darragh+Connolly+G
     max-width: calc(var(--max) + 4rem);
     margin-inline: auto;
     border-radius: var(--radius-lg);
-    overflow: hidden;
+    overflow: clip;
     isolation: isolate;
     min-height: clamp(28rem, 44vw, 38rem);
     display: flex;
@@ -254,14 +255,14 @@ const youtube = 'https://www.youtube.com/results?search_query=Darragh+Connolly+G
     color: #dfe5d8;
     max-width: 40ch;
   }
-  .js .hero-lede,
-  .js .hero-actions {
+  .hero-lede,
+  .hero-actions {
     animation: rise-in 900ms var(--ease-out) both;
   }
-  .js .hero-lede {
+  .hero-lede {
     animation-delay: 1700ms;
   }
-  .js .hero-actions {
+  .hero-actions {
     animation-delay: 2000ms;
   }
   @keyframes rise-in {
@@ -391,7 +392,7 @@ const youtube = 'https://www.youtube.com/results?search_query=Darragh+Connolly+G
   .pcard {
     position: relative;
     border-radius: var(--radius-lg);
-    overflow: hidden;
+    overflow: clip;
     isolation: isolate;
     min-height: 21rem;
     display: flex;
@@ -542,7 +543,7 @@ const youtube = 'https://www.youtube.com/results?search_query=Darragh+Connolly+G
     min-height: 16rem;
     padding: clamp(1.5rem, 4vw, 3rem);
     border-radius: var(--radius-lg);
-    overflow: hidden;
+    overflow: clip;
     isolation: isolate;
     color: #fff;
     text-decoration: none;

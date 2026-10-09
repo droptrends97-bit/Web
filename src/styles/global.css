@@ -260,7 +260,7 @@ a {
   position: absolute;
   width: 1px;
   height: 1px;
-  overflow: hidden;
+  overflow: clip;
   clip: rect(0 0 0 0);
   white-space: nowrap;
 }
@@ -281,7 +281,7 @@ a {
 }
 
 /* Scroll reveal: content is visible without JS; .js enables the entrance. */
-.js [data-reveal] {
+.js-io [data-reveal] {
   opacity: 0;
   transform: translateY(28px);
   filter: blur(6px);
@@ -291,14 +291,14 @@ a {
     filter 900ms var(--ease-out);
   transition-delay: calc(var(--d, 0) * 90ms);
 }
-.js [data-reveal].in {
+.js-io [data-reveal].in {
   opacity: 1;
   transform: none;
   filter: none;
 }
 
 /* Pop: springy scale-in */
-.js [data-pop] {
+.js-io [data-pop] {
   opacity: 0;
   transform: scale(0.82) translateY(18px);
   transition:
@@ -306,7 +306,7 @@ a {
     transform 800ms cubic-bezier(0.34, 1.56, 0.64, 1);
   transition-delay: calc(var(--d, 0) * 90ms);
 }
-.js [data-pop].in {
+.js-io [data-pop].in {
   opacity: 1;
   transform: none;
 }
@@ -353,7 +353,7 @@ a {
 /* Infinite marquee */
 .marquee {
   display: flex;
-  overflow: hidden;
+  overflow: clip;
   -webkit-mask: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
   mask: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
 }
@@ -378,8 +378,8 @@ a {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .js [data-reveal],
-  .js [data-pop] {
+  .js-io [data-reveal],
+  .js-io [data-pop] {
     opacity: 1;
     transform: none;
     filter: none;
@@ -430,7 +430,7 @@ a {
 .ink .ic {
   display: inline-block;
 }
-.js .ink.go .ic {
+.ink .ic {
   animation: ink 1100ms cubic-bezier(0.22, 1, 0.36, 1) both;
   animation-delay: calc(150ms + var(--i) * 42ms);
 }
@@ -489,7 +489,7 @@ a {
 /* ---------- Section titles: words rise from behind a line ---------- */
 .rise .wr {
   display: inline-block;
-  overflow: hidden;
+  overflow: clip;
   vertical-align: top;
   padding-bottom: 0.08em;
   margin-bottom: -0.08em;
@@ -497,7 +497,7 @@ a {
 .rise .wr > span {
   display: inline-block;
 }
-.js .rise.go .wr > span {
+.js-io .rise.go .wr > span {
   animation: word-rise 900ms cubic-bezier(0.16, 1, 0.3, 1) both;
   animation-delay: calc(var(--i) * 75ms);
 }
@@ -509,10 +509,10 @@ a {
 }
 
 /* ---------- Groups that enter one by one ---------- */
-.js [data-stagger] > * {
+.js-io [data-stagger] > * {
   opacity: 0;
 }
-.js [data-stagger].in > * {
+.js-io [data-stagger].in > * {
   animation-duration: 850ms;
   animation-fill-mode: both;
   animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
@@ -550,7 +550,7 @@ a {
 .js [data-stagger='grow'].in > * { animation-name: st-grow; animation-timing-function: cubic-bezier(0.34, 1.4, 0.64, 1); }
 
 /* Ticks inside staggered points draw themselves after their row lands. */
-.js [data-stagger].in .tick svg path {
+.js-io [data-stagger].in .tick svg path {
   stroke-dasharray: 26;
   stroke-dashoffset: 26;
   animation: tick-draw 500ms ease-out forwards;
@@ -561,10 +561,10 @@ a {
 }
 
 /* ---------- Curtain reveal for feature photos ---------- */
-.js [data-curtain] img {
+.js-io [data-curtain] img {
   clip-path: inset(100% 0 0 0 round var(--radius-lg));
 }
-.js [data-curtain].in img {
+.js-io [data-curtain].in img {
   animation: curtain 1400ms cubic-bezier(0.76, 0, 0.24, 1) both;
 }
 @keyframes curtain {
@@ -575,7 +575,7 @@ a {
 /* ---------- Button sheen ---------- */
 .btn {
   position: relative;
-  overflow: hidden;
+  overflow: clip;
   isolation: isolate;
 }
 .btn::after {
@@ -595,8 +595,8 @@ a {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .js [data-stagger] > *,
-  .js [data-curtain] img {
+  .js-io [data-stagger] > *,
+  .js-io [data-curtain] img {
     opacity: 1 !important;
     clip-path: none !important;
     animation: none !important;
@@ -605,4 +605,141 @@ a {
     stroke-dashoffset: 0;
     animation: none;
   }
+}
+
+/* Scatter offsets and stagger order, set in CSS so they work without JavaScript. */
+[data-stagger] > :nth-child(6n + 1) { --sx: -40px; --sy: 30px; --sr: -12deg; }
+[data-stagger] > :nth-child(6n + 2) { --sx: 50px; --sy: -20px; --sr: 10deg; }
+[data-stagger] > :nth-child(6n + 3) { --sx: -20px; --sy: -40px; --sr: 6deg; }
+[data-stagger] > :nth-child(6n + 4) { --sx: 30px; --sy: 40px; --sr: -8deg; }
+[data-stagger] > :nth-child(6n + 5) { --sx: 0px; --sy: 50px; --sr: 14deg; }
+[data-stagger] > :nth-child(6n + 6) { --sx: -50px; --sy: 0px; --sr: -6deg; }
+[data-stagger] > :nth-child(1) { --s: 0; }
+[data-stagger] > :nth-child(2) { --s: 1; }
+[data-stagger] > :nth-child(3) { --s: 2; }
+[data-stagger] > :nth-child(4) { --s: 3; }
+[data-stagger] > :nth-child(5) { --s: 4; }
+[data-stagger] > :nth-child(6) { --s: 5; }
+[data-stagger] > :nth-child(7) { --s: 6; }
+[data-stagger] > :nth-child(8) { --s: 7; }
+[data-stagger] > :nth-child(9) { --s: 8; }
+[data-stagger] > :nth-child(10) { --s: 9; }
+[data-stagger] > :nth-child(11) { --s: 10; }
+[data-stagger] > :nth-child(12) { --s: 11; }
+[data-stagger] > :nth-child(13) { --s: 12; }
+[data-stagger] > :nth-child(14) { --s: 13; }
+[data-stagger] > :nth-child(15) { --s: 14; }
+[data-stagger] > :nth-child(16) { --s: 15; }
+[data-stagger] > :nth-child(17) { --s: 16; }
+[data-stagger] > :nth-child(18) { --s: 17; }
+[data-stagger] > :nth-child(19) { --s: 18; }
+[data-stagger] > :nth-child(20) { --s: 19; }
+[data-stagger] > :nth-child(21) { --s: 20; }
+[data-stagger] > :nth-child(22) { --s: 21; }
+[data-stagger] > :nth-child(23) { --s: 22; }
+[data-stagger] > :nth-child(24) { --s: 23; }
+
+/* Counting numbers in plain CSS: a registered integer animates and is shown via a counter. */
+@property --n {
+  syntax: '<integer>';
+  initial-value: 0;
+  inherits: false;
+}
+
+/* ========== Scroll-driven entrances (no JavaScript needed) ========== */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    [data-reveal] {
+      animation: sd-reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 28%;
+    }
+    [data-pop] {
+      animation: sd-pop linear both;
+      animation-timeline: view();
+      animation-range: entry calc(var(--d, 0) * 5%) cover calc(26% + var(--d, 0) * 5%);
+    }
+    [data-stagger] > * {
+      animation-timeline: view();
+      animation-fill-mode: both;
+      animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+      animation-duration: auto;
+      animation-range: entry calc(var(--s, 0) * 6%) cover calc(28% + var(--s, 0) * 6%);
+    }
+    [data-stagger='slide'] > * { animation-name: st-slide; }
+    [data-stagger='flip'] > * { animation-name: st-flip; transform-origin: 50% 100%; }
+    [data-stagger='rise'] > * { animation-name: st-rise; }
+    [data-stagger='scatter'] > * {
+      animation-name: st-scatter;
+      animation-range: entry calc(var(--s, 0) * 4%) cover calc(26% + var(--s, 0) * 4%);
+    }
+    [data-stagger='grow'] > * { animation-name: st-grow; animation-timing-function: ease-out; }
+
+    [data-stagger] .tick svg path {
+      stroke-dasharray: 26;
+      animation: sd-draw linear both;
+      animation-timeline: view();
+      animation-range: entry calc(30% + var(--s, 0) * 6%) cover calc(34% + var(--s, 0) * 6%);
+    }
+
+    [data-curtain] img {
+      animation: curtain linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 45%;
+    }
+
+    .rise .wr > span {
+      animation: word-rise linear both;
+      animation-timeline: view();
+      animation-range: entry calc(10% + var(--i) * 5%) cover calc(22% + var(--i) * 5%);
+    }
+    .rise-blur .wr > span {
+      animation-name: word-blur;
+    }
+
+    [data-count] {
+      --n: var(--to);
+      counter-reset: n var(--n);
+      animation: sd-count linear both;
+      animation-timeline: view();
+      animation-range: entry 10% entry 100%;
+    }
+    /* Numbers already on screen when a page opens count on a timer instead. */
+    [data-count='now'] {
+      animation: sd-count 1.8s 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+      animation-timeline: auto;
+    }
+    /* The real number keeps its width but is see-through; the counter sits on top of it. */
+    [data-count] {
+      position: relative;
+      display: inline-block;
+      -webkit-text-fill-color: transparent;
+    }
+    [data-count]::after {
+      content: counter(n);
+      position: absolute;
+      inset: 0;
+      -webkit-text-fill-color: currentColor;
+    }
+  }
+}
+@keyframes sd-reveal {
+  from { opacity: 0; translate: 0 28px; filter: blur(6px); }
+  to { opacity: 1; filter: blur(0); }
+}
+@keyframes sd-pop {
+  from { opacity: 0; scale: 0.82; translate: 0 18px; }
+  to { opacity: 1; }
+}
+@keyframes sd-draw {
+  from { stroke-dashoffset: 26; }
+  to { stroke-dashoffset: 0; }
+}
+@keyframes sd-count {
+  from { --n: 0; }
+  to { --n: var(--to); }
+}
+@keyframes word-blur {
+  from { opacity: 0; filter: blur(12px); translate: 0 0.3em; }
+  to { opacity: 1; filter: blur(0); }
 }

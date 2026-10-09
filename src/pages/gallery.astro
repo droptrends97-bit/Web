@@ -1,4 +1,5 @@
 ---
+import Split from '../components/Split.astro';
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
 import CallToAction from '../components/CallToAction.astro';
@@ -64,14 +65,14 @@ const count = (c: Cat) => photos.filter((p) => p.cat === c).length;
   description="Photos from gardens Darragh Connolly Garden Care looks after across Dublin and Wicklow: planting, lawns, hedging, topiary, pots and features."
 >
   <section class="wrap hero" id="gal-top" aria-labelledby="gal-title">
-    <h1 id="gal-title" data-type data-speed="50">Gardens we look after.</h1>
+    <h1 id="gal-title" class="ink" style="--n:19" aria-label={"Gardens we look after."}><Split text={"Gardens we look after."} letters /><span class="swash" aria-hidden="true"><svg viewBox="0 0 300 24" preserveAspectRatio="none"><path d="M4 16C60 6 120 4 180 9s90 8 116-2" /></svg></span></h1>
     <div class="hero-side">
       <p class="lede" data-reveal>
-        <span data-count>{photos.length}</span> photos from gardens across Dublin and Wicklow. Tap any photo to see it larger.
+        <span data-count="now" style={`--to:${photos.length}`}>{photos.length}</span> photos from gardens across Dublin and Wicklow. Tap any photo to see it larger.
       </p>
       <ul class="stats">
         {cats.slice(1).map((c, i) => (
-          <li data-pop style={`--d:${i}`}><strong data-count>{count(c.id as Cat)}</strong>{c.label}</li>
+          <li data-pop style={`--d:${i}`}><strong data-count="now" style={`--to:${count(c.id as Cat)}`}>{count(c.id as Cat)}</strong>{c.label}</li>
         ))}
       </ul>
     </div>
@@ -161,7 +162,7 @@ const count = (c: Cat) => photos.filter((p) => p.cat === c).length;
   .grid { list-style: none; margin: 0; padding: 0; columns: 4 15rem; column-gap: 0.85rem; }
   .tile { break-inside: avoid; margin-bottom: 0.85rem; animation: tile-in 500ms var(--ease-out) both; }
   @keyframes tile-in { from { opacity: 0; transform: scale(0.96); } }
-  .tile a { position: relative; display: block; border-radius: 18px; overflow: hidden; }
+  .tile a { position: relative; display: block; border-radius: 18px; overflow: clip; }
   .tile img { width: 100%; height: auto; transition: transform 800ms var(--ease-out), filter 400ms; }
   .tile a:hover img { transform: scale(1.05); }
   .zoom { position: absolute; right: 0.75rem; bottom: 0.75rem; width: 2.6rem; height: 2.6rem; border-radius: 50%; display: grid; place-items: center; background: rgb(255 255 255 / 0.85); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); opacity: 0; transform: scale(0.7); transition: opacity 250ms, transform 350ms cubic-bezier(0.34, 1.56, 0.64, 1); }

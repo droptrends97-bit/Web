@@ -1,4 +1,5 @@
 ---
+import Split from '../components/Split.astro';
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
 import Proof from '../components/Proof.astro';
@@ -70,7 +71,7 @@ const belief = "Nature isn't just a background to our lives; it actively support
     <div class="hero-card">
       <img class="hero-img" src="/img/mountain-peak.jpg" alt="A mountain in Wicklow under a bright sky." />
       <div class="hero-copy">
-        <h1 id="about-hero" data-type data-speed="60">Hi, I'm Darragh.</h1>
+        <h1 id="about-hero" class="ink" style="--n:14" aria-label={"Hi, I'm Darragh."}><Split text={"Hi, I'm Darragh."} letters /><span class="swash" aria-hidden="true"><svg viewBox="0 0 300 24" preserveAspectRatio="none"><path d="M4 16C60 6 120 4 180 9s90 8 116-2" /></svg></span></h1>
         <p class="hero-lede">
           Transforming gardens into spaces of peace and well-being, across Dublin and Wicklow, for over 20 years.
         </p>
@@ -88,8 +89,14 @@ const belief = "Nature isn't just a background to our lives; it actively support
       {
         facts.map((f, i) => (
           <li data-pop style={`--d:${i}`}>
-            <span class="fact-big" data-count={f.count ? '' : undefined}>
-              {f.big}
+            <span class="fact-big">
+              {f.count ? (
+                <Fragment>
+                  <span data-count="now" style={`--to:${f.count}`}>{f.count}</span>+
+                </Fragment>
+              ) : (
+                f.big
+              )}
             </span>
             <span class="fact-label">{f.label}</span>
           </li>
@@ -101,7 +108,7 @@ const belief = "Nature isn't just a background to our lives; it actively support
   <!-- Story -->
   <section class="wrap story" aria-labelledby="story-title">
     <div class="story-head">
-      <h2 id="story-title" data-type>Transforming gardens into spaces of peace</h2>
+      <h2 id="story-title" class="rise" aria-label={"Transforming gardens into spaces of peace"}><Split text={"Transforming gardens into spaces of peace"} /></h2>
     </div>
     <div class="story-body" data-reveal>
       <p class="story-lead">
@@ -148,7 +155,7 @@ const belief = "Nature isn't just a background to our lives; it actively support
         <figcaption>Out in the cold: where the idea took root.</figcaption>
       </figure>
       <div class="journey-copy">
-        <h2 id="journey-title" data-type>My journey into wellness gardening</h2>
+        <h2 id="journey-title" class="rise" aria-label={"My journey into wellness gardening"}><Split text={"My journey into wellness gardening"} /></h2>
         <p>
           Beyond my work in gardens, I've always been drawn to nature's ability to restore and strengthen us. Whether
           it's through cold exposure, breathwork or simply spending time outdoors, I've experienced first-hand how the
@@ -182,7 +189,7 @@ const belief = "Nature isn't just a background to our lives; it actively support
   <!-- How I can help -->
   <section class="wrap help" aria-labelledby="help-title">
     <div class="help-head">
-      <h2 id="help-title" data-type>How I can help you</h2>
+      <h2 id="help-title" class="rise" aria-label={"How I can help you"}><Split text={"How I can help you"} /></h2>
       <p class="lede">I now focus on helping people create gardens that feel as good as they look.</p>
     </div>
     <ul class="help-grid" data-stagger="flip">
@@ -258,7 +265,7 @@ const belief = "Nature isn't just a background to our lives; it actively support
     max-width: calc(var(--max) + 4rem);
     margin-inline: auto;
     border-radius: var(--radius-lg);
-    overflow: hidden;
+    overflow: clip;
     min-height: clamp(26rem, 38vw, 34rem);
     display: flex;
     align-items: flex-end;
@@ -303,14 +310,14 @@ const belief = "Nature isn't just a background to our lives; it actively support
     color: #dfe5d8;
     max-width: 38ch;
   }
-  .js .hero-lede,
-  .js .hero-actions {
+  .hero-lede,
+  .hero-actions {
     animation: rise-in 900ms var(--ease-out) both;
   }
-  .js .hero-lede {
+  .hero-lede {
     animation-delay: 1100ms;
   }
-  .js .hero-actions {
+  .hero-actions {
     animation-delay: 1400ms;
   }
   @keyframes rise-in {
@@ -617,7 +624,7 @@ const belief = "Nature isn't just a background to our lives; it actively support
     align-items: flex-end;
     min-height: 24rem;
     border-radius: var(--radius-lg);
-    overflow: hidden;
+    overflow: clip;
     isolation: isolate;
     color: #fff;
     text-decoration: none;

@@ -1,4 +1,5 @@
 ---
+import Split from '../../components/Split.astro';
 import Base from '../../layouts/Base.astro';
 import Icon from '../../components/Icon.astro';
 import CallToAction from '../../components/CallToAction.astro';
@@ -89,7 +90,7 @@ const heroPhotos = [
   <section class="hero wrap" aria-labelledby="pots-title">
     <div class="hero-copy">
       <a class="crumb" href="/services/">Services</a>
-      <h1 id="pots-title" data-type data-speed="50">Pots &amp; planters for every season.</h1>
+      <h1 id="pots-title" class="ink" style="--n:28" aria-label={"Pots & planters for every season."}><Split text={"Pots & planters for every season."} letters /><span class="swash" aria-hidden="true"><svg viewBox="0 0 300 24" preserveAspectRatio="none"><path d="M4 16C60 6 120 4 180 9s90 8 116-2" /></svg></span></h1>
       <p class="lede hero-lede">
         Transform your entrance, patio, balcony or business with professionally designed seasonal pots and planters.
       </p>
@@ -124,7 +125,7 @@ const heroPhotos = [
         <img src="/img/topiary-tulips.jpg" alt="Two lollipop topiary trees above pink and red tulips at a granite entrance." loading="lazy" />
       </figure>
       <div class="why-copy">
-        <h2 id="why-title" data-type>Why choose pots and planters?</h2>
+        <h2 id="why-title" class="rise" aria-label={"Why choose pots and planters?"}><Split text={"Why choose pots and planters?"} /></h2>
         <p class="why-lead" data-reveal>
           You want beautiful pots, but choosing the right plants, compost, containers and seasonal combinations can be
           overwhelming. <strong>We take care of everything.</strong>
@@ -148,7 +149,7 @@ const heroPhotos = [
   <!-- Displays -->
   <section class="wrap displays" aria-labelledby="displays-title">
     <div class="section-head">
-      <h2 id="displays-title" data-type>Tailored displays for homes &amp; businesses</h2>
+      <h2 id="displays-title" class="rise" aria-label={"Tailored displays for homes & businesses"}><Split text={"Tailored displays for homes & businesses"} /></h2>
       <p class="lede">From striking front-door displays to colourful patio arrangements, we create gardens that look fantastic throughout the year.</p>
     </div>
     <ul class="bento" data-stagger="flip">
@@ -169,7 +170,7 @@ const heroPhotos = [
   <!-- How it works -->
   <section class="process" aria-labelledby="process-title">
     <div class="wrap">
-      <h2 id="process-title" data-type>How it works</h2>
+      <h2 id="process-title" class="rise" aria-label={"How it works"}><Split text={"How it works"} /></h2>
       <ol class="steps" data-stagger="rise">
         {
           steps.map((s, i) => (
@@ -188,7 +189,7 @@ const heroPhotos = [
   <section class="gallery" aria-labelledby="gallery-pots-title">
     <div class="wrap gallery-head">
       <div>
-        <h2 id="gallery-pots-title" data-type>Real pots. Real transformations.</h2>
+        <h2 id="gallery-pots-title" class="rise" aria-label={"Real pots. Real transformations."}><Split text={"Real pots. Real transformations."} /></h2>
         <p class="lede">A gallery of great transformations says more than words ever can.</p>
       </div>
       <div class="gallery-btns">
@@ -256,14 +257,14 @@ const heroPhotos = [
   .hero-lede {
     max-width: 36ch;
   }
-  .js .hero-lede,
-  .js .hero-actions {
+  .hero-lede,
+  .hero-actions {
     animation: rise-in 900ms var(--ease-out) both;
   }
-  .js .hero-lede {
+  .hero-lede {
     animation-delay: 1500ms;
   }
-  .js .hero-actions {
+  .hero-actions {
     animation-delay: 1800ms;
   }
   @keyframes rise-in {
@@ -287,7 +288,7 @@ const heroPhotos = [
     margin: 0;
     width: 52%;
     border-radius: 24px;
-    overflow: hidden;
+    overflow: clip;
     box-shadow: 0 30px 60px -30px rgb(10 25 16 / 0.55);
     border: 6px solid #fff;
   }
@@ -467,7 +468,7 @@ const heroPhotos = [
   .tile {
     position: relative;
     border-radius: var(--radius-lg);
-    overflow: hidden;
+    overflow: clip;
     isolation: isolate;
     display: flex;
     align-items: flex-end;

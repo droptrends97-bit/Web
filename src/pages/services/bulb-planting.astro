@@ -1,4 +1,5 @@
 ---
+import Split from '../../components/Split.astro';
 import Base from '../../layouts/Base.astro';
 import Icon from '../../components/Icon.astro';
 import CallToAction from '../../components/CallToAction.astro';
@@ -42,7 +43,7 @@ const gallery = Array.from({ length: 16 }, (_, i) => ({ src: `/img/bulb-${i + 1}
       <img class="hero-img" src="/img/bulb-tulips-lawn.jpg" alt="Pink and orange tulips flowering at the edge of a lawn." />
       <div class="hero-copy">
         <a class="crumb" href="/services/">Services</a>
-        <h1 id="bulb-title" data-type data-speed="55">Bulb planting.</h1>
+        <h1 id="bulb-title" class="ink" style="--n:13" aria-label={"Bulb planting."}><Split text={"Bulb planting."} letters /><span class="swash" aria-hidden="true"><svg viewBox="0 0 300 24" preserveAspectRatio="none"><path d="M4 16C60 6 120 4 180 9s90 8 116-2" /></svg></span></h1>
         <p class="hero-lede">Colour and life in your garden, from the depths of winter right up to late June and July.</p>
         <div class="hero-actions">
           <a class="btn btn-leaf" href="#bulb-plans">See the plans <Icon name="arrow" /></a>
@@ -64,7 +65,7 @@ const gallery = Array.from({ length: 16 }, (_, i) => ({ src: `/img/bulb-${i + 1}
   </section>
 
   <section class="wrap season" aria-labelledby="season-title">
-    <h2 id="season-title" data-type>A longer season, in layers</h2>
+    <h2 id="season-title" class="rise" aria-label={"A longer season, in layers"}><Split text={"A longer season, in layers"} /></h2>
     <ol class="tl" data-stagger="grow">
       {
         timeline.map((t, i) => (
@@ -81,7 +82,7 @@ const gallery = Array.from({ length: 16 }, (_, i) => ({ src: `/img/bulb-${i + 1}
   <section class="plans" id="bulb-plans" aria-labelledby="plans-title">
     <div class="wrap">
       <div class="section-head">
-        <h2 id="plans-title" data-type>Bulb planting plans</h2>
+        <h2 id="plans-title" class="rise" aria-label={"Bulb planting plans"}><Split text={"Bulb planting plans"} /></h2>
         <p class="lede">Choose the best plan for your garden. Final planting costs vary from garden to garden.</p>
       </div>
       <ul class="plan-grid" data-stagger="flip">
@@ -90,7 +91,7 @@ const gallery = Array.from({ length: 16 }, (_, i) => ({ src: `/img/bulb-${i + 1}
             <li class:list={['plan', { popular: p.popular }]} data-pop style={`--d:${i}`}>
               {p.popular && <span class="badge">Most popular</span>}
               <h3>{p.name}</h3>
-              <p class="count"><span data-count>{p.bulbs.length}</span> bulb types</p>
+              <p class="count"><span data-count style={`--to:${p.bulbs.length}`}>{p.bulbs.length}</span> bulb types</p>
               <ul class="bulbs">
                 {p.bulbs.map((b) => (
                   <li>
@@ -112,7 +113,7 @@ const gallery = Array.from({ length: 16 }, (_, i) => ({ src: `/img/bulb-${i + 1}
   </section>
 
   <section class="wrap process" aria-labelledby="bulb-proc">
-    <h2 id="bulb-proc" data-type>How it works</h2>
+    <h2 id="bulb-proc" class="rise" aria-label={"How it works"}><Split text={"How it works"} /></h2>
     <ol class="steps" data-stagger="rise">
       {
         steps.map((s, i) => (
@@ -127,7 +128,7 @@ const gallery = Array.from({ length: 16 }, (_, i) => ({ src: `/img/bulb-${i + 1}
   </section>
 
   <section class="gallery" aria-labelledby="bulb-gallery">
-    <div class="wrap"><h2 id="bulb-gallery" data-type>Spring in gardens we look after</h2></div>
+    <div class="wrap"><h2 id="bulb-gallery" class="rise" aria-label={"Spring in gardens we look after"}><Split text={"Spring in gardens we look after"} /></h2></div>
     <div class="marquee bulb-rail" style="--speed: 75s; --gap: 1rem">
       {
         [0, 1].map((k) => (
@@ -147,7 +148,7 @@ const gallery = Array.from({ length: 16 }, (_, i) => ({ src: `/img/bulb-${i + 1}
 
 <style>
   .hero { padding: 0.75rem clamp(0.5rem, 1.5vw, 1rem) 0; }
-  .hero-card { position: relative; max-width: calc(var(--max) + 4rem); margin-inline: auto; border-radius: var(--radius-lg); overflow: hidden; isolation: isolate; min-height: clamp(28rem, 44vw, 38rem); display: flex; align-items: flex-end; color: #f4f6ee; }
+  .hero-card { position: relative; max-width: calc(var(--max) + 4rem); margin-inline: auto; border-radius: var(--radius-lg); overflow: clip; isolation: isolate; min-height: clamp(28rem, 44vw, 38rem); display: flex; align-items: flex-end; color: #f4f6ee; }
   .hero-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 60% 60%; z-index: -2; animation: settle-in 14s var(--ease-out) both; }
   @keyframes settle-in { from { transform: scale(1.12); } }
   .hero-card::before { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgb(12 26 17 / 0) 25%, rgb(12 26 17 / 0.5) 55%, rgb(12 26 17 / 0.88) 100%); }
@@ -155,9 +156,9 @@ const gallery = Array.from({ length: 16 }, (_, i) => ({ src: `/img/bulb-${i + 1}
   .crumb { font-weight: 600; font-size: 0.95rem; color: #f4f6ee; text-decoration: none; padding: 0.35rem 0.8rem; border-radius: 999px; background: rgb(255 255 255 / 0.14); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
   .hero h1 { font-size: clamp(2.9rem, 7vw, 6rem); line-height: 0.96; }
   .hero-lede { font-size: clamp(1.15rem, 1.8vw, 1.4rem); color: #dfe5d8; max-width: 42ch; }
-  .js .hero-lede, .js .hero-actions { animation: rise-in 900ms var(--ease-out) both; }
-  .js .hero-lede { animation-delay: 1200ms; }
-  .js .hero-actions { animation-delay: 1500ms; }
+  .hero-lede, .hero-actions { animation: rise-in 900ms var(--ease-out) both; }
+  .hero-lede { animation-delay: 1200ms; }
+  .hero-actions { animation-delay: 1500ms; }
   @keyframes rise-in { from { opacity: 0; transform: translateY(16px); filter: blur(6px); } }
   .hero-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; }
   .btn-glass { color: #f4f6ee; background: rgb(255 255 255 / 0.12); border: 1px solid rgb(255 255 255 / 0.3); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }

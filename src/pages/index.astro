@@ -1,4 +1,5 @@
 ---
+import Split from '../components/Split.astro';
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
 import YearRibbon from '../components/YearRibbon.astro';
@@ -90,7 +91,7 @@ const statement =
   <!-- Hero -->
   <section class="hero" aria-labelledby="hero-title">
     <div class="hero-copy">
-      <h1 id="hero-title" data-type data-speed="55">Your garden, looked after all year.</h1>
+      <h1 id="hero-title" class="ink" style="--n:30" aria-label={"Your garden, looked after all year."}><Split text={"Your garden, looked after all year."} letters /><span class="swash" aria-hidden="true"><svg viewBox="0 0 300 24" preserveAspectRatio="none"><path d="M4 16C60 6 120 4 180 9s90 8 116-2" /></svg></span></h1>
       <p class="lede hero-lede">
         Darragh Connolly and his team care for gardens across Dublin and North Wicklow: regular maintenance, seasonal
         interventions, lawn health and planted pots.
@@ -143,7 +144,7 @@ const statement =
   <section class="services" aria-labelledby="services-title">
     <div class="wrap">
       <div class="section-head" data-reveal>
-        <h2 id="services-title" data-type>How we look after a garden</h2>
+        <h2 id="services-title" class="rise" aria-label={"How we look after a garden"}><Split text={"How we look after a garden"} /></h2>
         <p class="lede">Garden care is all we do. Start with a visit or a Garden Intervention, then keep it right with regular care.</p>
       </div>
 
@@ -203,7 +204,7 @@ const statement =
   <!-- How it works: stacking cards -->
   <section class="steps" aria-labelledby="steps-title">
     <div class="wrap">
-      <h2 id="steps-title" class="steps-title" data-type>Three steps to a garden you don't have to worry about</h2>
+      <h2 id="steps-title" class="steps-title rise" aria-label={"Three steps to a garden you don't have to worry about"}><Split text={"Three steps to a garden you don't have to worry about"} /></h2>
       <ol class="stack">
         {
           steps.map((s, i) => (
@@ -239,7 +240,7 @@ const statement =
         <img src="/img/gal-18.jpg" alt="Purple alliums in front of the Darragh Connolly Garden Care van." loading="lazy" />
       </figure>
       <div class="about-body" data-reveal style="--d:1">
-        <h2 id="about-title" data-type>He'll look after your garden like it's his own.</h2>
+        <h2 id="about-title" class="rise" aria-label={"He'll look after your garden like it's his own."}><Split text={"He'll look after your garden like it's his own."} /></h2>
         <p>
           Darragh's work is mainly in Dublin and North Wicklow. He carries out all work thoroughly, to the highest
           standard possible, and takes pride in doing so. The business has grown through referrals from clients who are
@@ -252,7 +253,7 @@ const statement =
 
   <section class="strip-photos" aria-labelledby="gallery-title">
     <div class="wrap strip-head">
-      <h2 id="gallery-title" data-type>Gardens we look after</h2>
+      <h2 id="gallery-title" class="rise" aria-label={"Gardens we look after"}><Split text={"Gardens we look after"} /></h2>
       <a class="btn btn-ghost" href="/gallery/">See the gallery <Icon name="arrow" /></a>
     </div>
     <div class="marquee photo-rail" style="--speed: 60s; --gap: 1rem">
@@ -366,24 +367,24 @@ const statement =
   .hero-lede {
     max-width: 34ch;
   }
-  .js .hero-lede,
-  .js .hero-actions,
-  .js .now {
+  .hero-lede,
+  .hero-actions,
+  .now {
     animation: fade-up 900ms var(--ease-out) both;
   }
-  .js .hero-lede {
+  .hero-lede {
     animation-delay: 1700ms;
   }
-  .js .hero-actions,
-  .js .now {
+  .hero-actions,
+  .now {
     animation-name: pop-in;
     animation-duration: 800ms;
     animation-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
   }
-  .js .hero-actions {
+  .hero-actions {
     animation-delay: 2100ms;
   }
-  .js .now {
+  .now {
     animation-delay: 2500ms;
   }
   @keyframes pop-in {
@@ -451,13 +452,13 @@ const statement =
     gap: 0.75rem;
     height: min(calc(100svh - 9rem), 48rem);
     min-height: 30rem;
-    overflow: hidden;
+    overflow: clip;
     border-radius: var(--radius-lg);
     -webkit-mask: linear-gradient(transparent, #000 10%, #000 90%, transparent);
     mask: linear-gradient(transparent, #000 10%, #000 90%, transparent);
   }
   .col {
-    overflow: hidden;
+    overflow: clip;
   }
   .col-track {
     display: grid;
@@ -559,7 +560,7 @@ const statement =
   .tile {
     position: relative;
     border-radius: var(--radius-lg);
-    overflow: hidden;
+    overflow: clip;
     isolation: isolate;
   }
   .tile::after {

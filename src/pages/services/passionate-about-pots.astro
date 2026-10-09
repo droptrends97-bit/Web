@@ -1,4 +1,5 @@
 ---
+import Split from '../../components/Split.astro';
 import Base from '../../layouts/Base.astro';
 import Icon from '../../components/Icon.astro';
 import CallToAction from '../../components/CallToAction.astro';
@@ -48,7 +49,7 @@ const seasons = [
       <img class="hero-img" src="/img/pap-hero.jpg" alt="A large pale Torc pot planted with grasses on a terrace beside pink roses and a bench at sunset." />
       <div class="hero-copy">
         <a class="crumb" href="/services/">Services</a>
-        <h1 id="pap-title" data-type data-speed="55">Passionate about pots.</h1>
+        <h1 id="pap-title" class="ink" style="--n:20" aria-label={"Passionate about pots."}><Split text={"Passionate about pots."} letters /><span class="swash" aria-hidden="true"><svg viewBox="0 0 300 24" preserveAspectRatio="none"><path d="M4 16C60 6 120 4 180 9s90 8 116-2" /></svg></span></h1>
         <p class="hero-lede">Distinctive, durable pots that are built to last, chosen with you and planted for every season.</p>
         <div class="hero-actions">
           <a class="btn btn-leaf" href="#pap-torc">See the Torc range <Icon name="arrow" /></a>
@@ -75,7 +76,7 @@ const seasons = [
     <div class="wrap ndt-grid">
       <div class="ndt-copy">
         <span class="maker">From the Netherlands</span>
-        <h2 id="ndt-title" data-type>NDT Potteries</h2>
+        <h2 id="ndt-title" class="rise" aria-label={"NDT Potteries"}><Split text={"NDT Potteries"} /></h2>
         <p data-reveal>Stocked at Windyridge Garden Centre in Killiney. The process is easy:</p>
         <ol class="ndt-steps" data-stagger="slide">
           <li data-pop><span>1</span>We meet at Windyridge Garden Centre</li>
@@ -95,7 +96,7 @@ const seasons = [
     <div class="torc-head">
       <div>
         <span class="maker">Hand-made in Jersey</span>
-        <h2 id="torc-title" data-type>Torc Pots</h2>
+        <h2 id="torc-title" class="rise" aria-label={"Torc Pots"}><Split text={"Torc Pots"} /></h2>
       </div>
       <div class="torc-intro" data-reveal>
         <p>
@@ -143,7 +144,7 @@ const seasons = [
 
   <!-- Process -->
   <section class="wrap process" aria-labelledby="proc-title">
-    <h2 id="proc-title" data-type>The process</h2>
+    <h2 id="proc-title" class="rise" aria-label={"The process"}><Split text={"The process"} /></h2>
     <ol class="steps" data-stagger="flip">
       {
         steps.map((s, i) => (
@@ -183,7 +184,7 @@ const seasons = [
 
 <style>
   .hero { padding: 0.75rem clamp(0.5rem, 1.5vw, 1rem) 0; }
-  .hero-card { position: relative; max-width: calc(var(--max) + 4rem); margin-inline: auto; border-radius: var(--radius-lg); overflow: hidden; isolation: isolate; min-height: clamp(28rem, 44vw, 38rem); display: flex; align-items: flex-end; color: #f4f6ee; }
+  .hero-card { position: relative; max-width: calc(var(--max) + 4rem); margin-inline: auto; border-radius: var(--radius-lg); overflow: clip; isolation: isolate; min-height: clamp(28rem, 44vw, 38rem); display: flex; align-items: flex-end; color: #f4f6ee; }
   .hero-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 30% 50%; z-index: -2; animation: settle-in 14s var(--ease-out) both; }
   @keyframes settle-in { from { transform: scale(1.12); } }
   .hero-card::before { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgb(12 26 17 / 0) 25%, rgb(12 26 17 / 0.5) 55%, rgb(12 26 17 / 0.88) 100%); }
@@ -191,9 +192,9 @@ const seasons = [
   .crumb { font-weight: 600; font-size: 0.95rem; color: #f4f6ee; text-decoration: none; padding: 0.35rem 0.8rem; border-radius: 999px; background: rgb(255 255 255 / 0.14); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
   .hero h1 { font-size: clamp(2.9rem, 7vw, 6rem); line-height: 0.96; max-width: 11ch; }
   .hero-lede { font-size: clamp(1.15rem, 1.8vw, 1.4rem); color: #dfe5d8; max-width: 42ch; }
-  .js .hero-lede, .js .hero-actions { animation: rise-in 900ms var(--ease-out) both; }
-  .js .hero-lede { animation-delay: 1500ms; }
-  .js .hero-actions { animation-delay: 1800ms; }
+  .hero-lede, .hero-actions { animation: rise-in 900ms var(--ease-out) both; }
+  .hero-lede { animation-delay: 1500ms; }
+  .hero-actions { animation-delay: 1800ms; }
   @keyframes rise-in { from { opacity: 0; transform: translateY(16px); filter: blur(6px); } }
   .hero-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; }
   .btn-glass { color: #f4f6ee; background: rgb(255 255 255 / 0.12); border: 1px solid rgb(255 255 255 / 0.3); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
@@ -214,7 +215,7 @@ const seasons = [
   .ndt-steps span { flex: none; width: 2rem; height: 2rem; border-radius: 50%; display: grid; place-items: center; background: var(--evergreen); color: var(--leaf); font-weight: 650; }
   .enjoy { font-family: var(--display); font-weight: 600; font-size: clamp(1.4rem, 2.4vw, 1.9rem) !important; letter-spacing: -0.04em; color: var(--ink) !important; }
   .ndt-photos { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.6rem; }
-  .ndt-photos li { border-radius: 18px; overflow: hidden; aspect-ratio: 3 / 4; }
+  .ndt-photos li { border-radius: 18px; overflow: clip; aspect-ratio: 3 / 4; }
   .ndt-photos li:nth-child(even) { transform: translateY(1.5rem); }
   .ndt-photos img { width: 100%; height: 100%; object-fit: cover; transition: transform 800ms var(--ease-out); }
   .ndt-photos li:hover img { transform: scale(1.06); }
@@ -223,7 +224,7 @@ const seasons = [
   .torc-head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 1rem clamp(2rem, 5vw, 5rem); align-items: end; margin-bottom: clamp(2rem, 4vw, 3rem); }
   .torc-intro p { color: var(--ink-2); font-size: 1.1rem; }
   .torc-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; }
-  .torc-grid figure { margin: 0; position: relative; border-radius: 20px; overflow: hidden; aspect-ratio: 1; }
+  .torc-grid figure { margin: 0; position: relative; border-radius: 20px; overflow: clip; aspect-ratio: 1; }
   .torc-grid img { width: 100%; height: 100%; object-fit: cover; transition: transform 900ms var(--ease-out); }
   .torc-grid figure:hover img { transform: scale(1.07); }
   .torc-grid figcaption { position: absolute; left: 0.75rem; bottom: 0.75rem; padding: 0.5rem 0.85rem; border-radius: 14px; background: rgb(255 255 255 / 0.88); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); display: grid; line-height: 1.15; }

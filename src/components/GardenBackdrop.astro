@@ -188,7 +188,7 @@ const plants: Plant[] = [
     height: 100svh;
     z-index: -1;
     pointer-events: none;
-    overflow: hidden;
+    overflow: clip;
     /* Full at the screen edges, faded before the content column. */
     --edge: linear-gradient(90deg, #000 0, #000 3vw, transparent 11vw, transparent calc(100% - 11vw), #000 calc(100% - 3vw), #000 100%);
     -webkit-mask-image: var(--edge);

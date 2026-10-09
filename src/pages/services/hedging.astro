@@ -1,4 +1,5 @@
 ---
+import Split from '../../components/Split.astro';
 import Base from '../../layouts/Base.astro';
 import Icon from '../../components/Icon.astro';
 import CallToAction from '../../components/CallToAction.astro';
@@ -40,7 +41,7 @@ const gallery = [3, 4, 7, 13, 14, 16, 18, 19, 21, 23, 26, 27, 11, 1].map((n) => 
       <img class="hero-img" src="/img/hedge-hero.jpg" alt="A row of pleached trees forming a green screen above a clipped box hedge and red-brick wall." />
       <div class="hero-copy">
         <a class="crumb" href="/services/">Services</a>
-        <h1 id="hg-title" data-type data-speed="50">Hedging, designed and planted.</h1>
+        <h1 id="hg-title" class="ink" style="--n:27" aria-label={"Hedging, designed and planted."}><Split text={"Hedging, designed and planted."} letters /><span class="swash" aria-hidden="true"><svg viewBox="0 0 300 24" preserveAspectRatio="none"><path d="M4 16C60 6 120 4 180 9s90 8 116-2" /></svg></span></h1>
         <p class="hero-lede">Define your boundaries, gain privacy and shelter, and give your garden a living frame.</p>
         <div class="hero-actions">
           <a class="btn btn-leaf" href="#hg-plants">Choose your hedge <Icon name="arrow" /></a>
@@ -60,7 +61,7 @@ const gallery = [3, 4, 7, 13, 14, 16, 18, 19, 21, 23, 26, 27, 11, 1].map((n) => 
   </section>
 
   <section class="wrap benefits" aria-labelledby="ben-title">
-    <h2 id="ben-title" data-type>What a mature hedge gives you</h2>
+    <h2 id="ben-title" class="rise" aria-label={"What a mature hedge gives you"}><Split text={"What a mature hedge gives you"} /></h2>
     <ul class="ben-grid" data-stagger="rise">
       {
         benefits.map((b, i) => (
@@ -76,7 +77,7 @@ const gallery = [3, 4, 7, 13, 14, 16, 18, 19, 21, 23, 26, 27, 11, 1].map((n) => 
 
   <section class="wrap plants" id="hg-plants" aria-labelledby="plants-title">
     <div class="section-head">
-      <h2 id="plants-title" data-type>Hedges we plant regularly</h2>
+      <h2 id="plants-title" class="rise" aria-label={"Hedges we plant regularly"}><Split text={"Hedges we plant regularly"} /></h2>
       <p class="lede">These are just a few options. The right plant depends on your needs and growing conditions.</p>
     </div>
     <ul class="plant-grid" data-stagger="flip">
@@ -117,7 +118,7 @@ const gallery = [3, 4, 7, 13, 14, 16, 18, 19, 21, 23, 26, 27, 11, 1].map((n) => 
         <img src="/img/hg-3.jpg" alt="Pleached trees forming an elevated green wall above a stone wall." loading="lazy" />
       </figure>
       <div class="pleach-copy">
-        <h2 id="pleach-title" data-type>Pleached hedges: a green wall in the air</h2>
+        <h2 id="pleach-title" class="rise" aria-label={"Pleached hedges: a green wall in the air"}><Split text={"Pleached hedges: a green wall in the air"} /></h2>
         <p data-reveal>
           Pleached trees are trained to form a screen of branches and foliage on a single, straight stem. Planted in rows at
           set distances, they create an elevated green wall, a great natural alternative to high fencing.
@@ -131,7 +132,7 @@ const gallery = [3, 4, 7, 13, 14, 16, 18, 19, 21, 23, 26, 27, 11, 1].map((n) => 
   </section>
 
   <section class="gallery" aria-labelledby="hg-gallery">
-    <div class="wrap"><h2 id="hg-gallery" data-type>Hedges we've planted</h2></div>
+    <div class="wrap"><h2 id="hg-gallery" class="rise" aria-label={"Hedges we've planted"}><Split text={"Hedges we've planted"} /></h2></div>
     <div class="marquee hg-rail" style="--speed: 70s; --gap: 1rem">
       {
         [0, 1].map((k) => (
@@ -153,7 +154,7 @@ const gallery = [3, 4, 7, 13, 14, 16, 18, 19, 21, 23, 26, 27, 11, 1].map((n) => 
   .hero { padding: 0.75rem clamp(0.5rem, 1.5vw, 1rem) 0; }
   .hero-card {
     position: relative; max-width: calc(var(--max) + 4rem); margin-inline: auto; border-radius: var(--radius-lg);
-    overflow: hidden; isolation: isolate; min-height: clamp(28rem, 44vw, 38rem); display: flex; align-items: flex-end; color: #f4f6ee;
+    overflow: clip; isolation: isolate; min-height: clamp(28rem, 44vw, 38rem); display: flex; align-items: flex-end; color: #f4f6ee;
   }
   .hero-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 40%; z-index: -2; animation: settle-in 14s var(--ease-out) both; }
   @keyframes settle-in { from { transform: scale(1.12); } }
@@ -162,9 +163,9 @@ const gallery = [3, 4, 7, 13, 14, 16, 18, 19, 21, 23, 26, 27, 11, 1].map((n) => 
   .crumb { font-weight: 600; font-size: 0.95rem; color: #f4f6ee; text-decoration: none; padding: 0.35rem 0.8rem; border-radius: 999px; background: rgb(255 255 255 / 0.14); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
   .hero h1 { font-size: clamp(2.9rem, 7vw, 6rem); line-height: 0.96; max-width: 12ch; }
   .hero-lede { font-size: clamp(1.15rem, 1.8vw, 1.4rem); color: #dfe5d8; max-width: 42ch; }
-  .js .hero-lede, .js .hero-actions { animation: rise-in 900ms var(--ease-out) both; }
-  .js .hero-lede { animation-delay: 1600ms; }
-  .js .hero-actions { animation-delay: 1900ms; }
+  .hero-lede, .hero-actions { animation: rise-in 900ms var(--ease-out) both; }
+  .hero-lede { animation-delay: 1600ms; }
+  .hero-actions { animation-delay: 1900ms; }
   @keyframes rise-in { from { opacity: 0; transform: translateY(16px); filter: blur(6px); } }
   .hero-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; }
   .btn-glass { color: #f4f6ee; background: rgb(255 255 255 / 0.12); border: 1px solid rgb(255 255 255 / 0.3); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
@@ -186,7 +187,7 @@ const gallery = [3, 4, 7, 13, 14, 16, 18, 19, 21, 23, 26, 27, 11, 1].map((n) => 
   .plants { padding-block: clamp(3rem, 7vw, 5rem); scroll-margin-top: 6rem; }
   .section-head { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 1rem clamp(2rem, 5vw, 5rem); align-items: end; margin-bottom: clamp(2rem, 4vw, 3rem); }
   .plant-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
-  .plant { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow); display: grid; grid-template-rows: auto 1fr; }
+  .plant { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: clip; box-shadow: var(--shadow); display: grid; grid-template-rows: auto 1fr; }
   .plant img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; transition: transform 800ms var(--ease-out); }
   .plant:hover img { transform: scale(1.05); }
   .plant-body { padding: 1.25rem 1.4rem 1.5rem; display: grid; gap: 0.35rem; align-content: start; position: relative; background: var(--card); }

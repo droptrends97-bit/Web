@@ -1,4 +1,5 @@
 ---
+import Split from '../../components/Split.astro';
 import Base from '../../layouts/Base.astro';
 import Icon from '../../components/Icon.astro';
 import CallToAction from '../../components/CallToAction.astro';
@@ -56,7 +57,7 @@ const gallery = [
       <img class="hero-img" src="/img/gh-hero.jpg" alt="A freshly striped lawn leading to a white bench, clipped bay trees and hydrangeas before a trellis." />
       <div class="hero-copy">
         <a class="crumb" href="/services/">Services</a>
-        <h1 id="gh-title" data-type data-speed="50">Your garden's wellness check-up.</h1>
+        <h1 id="gh-title" class="ink" style="--n:29" aria-label={"Your garden's wellness check-up."}><Split text={"Your garden's wellness check-up."} letters /><span class="swash" aria-hidden="true"><svg viewBox="0 0 300 24" preserveAspectRatio="none"><path d="M4 16C60 6 120 4 180 9s90 8 116-2" /></svg></span></h1>
         <p class="hero-lede">Specialist care for gardens that deserve the very best.</p>
         <div class="hero-actions">
           <a class="btn btn-leaf" href="#gh-book">Book the programme <Icon name="arrow" /></a>
@@ -85,7 +86,7 @@ const gallery = [
 
   <!-- Programme -->
   <section class="wrap programme" aria-labelledby="prog-title">
-    <h2 id="prog-title" data-type>What the programme includes</h2>
+    <h2 id="prog-title" class="rise" aria-label={"What the programme includes"}><Split text={"What the programme includes"} /></h2>
     <ol class="prog-grid" data-stagger="grow">
       {
         programme.map((p, i) => (
@@ -144,7 +145,7 @@ const gallery = [
   <section class="why" aria-labelledby="why-gh-title">
     <div class="wrap why-grid">
       <div class="why-copy">
-        <h2 id="why-gh-title" data-type>We're not just gardeners. We're wellness creators.</h2>
+        <h2 id="why-gh-title" class="rise" aria-label={"We're not just gardeners. We're wellness creators."}><Split text={"We're not just gardeners. We're wellness creators."} /></h2>
         <p data-reveal>
           Our approach is about helping you cultivate a space that restores, inspires and nurtures you. Whether you need a
           full transformation or simple maintenance, we focus on creating gardens that work for your well-being.
@@ -212,7 +213,7 @@ const gallery = [
     max-width: calc(var(--max) + 4rem);
     margin-inline: auto;
     border-radius: var(--radius-lg);
-    overflow: hidden;
+    overflow: clip;
     isolation: isolate;
     min-height: clamp(28rem, 44vw, 38rem);
     display: flex;
@@ -268,14 +269,14 @@ const gallery = [
     font-size: clamp(1.15rem, 1.8vw, 1.4rem);
     color: #dfe5d8;
   }
-  .js .hero-lede,
-  .js .hero-actions {
+  .hero-lede,
+  .hero-actions {
     animation: rise-in 900ms var(--ease-out) both;
   }
-  .js .hero-lede {
+  .hero-lede {
     animation-delay: 1700ms;
   }
-  .js .hero-actions {
+  .hero-actions {
     animation-delay: 2000ms;
   }
   @keyframes rise-in {

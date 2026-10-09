@@ -1,4 +1,5 @@
 ---
+import Split from './Split.astro';
 import Icon from './Icon.astro';
 import { contact } from '../data/site';
 
@@ -12,7 +13,7 @@ const { heading = 'Tell us about your garden.', text } = Astro.props;
 <section class="cta" aria-labelledby="cta-title">
   <div class="cta-card" data-reveal>
     <div class="cta-copy">
-      <h2 id="cta-title" data-type="type">{heading}</h2>
+      <h2 id="cta-title" class="rise rise-blur" aria-label={heading}><Split text={heading} /></h2>
       <p>{text ?? `Call Darragh for a chat, or send a few details and we'll arrange a visit. We work across ${contact.area}.`}</p>
     </div>
     <div class="cta-actions">
@@ -37,7 +38,7 @@ const { heading = 'Tell us about your garden.', text } = Astro.props;
     margin-inline: auto;
     position: relative;
     isolation: isolate;
-    overflow: hidden;
+    overflow: clip;
     border-radius: var(--radius-lg);
     --on-season: #f4f6ee;
     --on-season-2: #d5dccd;
