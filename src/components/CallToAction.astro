@@ -12,7 +12,7 @@ const { heading = 'Tell us about your garden.', text } = Astro.props;
 <section class="cta" aria-labelledby="cta-title">
   <div class="cta-card" data-reveal>
     <div class="cta-copy">
-      <h2 id="cta-title" data-type>{heading}</h2>
+      <h2 id="cta-title" data-type="type">{heading}</h2>
       <p>{text ?? `Call Darragh for a chat, or send a few details and we'll arrange a visit. We work across ${contact.area}.`}</p>
     </div>
     <div class="cta-actions">
@@ -112,6 +112,16 @@ const { heading = 'Tell us about your garden.', text } = Astro.props;
   .cta-phone-icon :global(svg) {
     width: 45%;
     height: 45%;
+  }
+  .cta-card.in .cta-phone-icon {
+    animation: ring-in 3.5s ease-in-out 1.2s infinite;
+  }
+  @keyframes ring-in {
+    0%, 80%, 100% { rotate: 0deg; }
+    83% { rotate: -16deg; }
+    86% { rotate: 14deg; }
+    89% { rotate: -10deg; }
+    92% { rotate: 6deg; }
   }
   .cta-phone:hover .cta-phone-icon {
     transform: rotate(-12deg) scale(1.06);

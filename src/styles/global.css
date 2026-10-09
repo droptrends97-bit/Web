@@ -421,3 +421,188 @@ a {
     animation: none !important;
   }
 }
+
+/* ---------- Ink-written hero headlines ---------- */
+.ink .iw {
+  display: inline-block;
+  white-space: nowrap;
+}
+.ink .ic {
+  display: inline-block;
+}
+.js .ink.go .ic {
+  animation: ink 1100ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(150ms + var(--i) * 42ms);
+}
+@keyframes ink {
+  0% {
+    opacity: 0;
+    filter: blur(10px);
+    translate: 0.15em 0.12em;
+    rotate: 6deg;
+    color: var(--leaf);
+  }
+  55% {
+    opacity: 1;
+    filter: blur(0);
+  }
+  100% {
+    opacity: 1;
+    translate: 0 0;
+    rotate: 0deg;
+  }
+}
+.ink {
+  position: relative;
+  padding-bottom: 0.22em;
+}
+.swash {
+  position: absolute;
+  left: 0.02em;
+  bottom: 0;
+  width: min(100%, 4.2em);
+  height: 0.16em;
+  pointer-events: none;
+}
+.swash svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.swash path {
+  fill: none;
+  stroke: var(--leaf);
+  stroke-width: 5;
+  stroke-linecap: round;
+  stroke-dasharray: 320;
+  stroke-dashoffset: 320;
+  animation: swash 1300ms cubic-bezier(0.65, 0, 0.35, 1) forwards;
+  animation-delay: calc(400ms + var(--n) * 42ms);
+}
+@keyframes swash {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* ---------- Section titles: words rise from behind a line ---------- */
+.rise .wr {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  padding-bottom: 0.08em;
+  margin-bottom: -0.08em;
+}
+.rise .wr > span {
+  display: inline-block;
+}
+.js .rise.go .wr > span {
+  animation: word-rise 900ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(var(--i) * 75ms);
+}
+@keyframes word-rise {
+  from {
+    translate: 0 110%;
+    rotate: 3deg;
+  }
+}
+
+/* ---------- Groups that enter one by one ---------- */
+.js [data-stagger] > * {
+  opacity: 0;
+}
+.js [data-stagger].in > * {
+  animation-duration: 850ms;
+  animation-fill-mode: both;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  animation-delay: calc(var(--s, 0) * 110ms);
+}
+@keyframes st-slide {
+  from { opacity: 0; translate: -36px 0; }
+  to { opacity: 1; }
+}
+@keyframes st-flip {
+  from { opacity: 0; rotate: x -38deg; translate: 0 44px; }
+  to { opacity: 1; }
+}
+[data-stagger='flip'] {
+  perspective: 1200px;
+}
+@keyframes st-rise {
+  from { opacity: 0; translate: 0 44px; filter: blur(8px); }
+  to { opacity: 1; filter: blur(0); }
+}
+@keyframes st-scatter {
+  0% { opacity: 0; translate: var(--sx) var(--sy); rotate: var(--sr); scale: 0.55; }
+  60% { opacity: 1; scale: 1.06; }
+  100% { opacity: 1; translate: 0 0; rotate: 0deg; scale: 1; }
+}
+@keyframes st-grow {
+  from { opacity: 0; scale: 0.6; }
+  70% { opacity: 1; scale: 1.04; }
+  to { opacity: 1; scale: 1; }
+}
+.js [data-stagger='slide'].in > * { animation-name: st-slide; }
+.js [data-stagger='flip'].in > * { animation-name: st-flip; animation-duration: 1000ms; transform-origin: 50% 100%; }
+.js [data-stagger='rise'].in > * { animation-name: st-rise; }
+.js [data-stagger='scatter'].in > * { animation-name: st-scatter; animation-duration: 1000ms; animation-delay: calc(var(--s, 0) * 70ms); }
+.js [data-stagger='grow'].in > * { animation-name: st-grow; animation-timing-function: cubic-bezier(0.34, 1.4, 0.64, 1); }
+
+/* Ticks inside staggered points draw themselves after their row lands. */
+.js [data-stagger].in .tick svg path {
+  stroke-dasharray: 26;
+  stroke-dashoffset: 26;
+  animation: tick-draw 500ms ease-out forwards;
+  animation-delay: calc(var(--s, 0) * 110ms + 380ms);
+}
+@keyframes tick-draw {
+  to { stroke-dashoffset: 0; }
+}
+
+/* ---------- Curtain reveal for feature photos ---------- */
+.js [data-curtain] img {
+  clip-path: inset(100% 0 0 0 round var(--radius-lg));
+}
+.js [data-curtain].in img {
+  animation: curtain 1400ms cubic-bezier(0.76, 0, 0.24, 1) both;
+}
+@keyframes curtain {
+  from { clip-path: inset(100% 0 0 0 round var(--radius-lg)); scale: 1.25; }
+  to { clip-path: inset(0 0 0 0 round var(--radius-lg)); scale: 1; }
+}
+
+/* ---------- Button sheen ---------- */
+.btn {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(110deg, transparent 30%, rgb(255 255 255 / 0.35) 50%, transparent 70%);
+  translate: -120% 0;
+  transition: translate 700ms var(--ease-out);
+  pointer-events: none;
+}
+@media (hover: hover) {
+  .btn:hover::after {
+    translate: 120% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js [data-stagger] > *,
+  .js [data-curtain] img {
+    opacity: 1 !important;
+    clip-path: none !important;
+    animation: none !important;
+  }
+  .swash path {
+    stroke-dashoffset: 0;
+    animation: none;
+  }
+}

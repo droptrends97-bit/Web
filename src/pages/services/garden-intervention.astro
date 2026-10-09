@@ -73,7 +73,7 @@ const youtube = 'https://www.youtube.com/results?search_query=Darragh+Connolly+G
     </div>
     <div class="check-card" data-pop>
       <p class="check-title">Sound familiar?</p>
-      <ul>
+      <ul data-stagger="slide">
         {
           signs.map((s, i) => (
             <li data-pop style={`--d:${i + 2}`}>
@@ -93,7 +93,7 @@ const youtube = 'https://www.youtube.com/results?search_query=Darragh+Connolly+G
       <h2 id="provide-title" data-type>What we can provide</h2>
       <p class="lede">Every Intervention is designed around your garden. These are the tools we bring to it.</p>
     </div>
-    <ol class="provide-grid">
+    <ol class="provide-grid" data-stagger="flip">
       {
         provide.map((p, i) => (
           <li class="pcard" data-pop style={`--d:${i}`}>

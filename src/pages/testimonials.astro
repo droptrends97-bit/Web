@@ -65,7 +65,7 @@ const ticker = reviews.map((r) => r.quote.split(/[.!]/)[0]);
 
   <section class="wrap wall" aria-labelledby="wall-title">
     <h2 id="wall-title" data-type>More from our clients</h2>
-    <ul class="masonry">
+    <ul class="masonry" data-stagger="rise">
       {
         rest.map((r, i) => (
           <li class="card" data-pop style={`--d:${i % 3}`}>
@@ -90,7 +90,7 @@ const ticker = reviews.map((r) => r.quote.split(/[.!]/)[0]);
         <h2 id="areas-title">Trusted across Dublin.</h2>
         <p>Reviews from gardens in {areas.length} neighbourhoods, and the business keeps growing through word of mouth.</p>
       </div>
-      <ul class="area-chips">
+      <ul class="area-chips" data-stagger="scatter">
         {areas.map((a, i) => <li data-pop style={`--d:${i}`}><Icon name="pin" /> {a}</li>)}
       </ul>
     </div>

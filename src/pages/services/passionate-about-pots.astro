@@ -77,7 +77,7 @@ const seasons = [
         <span class="maker">From the Netherlands</span>
         <h2 id="ndt-title" data-type>NDT Potteries</h2>
         <p data-reveal>Stocked at Windyridge Garden Centre in Killiney. The process is easy:</p>
-        <ol class="ndt-steps">
+        <ol class="ndt-steps" data-stagger="slide">
           <li data-pop><span>1</span>We meet at Windyridge Garden Centre</li>
           <li data-pop style="--d:1"><span>2</span>You pick out some pots</li>
           <li data-pop style="--d:2"><span>3</span>We organise delivery and planting</li>
@@ -104,7 +104,7 @@ const seasons = [
         </p>
       </div>
     </div>
-    <ul class="torc-grid">
+    <ul class="torc-grid" data-stagger="rise">
       {
         torc.map((t, i) => (
           <li data-pop style={`--d:${i % 4}`}>
@@ -128,7 +128,7 @@ const seasons = [
         <h2 id="col-title">Made in the colour you choose.</h2>
         <p>Statement pots can be made in any of these finishes. We'll bring the full colour chart to your consultation.</p>
       </div>
-      <ul class="swatches">
+      <ul class="swatches" data-stagger="scatter">
         {
           colours.map(([name, hex], i) => (
             <li data-pop style={`--d:${i % 6}`}>
@@ -144,7 +144,7 @@ const seasons = [
   <!-- Process -->
   <section class="wrap process" aria-labelledby="proc-title">
     <h2 id="proc-title" data-type>The process</h2>
-    <ol class="steps">
+    <ol class="steps" data-stagger="flip">
       {
         steps.map((s, i) => (
           <li data-pop style={`--d:${i}`}>

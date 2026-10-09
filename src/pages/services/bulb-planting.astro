@@ -65,7 +65,7 @@ const gallery = Array.from({ length: 16 }, (_, i) => ({ src: `/img/bulb-${i + 1}
 
   <section class="wrap season" aria-labelledby="season-title">
     <h2 id="season-title" data-type>A longer season, in layers</h2>
-    <ol class="tl">
+    <ol class="tl" data-stagger="grow">
       {
         timeline.map((t, i) => (
           <li data-pop style={`--d:${i}; --c:${t.c}`}>
@@ -84,7 +84,7 @@ const gallery = Array.from({ length: 16 }, (_, i) => ({ src: `/img/bulb-${i + 1}
         <h2 id="plans-title" data-type>Bulb planting plans</h2>
         <p class="lede">Choose the best plan for your garden. Final planting costs vary from garden to garden.</p>
       </div>
-      <ul class="plan-grid">
+      <ul class="plan-grid" data-stagger="flip">
         {
           plans.map((p, i) => (
             <li class:list={['plan', { popular: p.popular }]} data-pop style={`--d:${i}`}>
@@ -113,7 +113,7 @@ const gallery = Array.from({ length: 16 }, (_, i) => ({ src: `/img/bulb-${i + 1}
 
   <section class="wrap process" aria-labelledby="bulb-proc">
     <h2 id="bulb-proc" data-type>How it works</h2>
-    <ol class="steps">
+    <ol class="steps" data-stagger="rise">
       {
         steps.map((s, i) => (
           <li data-pop style={`--d:${i}`}>

@@ -61,7 +61,7 @@ const gallery = [3, 4, 7, 13, 14, 16, 18, 19, 21, 23, 26, 27, 11, 1].map((n) => 
 
   <section class="wrap benefits" aria-labelledby="ben-title">
     <h2 id="ben-title" data-type>What a mature hedge gives you</h2>
-    <ul class="ben-grid">
+    <ul class="ben-grid" data-stagger="rise">
       {
         benefits.map((b, i) => (
           <li data-pop style={`--d:${i}`}>
@@ -79,7 +79,7 @@ const gallery = [3, 4, 7, 13, 14, 16, 18, 19, 21, 23, 26, 27, 11, 1].map((n) => 
       <h2 id="plants-title" data-type>Hedges we plant regularly</h2>
       <p class="lede">These are just a few options. The right plant depends on your needs and growing conditions.</p>
     </div>
-    <ul class="plant-grid">
+    <ul class="plant-grid" data-stagger="flip">
       {
         plants.map((p, i) => (
           <li class="plant" data-pop style={`--d:${i}`}>
@@ -113,7 +113,7 @@ const gallery = [3, 4, 7, 13, 14, 16, 18, 19, 21, 23, 26, 27, 11, 1].map((n) => 
 
   <section class="pleach" aria-labelledby="pleach-title">
     <div class="wrap pleach-grid">
-      <figure class="pleach-photo" data-pop>
+      <figure class="pleach-photo" data-curtain>
         <img src="/img/hg-3.jpg" alt="Pleached trees forming an elevated green wall above a stone wall." loading="lazy" />
       </figure>
       <div class="pleach-copy">
@@ -122,7 +122,7 @@ const gallery = [3, 4, 7, 13, 14, 16, 18, 19, 21, 23, 26, 27, 11, 1].map((n) => 
           Pleached trees are trained to form a screen of branches and foliage on a single, straight stem. Planted in rows at
           set distances, they create an elevated green wall, a great natural alternative to high fencing.
         </p>
-        <ul class="pleach-list">
+        <ul class="pleach-list" data-stagger="scatter">
           {pleached.map((p, i) => <li data-pop style={`--d:${i}`}>{p}</li>)}
         </ul>
         <p class="small" data-reveal>Each has its own character. The choice depends on what you prefer; they all do a great job.</p>

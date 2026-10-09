@@ -86,7 +86,7 @@ const gallery = [
   <!-- Programme -->
   <section class="wrap programme" aria-labelledby="prog-title">
     <h2 id="prog-title" data-type>What the programme includes</h2>
-    <ol class="prog-grid">
+    <ol class="prog-grid" data-stagger="grow">
       {
         programme.map((p, i) => (
           <li data-pop style={`--d:${i}`}>
@@ -150,7 +150,7 @@ const gallery = [
           full transformation or simple maintenance, we focus on creating gardens that work for your well-being.
         </p>
       </div>
-      <ul class="why-list">
+      <ul class="why-list" data-stagger="slide">
         {
           why.map((w, i) => (
             <li data-pop style={`--d:${i}`}>

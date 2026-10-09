@@ -275,20 +275,89 @@ const jsonLd = {
         step();
       };
 
+      // Split text into spans (words, optionally letters) without losing it for screen readers.
+      const split = (el: HTMLElement, letters: boolean) => {
+        const text = (el.textContent ?? '').trim();
+        el.setAttribute('aria-label', text);
+        el.textContent = '';
+        let n = 0;
+        text.split(/\s+/).forEach((word, w, all) => {
+          const ws = document.createElement('span');
+          ws.className = letters ? 'iw' : 'wr';
+          ws.setAttribute('aria-hidden', 'true');
+          if (letters) {
+            [...word].forEach((ch) => {
+              const c = document.createElement('span');
+              c.className = 'ic';
+              c.textContent = ch;
+              c.style.setProperty('--i', String(n++));
+              ws.append(c);
+            });
+          } else {
+            const inner = document.createElement('span');
+            inner.textContent = word;
+            inner.style.setProperty('--i', String(n++));
+            ws.append(inner);
+          }
+          el.append(ws);
+          if (w < all.length - 1) el.append(' ');
+        });
+        return n;
+      };
+
+      // Hero headlines are "written": each letter flows in from a soft blur, then a swash draws beneath.
+      const inkWrite = (el: HTMLElement) => {
+        const n = split(el, true);
+        el.style.setProperty('--n', String(n));
+        const swash = document.createElement('span');
+        swash.className = 'swash';
+        swash.setAttribute('aria-hidden', 'true');
+        swash.innerHTML = '<svg viewBox="0 0 300 24" preserveAspectRatio="none"><path d="M4 16C60 6 120 4 180 9s90 8 116-2"/></svg>';
+        el.append(swash);
+        el.classList.add('ink', 'go');
+      };
+
+      // Section titles: words rise from behind an invisible line.
+      const rise = (el: HTMLElement) => {
+        split(el, false);
+        el.classList.add('rise', 'go');
+      };
+
+      // Groups of cards and points enter one by one; the style comes from data-stagger.
+      const scatter = [[-40, 30, -12], [50, -20, 10], [-20, -40, 6], [30, 40, -8], [0, 50, 14], [-50, 0, -6]];
+      document.querySelectorAll<HTMLElement>('[data-stagger]').forEach((group) => {
+        [...group.children].forEach((child, i) => {
+          const c = child as HTMLElement;
+          c.removeAttribute('data-pop');
+          c.style.setProperty('--s', String(i));
+          const [x, y, r] = scatter[i % scatter.length];
+          c.style.setProperty('--sx', `${x}px`);
+          c.style.setProperty('--sy', `${y}px`);
+          c.style.setProperty('--sr', `${r}deg`);
+        });
+      });
+
       const io = new IntersectionObserver(
         (entries) => {
           for (const e of entries) {
             if (!e.isIntersecting) continue;
             const el = e.target as HTMLElement;
-            if (el.hasAttribute('data-type')) typeIt(el);
-            else el.classList.add('in');
+            if (el.hasAttribute('data-type')) {
+              if (el.dataset.type === 'type') typeIt(el);
+              else if (el.tagName === 'H1') inkWrite(el);
+              else rise(el);
+            } else el.classList.add('in');
             io.unobserve(el);
           }
         },
         { rootMargin: '0px 0px -8% 0px', threshold: 0.12 },
       );
       document
-        .querySelectorAll<HTMLElement>(reduce ? '[data-reveal], [data-pop]' : '[data-reveal], [data-pop], [data-type]')
+        .querySelectorAll<HTMLElement>(
+          reduce
+            ? '[data-reveal], [data-pop], [data-stagger], [data-curtain]'
+            : '[data-reveal], [data-pop], [data-type], [data-stagger], [data-curtain]',
+        )
         .forEach((el) => io.observe(el));
     </script>
   </body>

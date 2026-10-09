@@ -57,7 +57,7 @@ const gallery = [
       <h2 id="rhythm-title" data-type>A schedule that suits your life</h2>
       <p class="lede">We tailor your visits to your lifestyle and the needs of your space.</p>
     </div>
-    <ul class="rhythm-grid">
+    <ul class="rhythm-grid" data-stagger="flip">
       {
         rhythms.map((r, i) => (
           <li data-pop style={`--d:${i}`} class:list={{ featured: i === 1 }}>
@@ -83,7 +83,7 @@ const gallery = [
           flow and form. We bring all the tools, always with a team of two gardeners.
         </p>
       </div>
-      <ul class="chips">
+      <ul class="chips" data-stagger="scatter">
         {tasks.map((t, i) => <li data-pop style={`--d:${i}`}>{t}</li>)}
       </ul>
     </div>
@@ -91,7 +91,7 @@ const gallery = [
 
   <section class="wrap visits" aria-labelledby="visits-title">
     <h2 id="visits-title" data-reveal>Visit lengths</h2>
-    <ul class="visit-row">
+    <ul class="visit-row" data-stagger="rise">
       {
         visitOptions.map((v, i) => (
           <li data-pop style={`--d:${i}`}>
@@ -105,7 +105,7 @@ const gallery = [
 
   <section class="gallery" aria-labelledby="mw-gallery">
     <div class="wrap"><h2 id="mw-gallery" data-type>Sanctuaries we look after</h2></div>
-    <ul class="mosaic wrap">
+    <ul class="mosaic wrap" data-stagger="grow">
       {gallery.map((g, i) => <li data-pop style={`--d:${i % 4}`}><img src={g.src} alt={g.alt} loading="lazy" /></li>)}
     </ul>
   </section>

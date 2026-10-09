@@ -154,14 +154,14 @@ const statement =
             <div class="care-head">
               <h3><a href={`/services/${care.slug}/`}>{care.name}</a></h3>
               <p>{care.short}</p>
-              <ul class="freq">
+              <ul class="freq" data-stagger="scatter">
                 <li data-pop style="--d:3">Monthly</li>
                 <li data-pop style="--d:4">Fortnightly</li>
                 <li data-pop style="--d:5">Weekly</li>
               </ul>
             </div>
           </div>
-          <ul class="visits">
+          <ul class="visits" data-stagger="rise">
             {
               visitOptions.map((v, i) => (
                 <li data-pop style={`--d:${i + 2}`}>
@@ -191,7 +191,7 @@ const statement =
 
         <div class="tile tile-also" data-pop style="--d:2">
           <p class="also-title">Also on the list</p>
-          <ul class="also-chips">
+          <ul class="also-chips" data-stagger="scatter">
             {alsoOffer.map((a, i) => <li data-pop style={`--d:${i + 3}`}>{a}</li>)}
           </ul>
           <a class="btn btn-leaf" href="/services/">All services <Icon name="arrow" /></a>
@@ -235,7 +235,7 @@ const statement =
   <!-- About -->
   <section class="about" aria-labelledby="about-title">
     <div class="wrap about-grid">
-      <figure class="plate about-plate" data-pop>
+      <figure class="plate about-plate" data-curtain>
         <img src="/img/gal-18.jpg" alt="Purple alliums in front of the Darragh Connolly Garden Care van." loading="lazy" />
       </figure>
       <div class="about-body" data-reveal style="--d:1">

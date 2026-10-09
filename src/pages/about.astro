@@ -84,7 +84,7 @@ const belief = "Nature isn't just a background to our lives; it actively support
 
   <!-- Facts -->
   <section class="wrap facts" aria-label="At a glance">
-    <ul>
+    <ul data-stagger="grow">
       {
         facts.map((f, i) => (
           <li data-pop style={`--d:${i}`}>
@@ -143,7 +143,7 @@ const belief = "Nature isn't just a background to our lives; it actively support
   <!-- Wellness journey -->
   <section class="journey" aria-labelledby="journey-title">
     <div class="wrap journey-grid">
-      <figure class="journey-photo" data-pop>
+      <figure class="journey-photo" data-curtain>
         <img src="/img/darragh-snow.jpg" alt="Darragh in a snowy forest, his hat and jacket covered in frost." loading="lazy" />
         <figcaption>Out in the cold: where the idea took root.</figcaption>
       </figure>
@@ -185,7 +185,7 @@ const belief = "Nature isn't just a background to our lives; it actively support
       <h2 id="help-title" data-type>How I can help you</h2>
       <p class="lede">I now focus on helping people create gardens that feel as good as they look.</p>
     </div>
-    <ul class="help-grid">
+    <ul class="help-grid" data-stagger="flip">
       {
         help.map((h, i) => (
           <li data-pop style={`--d:${i}`}>
