@@ -9,18 +9,53 @@ import { contact, services, alsoOffer, visitOptions, months } from '../data/site
 const [care, intervention, health, pots] = services;
 const thisMonth = months[new Date().getMonth()];
 
-const colA = [
-  { src: '/img/topiary-tulips.jpg', alt: 'Lollipop topiary above pink tulips at a granite entrance.' },
-  { src: '/img/acer-garden.jpg', alt: 'A copper acer framing a lawn and a border of roses.' },
-  { src: '/img/striped-lawn-bench.jpg', alt: 'A striped lawn leading to a white bench.' },
-  { src: '/img/tulips-paving.jpg', alt: 'Tulips along a granite kerb.' },
-];
-const colB = [
-  { src: '/img/bench-border.jpg', alt: 'A curved lawn with bay trees and a white bench.' },
-  { src: '/img/alliums-van.jpg', alt: 'Purple alliums in front of the Darragh Connolly van.' },
-  { src: '/img/striped-lawn-bench.jpg', alt: 'A striped lawn leading to a white bench.' },
-  { src: '/img/topiary-tulips.jpg', alt: 'Lollipop topiary above pink tulips at a granite entrance.' },
-];
+const heroCols = [
+  [
+    ['gal-39', 'A striped lawn leading to a white bench and hydrangeas.'],
+    ['pots-urn-white-hydrangea', 'White hydrangeas spilling from a black urn.'],
+    ['gal-15', 'Pleached trees above box balls along a white wall.'],
+    ['gal-12', 'A purple allium among ferns.'],
+    ['topiary-tulips', 'Lollipop topiary above pink tulips at a granite entrance.'],
+    ['gal-34', 'Cone topiary and box beside a red-brick house.'],
+    ['gi-3', 'Lime-green panicle hydrangeas.'],
+    ['gal-30', 'Magenta azaleas by a granite path.'],
+  ],
+  [
+    ['gal-07', 'A long striped lawn beside a modern garden room.'],
+    ['gal-17', 'A terracotta urn framed by clipped box.'],
+    ['gal-25', 'Alliums around a silver birch before a yew hedge.'],
+    ['pots-olive-tree', 'A cloud-pruned olive tree in a dark glazed pot.'],
+    ['gal-44', 'Rudbeckia and persicaria in full flower.'],
+    ['hg-3', 'Pleached trees forming a green screen above a wall.'],
+    ['gal-21', 'Annabelle hydrangeas.'],
+    ['bulb-12', 'Pink and orange tulips in a spring border.'],
+  ],
+  [
+    ['gal-01', 'A courtyard with a steel pergola and planted walls.'],
+    ['gal-18', 'Alliums in front of the Darragh Connolly van.'],
+    ['pots-front-door', 'Evergreen planters at a modern front door.'],
+    ['gal-40', 'Box balls beneath a brick screen wall.'],
+    ['gal-36', 'Dark tulips against a stone wall.'],
+    ['mw-3', 'A colourful border of hydrangeas and perennials.'],
+    ['gal-05', 'A tree fern against trellis.'],
+    ['gal-37', 'Box balls lining a modern stone path.'],
+  ],
+].map((col) => col.map(([f, alt]) => ({ src: `/img/${f}.jpg`, alt })));
+
+const railPhotos = [
+  ['gal-42', 'A lawn below a curved stone wall.'],
+  ['gal-14', 'Lime-white panicle hydrangeas.'],
+  ['gal-29', 'A curving brick path beside clipped hedging.'],
+  ['pots-pink-hydrangea', 'Pink hydrangeas in a long trough.'],
+  ['gal-24', 'An acer over a raised timber bed.'],
+  ['gal-41', 'A box parterre beside a lawn.'],
+  ['gal-16', 'A curved bench in a planted corner.'],
+  ['bulb-11', 'Tulips along a lawn edge.'],
+  ['gal-13', 'Silver birches and a white-flowering border.'],
+  ['gal-38', 'Birch trees along a walled lawn.'],
+  ['gal-35', 'Lobelia and a box ball in a brick planter.'],
+  ['gal-02', 'A wide lawn framed by mature trees.'],
+].map(([f, alt]) => ({ src: `/img/${f}.jpg`, alt }));
 
 const ticker = ['Lawn care', 'Hedging', 'Bulb planting', 'Pots & planters', 'Pruning', 'Mulching', 'Garden health', 'Weeding', 'Border care', 'Power washing'];
 
@@ -34,13 +69,13 @@ const steps = [
   {
     title: 'We plan your schedule',
     text: 'Monthly, fortnightly or weekly visits, from 1.5 hours to a full day, always with a team of two gardeners.',
-    image: '/img/striped-lawn-bench.jpg',
+    image: '/img/gal-07.jpg',
     tone: 'evergreen',
   },
   {
     title: 'We keep it right, all year',
     text: 'We bring all the tools, work efficiently and take the green waste away. You get to simply enjoy the garden.',
-    image: '/img/acer-garden.jpg',
+    image: '/img/gal-42.jpg',
     tone: 'soft',
   },
 ];
@@ -72,16 +107,17 @@ const statement =
     </div>
 
     <div class="hero-cols" aria-label="Gardens we look after">
-      <div class="col">
-        <div class="col-track">
-          {[...colA, ...colA].map((p, i) => <img src={p.src} alt={i < colA.length ? p.alt : ''} loading={i < 2 ? 'eager' : 'lazy'} />)}
-        </div>
-      </div>
-      <div class="col col-down">
-        <div class="col-track">
-          {[...colB, ...colB].map((p, i) => <img src={p.src} alt={i < colB.length ? p.alt : ''} loading={i < 2 ? 'eager' : 'lazy'} />)}
-        </div>
-      </div>
+      {
+        heroCols.map((col, c) => (
+          <div class={`col c${c}`}>
+            <div class="col-track">
+              {[...col, ...col].map((p, i) => (
+                <img src={p.src} alt={i < col.length ? p.alt : ''} loading={i < 2 ? 'eager' : 'lazy'} class={`r${i % 3}`} />
+              ))}
+            </div>
+          </div>
+        ))
+      }
     </div>
   </section>
 
@@ -200,7 +236,7 @@ const statement =
   <section class="about" aria-labelledby="about-title">
     <div class="wrap about-grid">
       <figure class="plate about-plate" data-pop>
-        <img src="/img/alliums-van.jpg" alt="Purple alliums in front of the Darragh Connolly Garden Care van." loading="lazy" />
+        <img src="/img/gal-18.jpg" alt="Purple alliums in front of the Darragh Connolly Garden Care van." loading="lazy" />
       </figure>
       <div class="about-body" data-reveal style="--d:1">
         <h2 id="about-title" data-type>He'll look after your garden like it's his own.</h2>
@@ -223,7 +259,7 @@ const statement =
       {
         [0, 1].map((k) => (
           <ul class="marquee-track" aria-hidden={k > 0 ? 'true' : undefined}>
-            {[...colA, ...colB].map((p) => (
+            {railPhotos.map((p) => (
               <li><img src={p.src} alt={k === 0 ? p.alt : ''} loading="lazy" /></li>
             ))}
           </ul>
@@ -411,8 +447,8 @@ const statement =
 
   .hero-cols {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
     height: min(calc(100svh - 9rem), 48rem);
     min-height: 30rem;
     overflow: hidden;
@@ -425,26 +461,36 @@ const statement =
   }
   .col-track {
     display: grid;
-    gap: 1rem;
-    animation: col-up 34s linear infinite;
+    gap: 0.75rem;
+    animation: col-up 60s linear infinite;
   }
-  .col-down .col-track {
-    animation-duration: 46s;
-    animation-delay: -12s;
+  .c1 .col-track {
+    animation-duration: 75s;
+    animation-delay: -25s;
+  }
+  .c2 .col-track {
+    animation-duration: 52s;
+    animation-delay: -10s;
   }
   .hero-cols:hover .col-track {
     animation-play-state: paused;
   }
   @keyframes col-up {
     to {
-      transform: translateY(calc(-50% - 0.5rem));
+      transform: translateY(calc(-50% - 0.375rem));
     }
+  }
+  .col img.r1 {
+    aspect-ratio: 1;
+  }
+  .col img.r2 {
+    aspect-ratio: 3 / 4.4;
   }
   .col img {
     width: 100%;
     aspect-ratio: 4 / 5;
     object-fit: cover;
-    border-radius: 20px;
+    border-radius: 16px;
     background: var(--paper-2);
   }
 

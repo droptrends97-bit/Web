@@ -82,7 +82,7 @@ export const services: Service[] = [
     short: 'A three-visits-a-year programme: lawn, soil, feeding, and pest and disease care.',
     intro:
       "Darragh's Garden Health Programme gives a well-planted garden the ongoing specialist care it needs to stay vibrant, resilient and full of life.",
-    image: '/img/striped-lawn-bench.jpg',
+    image: '/img/gal-39.jpg',
     imageAlt: 'A freshly striped lawn in front of a white bench and trellis.',
     body: [
       'The programme is carried out three times a year. Even if you already have a maintenance company, we can work alongside them.',
