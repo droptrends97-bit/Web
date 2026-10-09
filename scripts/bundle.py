@@ -47,7 +47,21 @@ def page_html(route: str) -> str:
 
 
 def finish(html: str, links: dict, default: str) -> str:
-    html = re.sub(r'src="(/img/[^"]+)"', lambda m: f'src="{img_uri(m.group(1))}"', html)
+    # Photos used more than once are stored once, in a CSS rule, and shown via `content: url()`.
+    counts = {}
+    for m in re.finditer(r'src="(/img/[^"]+)"', html):
+        counts[m.group(1)] = counts.get(m.group(1), 0) + 1
+    shared = {rel: f'u{i}' for i, rel in enumerate(r for r, c in counts.items() if c > 1)}
+    blank = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
+    def src(m):
+        rel = m.group(1)
+        if rel in shared:
+            return f'src="{blank}" data-u="{shared[rel]}"'
+        return f'src="{img_uri(rel)}"'
+    html = re.sub(r'src="(/img/[^"]+)"', src, html)
+    if shared:
+        css = ''.join(f'img[data-u="{k}"]{{content:url({img_uri(rel)})}}' for rel, k in shared.items())
+        html = html.replace('</head>', f'<style>{css}</style></head>', 1)
     html = re.sub(r"url\(['\"]?(/img/[^'\")]+)['\"]?\)", lambda m: f"url({img_uri(m.group(1))})", html)
     html = re.sub(r'href="(/favicon\.svg)"', lambda m: f'href="{data_uri(dist / "favicon.svg")}"', html)
 
@@ -75,7 +89,7 @@ def styles(html: str) -> list:
 
 
 # Extra pages carried in the single-file site, as (page id, built route).
-SITE_PAGES = [('about', 'about'), ('pots', 'services/pots-and-planters'), ('intervention', 'services/garden-intervention'), ('health', 'services/garden-health'), ('care', 'services/garden-care'), ('hedging', 'services/hedging'), ('passion', 'services/passionate-about-pots'), ('bulbs', 'services/bulb-planting'), ('reviews', 'testimonials')]
+SITE_PAGES = [('about', 'about'), ('pots', 'services/pots-and-planters'), ('intervention', 'services/garden-intervention'), ('health', 'services/garden-health'), ('care', 'services/garden-care'), ('hedging', 'services/hedging'), ('passion', 'services/passionate-about-pots'), ('bulbs', 'services/bulb-planting'), ('reviews', 'testimonials'), ('gallery', 'gallery')]
 
 
 def page_css(ids):
@@ -86,6 +100,8 @@ def page_css(ids):
         rules.append(f"[data-page='{pid}'] {{ display: none; }}")
         rules.append(f"{on} [data-page='{pid}'] {{ display: block; }}")
         rules.append(f"{on} [data-page='home'] {{ display: none; }}")
+    rules.append("body:has([data-page='gallery']:target, [data-page='gallery'] :target) .nav a[href='#gallery'] "
+                 "{ color: var(--on-evergreen); background: rgb(255 255 255 / 0.12); }")
     rules.append("body:has([data-page='reviews']:target, [data-page='reviews'] :target) .nav a[href='#reviews'] "
                  "{ color: var(--on-evergreen); background: rgb(255 255 255 / 0.12); }")
     rules.append("body:has([data-page='about']:target, [data-page='about'] :target) .nav a[href='#about'] "
@@ -99,7 +115,7 @@ def build_site() -> str:
     home = page_html('home')
     links = {
         '/': '#home', '/about/': '#about', '/services/pots-and-planters/': '#pots', '/services/garden-intervention/': '#intervention', '/services/garden-health/': '#health', '/services/garden-care/': '#care', '/services/hedging/': '#hedging', '/services/passionate-about-pots/': '#passion', '/services/bulb-planting/': '#bulbs', '/testimonials/': '#reviews',
-        '/services/': '#services-title', '/the-year/': '#year-title', '/gallery/': '#gallery-title',
+        '/services/': '#services-title', '/the-year/': '#year-title', '/gallery/': '#gallery',
         '/contact/': '#cta-title',
     }
     home_main = main_inner(home)
@@ -141,7 +157,7 @@ if __name__ == '__main__':
         links = {
             '/': home_file, '/about/': FILES['about'], '/services/': f'{home_file}#services-title',
             '/the-year/': f'{home_file}#year-title', '/gallery/': f'{home_file}#gallery-title',
-            '/contact/': f'{home_file}#cta-title',
+            '/contact/': f'{home_file}#cta-title', '/testimonials/': f'{home_file}#cta-title',
         }
         html = finish(page_html(target), links, home_file)
     out = Path('preview') / FILES.get(target, f'darragh-connolly-{target}.html')

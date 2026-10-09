@@ -1,47 +1,194 @@
 ---
 import Base from '../layouts/Base.astro';
-import PageHead from '../components/PageHead.astro';
+import Icon from '../components/Icon.astro';
 import CallToAction from '../components/CallToAction.astro';
-import { gallery } from '../data/site';
+
+type Cat = 'lawns' | 'planting' | 'hedging' | 'pots';
+const cats: { id: Cat | 'all'; label: string }[] = [
+  { id: 'all', label: 'All' },
+  { id: 'planting', label: 'Planting' },
+  { id: 'lawns', label: 'Lawns' },
+  { id: 'hedging', label: 'Hedging & topiary' },
+  { id: 'pots', label: 'Pots & features' },
+];
+
+const raw: [string, Cat, string][] = [
+  ['01', 'pots', 'A courtyard with a steel pergola, hanging baskets and planted walls'],
+  ['15', 'hedging', 'Pleached trees above box balls along a white wall'],
+  ['39', 'lawns', 'A striped lawn leading to a white bench and hydrangeas'],
+  ['12', 'planting', 'A purple allium among ferns'],
+  ['17', 'pots', 'A terracotta urn framed by clipped box'],
+  ['07', 'lawns', 'A long striped lawn beside a modern garden room'],
+  ['05', 'planting', 'A tree fern against trellis'],
+  ['34', 'hedging', 'Cone topiary and box beside a red-brick house'],
+  ['18', 'planting', 'Alliums in front of the Darragh Connolly van'],
+  ['16', 'pots', 'A curved bench and table in a planted corner'],
+  ['04', 'lawns', 'A lawn edged with brick under tall trees'],
+  ['14', 'planting', 'Lime-white panicle hydrangeas'],
+  ['40', 'hedging', 'Box balls beneath a brick screen wall'],
+  ['06', 'planting', 'An acer and ferns beside a dark shed'],
+  ['20', 'pots', 'A hanging basket of red fuchsia on a slatted fence'],
+  ['42', 'lawns', 'A lawn below a curved stone wall'],
+  ['25', 'planting', 'Alliums around a silver birch before a yew hedge'],
+  ['29', 'hedging', 'A curving brick path beside clipped hedging'],
+  ['21', 'planting', 'Annabelle hydrangeas'],
+  ['23', 'pots', 'Red geraniums in a stone planter on gravel'],
+  ['31', 'lawns', 'A garden view across lawns to the sea'],
+  ['36', 'planting', 'Dark tulips against a stone wall'],
+  ['37', 'hedging', 'Box balls lining a modern stone path'],
+  ['30', 'planting', 'Magenta azaleas by a granite path'],
+  ['35', 'pots', 'Lobelia and a box ball in a brick planter'],
+  ['02', 'lawns', 'A wide lawn framed by mature trees'],
+  ['24', 'planting', 'An acer over a raised timber bed'],
+  ['41', 'hedging', 'A box parterre beside a lawn'],
+  ['44', 'planting', 'Rudbeckia and persicaria in full flower'],
+  ['26', 'pots', 'Red cyclamen and hydrangea by a painted shed'],
+  ['19', 'lawns', 'A red acer above a curved lawn edge'],
+  ['22', 'planting', 'A tree fern above box balls and ferns'],
+  ['32', 'hedging', 'A box-edged bed of spring bulbs'],
+  ['43', 'pots', 'Violas in a pot at a granite entrance'],
+  ['13', 'planting', 'Silver birches and a white-flowering border'],
+  ['38', 'lawns', 'Birch trees along a walled lawn'],
+  ['33', 'planting', 'Verbena among ferns'],
+  ['27', 'pots', 'A tree fern on a stone patio'],
+  ['28', 'planting', 'A stepping-stone path under a willow'],
+  ['03', 'planting', 'A cobbled path to a thatched porch'],
+];
+const photos = raw.map(([n, cat, alt], i) => ({ id: `g-${n}`, src: `/img/gal-${n}.jpg`, cat, alt, i }));
+const count = (c: Cat) => photos.filter((p) => p.cat === c).length;
 ---
 
-<Base title="Gallery" description="Gardens cared for by Darragh Connolly Garden Care in Dublin and North Wicklow.">
-  <PageHead title="Gardens we look after" lede="Lawns, borders, topiary and pots from gardens we care for across Dublin and North Wicklow." />
-  <div class="wrap grid">
-    {
-      gallery.map((g) => (
-        <figure class:list={['plate', { wide: g.wide }]}>
-          <img src={g.src} alt={g.alt} loading="lazy" />
-        </figure>
-      ))
-    }
-  </div>
-  <CallToAction />
+<Base
+  garden
+  title="Gallery"
+  description="Photos from gardens Darragh Connolly Garden Care looks after across Dublin and Wicklow: planting, lawns, hedging, topiary, pots and features."
+>
+  <section class="wrap hero" id="gal-top" aria-labelledby="gal-title">
+    <h1 id="gal-title" data-type data-speed="50">Gardens we look after.</h1>
+    <div class="hero-side">
+      <p class="lede" data-reveal>
+        {photos.length} photos from gardens across Dublin and Wicklow. Tap any photo to see it larger.
+      </p>
+      <ul class="stats">
+        {cats.slice(1).map((c, i) => (
+          <li data-pop style={`--d:${i}`}><strong>{count(c.id as Cat)}</strong>{c.label}</li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="wrap gal" aria-label="Photo gallery">
+    {cats.map((c, i) => <input type="radio" name="gal-filter" id={`f-${c.id}`} class="visually-hidden" checked={i === 0} />)}
+    <div class="filters" role="group" aria-label="Filter photos">
+      {cats.map((c) => <label for={`f-${c.id}`}>{c.label}</label>)}
+    </div>
+
+    <ul class="grid">
+      {
+        photos.map((p) => (
+          <li class="tile" data-cat={p.cat} data-pop style={`--d:${p.i % 4}`}>
+            <a href={`#${p.id}`} aria-label={`Open photo: ${p.alt}`}>
+              <img src={p.src} alt={p.alt} loading="lazy" />
+              <span class="zoom" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M10.5 4a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13zM20 20l-4.8-4.8M10.5 7.5v6M7.5 10.5h6" /></svg>
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <!-- Lightbox: plain anchors + :target, so it works without JavaScript -->
+  {
+    photos.map((p, i) => {
+      const prev = photos[(i - 1 + photos.length) % photos.length];
+      const next = photos[(i + 1) % photos.length];
+      return (
+        <div class="lb" id={p.id} role="dialog" aria-label={p.alt}>
+          <a class="lb-bg" href="#gal-top" aria-label="Close" />
+          <figure>
+            <img src={p.src} alt={p.alt} loading="lazy" />
+            <figcaption>
+              <span>{p.alt}</span>
+              <small>{i + 1} / {photos.length}</small>
+            </figcaption>
+          </figure>
+          <a class="lb-btn lb-prev" href={`#${prev.id}`} aria-label="Previous photo"><Icon name="arrow" /></a>
+          <a class="lb-btn lb-next" href={`#${next.id}`} aria-label="Next photo"><Icon name="arrow" /></a>
+          <a class="lb-btn lb-close" href="#gal-top" aria-label="Close"><Icon name="close" /></a>
+        </div>
+      );
+    })
+  }
+
+  <CallToAction heading="Want your garden in here?" text="Call Darragh to talk about what your garden needs. We work across Dublin, North Wicklow and surrounding counties." />
 </Base>
 
+<script>
+  // Keyboard support for the lightbox when scripts run.
+  addEventListener('keydown', (e) => {
+    const open = document.querySelector<HTMLElement>('.lb:target');
+    if (!open) return;
+    const sel = e.key === 'ArrowRight' ? '.lb-next' : e.key === 'ArrowLeft' ? '.lb-prev' : e.key === 'Escape' ? '.lb-close' : '';
+    if (sel) open.querySelector<HTMLAnchorElement>(sel)?.click();
+  });
+</script>
+
 <style>
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: clamp(0.75rem, 1.5vw, 1.25rem);
-    padding-block: clamp(2.5rem, 6vw, 5rem);
-  }
-  .plate img {
-    aspect-ratio: 1;
-    height: 100%;
-  }
-  .wide {
-    grid-column: 1 / -1;
-  }
-  .wide img {
-    aspect-ratio: 5 / 1;
-  }
-  @media (max-width: 760px) {
-    .grid {
-      grid-template-columns: 1fr 1fr;
-    }
-    .wide img {
-      aspect-ratio: 3 / 1;
-    }
+  .hero { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 1.5rem clamp(2rem, 5vw, 5rem); align-items: end; padding-block: clamp(2.5rem, 6vw, 5rem) clamp(1.5rem, 3vw, 2.5rem); scroll-margin-top: 6rem; }
+  .hero h1 { font-size: clamp(3rem, 7.5vw, 6.5rem); line-height: 0.95; max-width: 9ch; }
+  .hero-side { display: grid; gap: 1.25rem; }
+  .stats { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.5rem; }
+  .stats li { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 0.8rem 0.9rem; display: grid; gap: 0.15rem; font-size: 0.85rem; color: var(--ink-2); line-height: 1.25; }
+  .stats strong { font-family: var(--display); font-weight: 600; font-size: 1.8rem; letter-spacing: -0.04em; color: var(--evergreen); }
+
+  .gal { padding-bottom: clamp(2rem, 5vw, 4rem); }
+  .filters { position: sticky; top: 5.5rem; z-index: 5; display: flex; flex-wrap: wrap; gap: 0.4rem; padding: 0.4rem; margin-bottom: 1.25rem; width: fit-content; max-width: 100%; border-radius: 999px; background: rgb(255 255 255 / 0.85); border: 1px solid var(--border); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); box-shadow: var(--shadow); }
+  .filters label { padding: 0.6rem 1rem; border-radius: 999px; font-weight: 600; font-size: 0.95rem; cursor: pointer; transition: background-color 200ms, color 200ms; }
+  .filters label:hover { background: var(--paper-2); }
+  #f-all:checked ~ .filters label[for='f-all'],
+  #f-planting:checked ~ .filters label[for='f-planting'],
+  #f-lawns:checked ~ .filters label[for='f-lawns'],
+  #f-hedging:checked ~ .filters label[for='f-hedging'],
+  #f-pots:checked ~ .filters label[for='f-pots'] { background: var(--evergreen); color: var(--on-evergreen); }
+  input:focus-visible ~ .filters { outline: 3px solid var(--leaf-ink); outline-offset: 3px; }
+  #f-planting:checked ~ .grid .tile:not([data-cat='planting']),
+  #f-lawns:checked ~ .grid .tile:not([data-cat='lawns']),
+  #f-hedging:checked ~ .grid .tile:not([data-cat='hedging']),
+  #f-pots:checked ~ .grid .tile:not([data-cat='pots']) { display: none; }
+
+  .grid { list-style: none; margin: 0; padding: 0; columns: 4 15rem; column-gap: 0.85rem; }
+  .tile { break-inside: avoid; margin-bottom: 0.85rem; animation: tile-in 500ms var(--ease-out) both; }
+  @keyframes tile-in { from { opacity: 0; transform: scale(0.96); } }
+  .tile a { position: relative; display: block; border-radius: 18px; overflow: hidden; }
+  .tile img { width: 100%; height: auto; transition: transform 800ms var(--ease-out), filter 400ms; }
+  .tile a:hover img { transform: scale(1.05); }
+  .zoom { position: absolute; right: 0.75rem; bottom: 0.75rem; width: 2.6rem; height: 2.6rem; border-radius: 50%; display: grid; place-items: center; background: rgb(255 255 255 / 0.85); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); opacity: 0; transform: scale(0.7); transition: opacity 250ms, transform 350ms cubic-bezier(0.34, 1.56, 0.64, 1); }
+  .zoom svg { width: 1.2rem; height: 1.2rem; fill: none; stroke: var(--evergreen); stroke-width: 2; stroke-linecap: round; }
+  .tile a:hover .zoom, .tile a:focus-visible .zoom { opacity: 1; transform: none; }
+  @media (hover: none) { .zoom { opacity: 1; transform: none; } }
+
+  .lb { position: fixed; inset: 0; z-index: 200; display: none; place-items: center; padding: clamp(1rem, 4vw, 3rem); }
+  .lb:target { display: grid; animation: lb-in 300ms var(--ease-out); }
+  @keyframes lb-in { from { opacity: 0; } }
+  .lb-bg { position: absolute; inset: 0; background: rgb(10 20 14 / 0.92); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+  .lb figure { position: relative; margin: 0; display: grid; gap: 0.75rem; justify-items: center; max-width: min(100%, 72rem); animation: lb-pop 450ms cubic-bezier(0.34, 1.4, 0.64, 1); }
+  @keyframes lb-pop { from { transform: scale(0.92); opacity: 0; } }
+  .lb img { max-height: calc(100svh - 9rem); max-width: 100%; width: auto; border-radius: 18px; box-shadow: 0 30px 80px -20px rgb(0 0 0 / 0.6); }
+  .lb figcaption { display: flex; gap: 1rem; color: #e6ebe0; font-size: 0.98rem; text-align: center; }
+  .lb figcaption small { color: #a9b5a6; font-variant-numeric: tabular-nums; }
+  .lb-btn { position: absolute; z-index: 2; width: 3.25rem; height: 3.25rem; border-radius: 50%; display: grid; place-items: center; background: rgb(255 255 255 / 0.14); border: 1px solid rgb(255 255 255 / 0.25); color: #fff; transition: background-color 200ms; }
+  .lb-btn:hover { background: var(--leaf); color: var(--evergreen); }
+  .lb-prev { left: clamp(0.5rem, 2vw, 1.5rem); top: 50%; translate: 0 -50%; }
+  .lb-prev :global(svg) { rotate: 180deg; }
+  .lb-next { right: clamp(0.5rem, 2vw, 1.5rem); top: 50%; translate: 0 -50%; }
+  .lb-close { right: clamp(0.5rem, 2vw, 1.5rem); top: clamp(0.5rem, 2vw, 1.5rem); }
+
+  @media (max-width: 860px) {
+    .hero { grid-template-columns: 1fr; }
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .filters { top: 4.75rem; border-radius: 22px; }
+    .lb-prev, .lb-next { top: auto; bottom: 1rem; translate: none; }
   }
 </style>
