@@ -18,24 +18,142 @@ type Plant = {
 
 const img = (n: string) => `/img/garden/${n}.webp`;
 
-const plants: Plant[] = [
-  // Trees, with a box ball at the foot of one and a smaller tree further back.
-  { stage: 0, side: 'left', x: '-14vw', h: '72vh', src: img('tree'), kind: 'tree' },
-  { stage: 0, side: 'left', x: '3vw', h: '11vh', src: img('bush-1'), kind: 'bush', z: 2 },
-  { stage: 0, side: 'right', x: '-12vw', h: '62vh', src: img('tree'), kind: 'tree', flip: true },
-  { stage: 0, side: 'right', x: '7vw', h: '36vh', src: img('tree'), kind: 'tree', far: true, z: 0 },
-  // Box balls in loose groups, with a tree in the distance.
-  { stage: 1, side: 'left', x: '-7vw', h: '19vh', src: img('bush-pair'), kind: 'bush', z: 2 },
-  { stage: 1, side: 'left', x: '9vw', h: '10vh', src: img('bush-0'), kind: 'bush', z: 3 },
-  { stage: 1, side: 'right', x: '1vw', h: '46vh', src: img('tree'), kind: 'tree', far: true, flip: true, z: 0 },
-  { stage: 1, side: 'right', x: '-4vw', h: '21vh', src: img('bush-2'), kind: 'bush', z: 2 },
-  { stage: 1, side: 'right', x: '10vw', h: '12vh', src: img('bush-1'), kind: 'bush', flip: true, z: 3 },
-  // Potted flowers, with a box ball tucked behind.
-  { stage: 2, side: 'left', x: '-10vw', h: '23vh', src: img('pots-group'), kind: 'pot', z: 1 },
-  { stage: 2, side: 'left', x: '9vw', h: '17vh', src: img('pot-purple'), kind: 'pot', z: 3 },
-  { stage: 2, side: 'right', x: '7vw', h: '11vh', src: img('bush-0'), kind: 'bush', flip: true, z: 1 },
-  { stage: 2, side: 'right', x: '-1vw', h: '27vh', src: img('pot-red'), kind: 'pot', z: 2 },
+type Place = Omit<Plant, 'stage' | 'src'> & { src: string };
+const at = (stage: 0 | 1 | 2, list: Place[]): Plant[] => list.map((p) => ({ ...p, stage, src: img(p.src) }));
+
+// The home garden: trees, then box balls, then potted flowers.
+const garden: Plant[] = [
+  ...at(0, [
+    { side: 'left', x: '-14vw', h: '72vh', src: 'tree', kind: 'tree' },
+    { side: 'left', x: '3vw', h: '11vh', src: 'bush-1', kind: 'bush', z: 2 },
+    { side: 'right', x: '-12vw', h: '62vh', src: 'tree', kind: 'tree', flip: true },
+    { side: 'right', x: '7vw', h: '36vh', src: 'tree', kind: 'tree', far: true, z: 0 },
+  ]),
+  ...at(1, [
+    { side: 'left', x: '-7vw', h: '19vh', src: 'bush-pair', kind: 'bush', z: 2 },
+    { side: 'left', x: '9vw', h: '10vh', src: 'bush-0', kind: 'bush', z: 3 },
+    { side: 'right', x: '1vw', h: '46vh', src: 'tree', kind: 'tree', far: true, flip: true, z: 0 },
+    { side: 'right', x: '-4vw', h: '21vh', src: 'bush-2', kind: 'bush', z: 2 },
+    { side: 'right', x: '10vw', h: '12vh', src: 'bush-1', kind: 'bush', flip: true, z: 3 },
+  ]),
+  ...at(2, [
+    { side: 'left', x: '-10vw', h: '23vh', src: 'pots-group', kind: 'pot', z: 1 },
+    { side: 'left', x: '9vw', h: '17vh', src: 'pot-purple', kind: 'pot', z: 3 },
+    { side: 'right', x: '7vw', h: '11vh', src: 'bush-0', kind: 'bush', flip: true, z: 1 },
+    { side: 'right', x: '-1vw', h: '27vh', src: 'pot-red', kind: 'pot', z: 2 },
+  ]),
 ];
+
+const treesOnly = garden.filter((p) => p.stage === 0);
+
+// Each service page grows a few of the plants and pots from its own photos.
+const themes: Record<string, Plant[]> = {
+  garden,
+  pots: [
+    ...at(0, [
+      { side: 'left', x: '-6vw', h: '26vh', src: 'pots-barrels', kind: 'pot' },
+      { side: 'right', x: '-3vw', h: '30vh', src: 'pots-camellia-urn', kind: 'pot', flip: true },
+    ]),
+    ...at(1, [
+      { side: 'left', x: '-5vw', h: '24vh', src: 'pots-glazed-bowl', kind: 'pot' },
+      { side: 'right', x: '0vw', h: '34vh', src: 'pots-urn-white-hydrangea', kind: 'pot' },
+    ]),
+    ...at(2, [
+      { side: 'left', x: '-8vw', h: '15vh', src: 'pots-pink-hydrangea', kind: 'pot' },
+      { side: 'right', x: '-8vw', h: '14vh', src: 'pots-blue-trough', kind: 'pot', flip: true },
+    ]),
+  ],
+  torc: [
+    ...at(0, [
+      { side: 'left', x: '-2vw', h: '32vh', src: 'torc-caradoc', kind: 'pot' },
+      { side: 'right', x: '-4vw', h: '26vh', src: 'torc-abria', kind: 'pot' },
+      { side: 'right', x: '9vw', h: '9vh', src: 'torc-medea', kind: 'pot', z: 3 },
+    ]),
+    ...at(1, [
+      { side: 'left', x: '-4vw', h: '26vh', src: 'ndt-6', kind: 'pot' },
+      { side: 'right', x: '-3vw', h: '20vh', src: 'torc-asa', kind: 'pot' },
+    ]),
+    ...at(2, [
+      { side: 'left', x: '-3vw', h: '18vh', src: 'torc-asa', kind: 'pot', flip: true },
+      { side: 'left', x: '9vw', h: '8vh', src: 'torc-medea', kind: 'pot', z: 3 },
+      { side: 'right', x: '-1vw', h: '28vh', src: 'torc-caradoc', kind: 'pot', flip: true },
+    ]),
+  ],
+  bulbs: [
+    ...at(0, [
+      { side: 'left', x: '-10vw', h: '26vh', src: 'bulb-3', kind: 'bush' },
+      { side: 'right', x: '-6vw', h: '26vh', src: 'bulb-1', kind: 'bush' },
+    ]),
+    ...at(1, [
+      { side: 'left', x: '-12vw', h: '26vh', src: 'bulb-tulips-lawn', kind: 'bush' },
+      { side: 'right', x: '-10vw', h: '24vh', src: 'bulb-3', kind: 'bush', flip: true },
+    ]),
+    ...at(2, [
+      { side: 'left', x: '-6vw', h: '24vh', src: 'bulb-1', kind: 'bush', flip: true },
+      { side: 'right', x: '-12vw', h: '26vh', src: 'bulb-tulips-lawn', kind: 'bush', flip: true },
+    ]),
+  ],
+  hedging: [
+    ...at(0, [
+      { side: 'left', x: '-14vw', h: '72vh', src: 'tree', kind: 'tree' },
+      { side: 'left', x: '3vw', h: '11vh', src: 'bush-1', kind: 'bush', z: 2 },
+      { side: 'right', x: '-6vw', h: '34vh', src: 'topiary-tulips', kind: 'bush', flip: true },
+    ]),
+    ...at(1, [
+      { side: 'left', x: '-7vw', h: '19vh', src: 'bush-pair', kind: 'bush' },
+      { side: 'right', x: '-1vw', h: '24vh', src: 'hg-16', kind: 'bush' },
+      { side: 'right', x: '9vw', h: '9vh', src: 'gi-10', kind: 'bush', z: 3 },
+    ]),
+    ...at(2, [
+      { side: 'left', x: '-6vw', h: '30vh', src: 'topiary-tulips', kind: 'bush' },
+      { side: 'right', x: '-4vw', h: '21vh', src: 'bush-2', kind: 'bush' },
+      { side: 'right', x: '10vw', h: '11vh', src: 'bush-0', kind: 'bush', flip: true, z: 3 },
+    ]),
+  ],
+  intervention: [
+    ...treesOnly,
+    ...at(1, [
+      { side: 'left', x: '-7vw', h: '19vh', src: 'bush-pair', kind: 'bush' },
+      { side: 'left', x: '9vw', h: '9vh', src: 'gi-10', kind: 'bush', z: 3 },
+      { side: 'right', x: '-6vw', h: '30vh', src: 'topiary-tulips', kind: 'bush', flip: true },
+    ]),
+    ...at(2, [
+      { side: 'left', x: '-1vw', h: '22vh', src: 'hg-16', kind: 'bush' },
+      { side: 'right', x: '-4vw', h: '21vh', src: 'bush-2', kind: 'bush' },
+    ]),
+  ],
+  health: [
+    ...treesOnly,
+    ...at(1, [
+      { side: 'left', x: '-4vw', h: '21vh', src: 'bush-2', kind: 'bush' },
+      { side: 'right', x: '-7vw', h: '19vh', src: 'bush-pair', kind: 'bush', flip: true },
+    ]),
+    ...at(2, [
+      { side: 'left', x: '-6vw', h: '28vh', src: 'topiary-tulips', kind: 'bush' },
+      { side: 'right', x: '-1vw', h: '22vh', src: 'hg-16', kind: 'bush', flip: true },
+      { side: 'right', x: '9vw', h: '9vh', src: 'gi-10', kind: 'bush', z: 3 },
+    ]),
+  ],
+  care: [
+    ...treesOnly,
+    ...at(1, [
+      { side: 'left', x: '-7vw', h: '19vh', src: 'bush-pair', kind: 'bush' },
+      { side: 'right', x: '-4vw', h: '21vh', src: 'bush-2', kind: 'bush' },
+    ]),
+    ...at(2, [
+      { side: 'left', x: '0vw', h: '22vh', src: 'mw-2', kind: 'pot' },
+      { side: 'left', x: '9vw', h: '8vh', src: 'gi-10', kind: 'bush', z: 3 },
+      { side: 'right', x: '1vw', h: '44vh', src: 'tree', kind: 'tree', far: true, z: 0 },
+      { side: 'right', x: '-4vw', h: '18vh', src: 'bush-2', kind: 'bush', flip: true },
+    ]),
+  ],
+};
+
+interface Props {
+  theme?: string;
+}
+const { theme = 'garden' } = Astro.props;
+const plants = themes[theme] ?? garden;
 
 // Leaves that drift off each tree once it has rustled. They start from the strip
 // of crown that shows at the screen edge (most of each tree sits off-screen), and a
@@ -62,6 +180,7 @@ const leavesFor = (p: Plant, i: number) =>
 ---
 
 <div class="garden" aria-hidden="true" data-stage="0">
+  <div class="garden-set" data-theme={theme}>
   {
     plants.map((p, i) => (
       <div
@@ -84,6 +203,7 @@ const leavesFor = (p: Plant, i: number) =>
       </div>
     ))
   }
+  </div>
 </div>
 
 <script>
@@ -126,6 +246,9 @@ const leavesFor = (p: Plant, i: number) =>
     --edge: linear-gradient(90deg, #000 0, #000 3vw, transparent 11vw, transparent calc(100% - 11vw), #000 calc(100% - 3vw), #000 100%);
     -webkit-mask-image: var(--edge);
     mask-image: var(--edge);
+  }
+  .garden-set {
+    display: contents;
   }
   .plant {
     --o: 0.95;

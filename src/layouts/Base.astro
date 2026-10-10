@@ -8,7 +8,8 @@ interface Props {
   title?: string;
   description?: string;
   callbar?: boolean;
-  garden?: boolean;
+  /** Show the growing garden; a name picks a page theme (e.g. "pots"). */
+  garden?: boolean | string;
 }
 
 const {
@@ -134,7 +135,7 @@ const jsonLd = {
       </div>
     </header>
 
-    {garden && <GardenBackdrop />}
+    {garden && <GardenBackdrop theme={typeof garden === 'string' ? garden : undefined} />}
 
     <main id="main">
       <slot />

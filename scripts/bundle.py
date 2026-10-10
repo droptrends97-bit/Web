@@ -75,6 +75,20 @@ def finish(html: str, links: dict, default: str) -> str:
     return re.sub(r'href="(/[^"]*)"', link, html)
 
 
+def garden_set(html: str):
+    """The page's garden plants (a <div class="garden-set" data-theme="..."> block), if it has one."""
+    start = html.find('<div class="garden-set"')
+    if start < 0:
+        return None, None
+    depth, i = 0, start
+    for m in re.finditer(r'<div\b|</div>', html[start:]):
+        depth += 1 if m.group(0) == '<div' else -1
+        if depth == 0:
+            block = html[start:start + m.end()]
+            return re.search(r'data-theme="([^"]+)"', block).group(1), block
+    return None, None
+
+
 def main_inner(html: str) -> str:
     m = re.search(r'<main id="main"[^>]*>(.*)</main>', html, re.S)
     return m.group(1)
@@ -111,6 +125,18 @@ def page_css(ids):
     return '<style>' + '\n'.join(rules) + '</style>'
 
 
+def garden_css(home_theme, page_themes):
+    """Show the home garden by default, and each page's own garden while that page is open."""
+    rules = [f".garden-set:not([data-theme='{home_theme}']) {{ display: none; }}"]
+    for pid, theme in page_themes.items():
+        if theme == home_theme:
+            continue
+        on = f"body:has([data-page='{pid}']:target, [data-page='{pid}'] :target)"
+        rules.append(f"{on} .garden-set[data-theme='{home_theme}'] {{ display: none; }}")
+        rules.append(f"{on} .garden-set[data-theme='{theme}'] {{ display: contents; }}")
+    return '<style>' + '\n'.join(rules) + '</style>'
+
+
 def build_site() -> str:
     home = page_html('home')
     links = {
@@ -123,8 +149,17 @@ def build_site() -> str:
     blocks = ['<div id="home" data-page="home">' + home_main + '</div>']
     home_styles, home_scripts = set(styles(home)), set(module_scripts(home))
     extra_css, extra_js = [], []
+    home_theme, _ = garden_set(home)
+    themes = {home_theme: 'home'} if home_theme else {}
+    page_themes, extra_gardens = {}, []
     for pid, route in SITE_PAGES:
         page = page_html(route)
+        theme, block = garden_set(page)
+        if theme:
+            page_themes[pid] = theme
+            if theme not in themes:
+                themes[theme] = pid
+                extra_gardens.append(block)
         inner = main_inner(page)
         # IDs already used elsewhere get a page prefix so each page's buttons stay on that page.
         for dup in set(re.findall(r' id="([^"]+)"', inner)) & used_ids:
@@ -141,7 +176,11 @@ def build_site() -> str:
             if js not in home_scripts and js not in extra_js:
                 extra_js.append(js)
     html = home.replace(home_main, ''.join(blocks), 1)
-    html = html.replace('</head>', ''.join(extra_css) + page_css([p for p, _ in SITE_PAGES]) + '</head>', 1)
+    # One garden for the whole preview: every page's plants live in it, and the page on show picks its set.
+    _, home_block = garden_set(html)
+    if home_block:
+        html = html.replace(home_block, home_block + ''.join(extra_gardens), 1)
+    html = html.replace('</head>', ''.join(extra_css) + page_css([p for p, _ in SITE_PAGES]) + garden_css(home_theme, page_themes) + '</head>', 1)
     html = html.replace('</body>', ''.join(extra_js) + '</body>', 1)
     return finish(html, links, '')
 
