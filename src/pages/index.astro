@@ -5,43 +5,10 @@ import Icon from '../components/Icon.astro';
 import YearRibbon from '../components/YearRibbon.astro';
 import Proof from '../components/Proof.astro';
 import CallToAction from '../components/CallToAction.astro';
-import { contact, services, alsoOffer, visitOptions, months } from '../data/site';
+import { contact, services, alsoOffer, visitOptions, months, nav, serviceMenu } from '../data/site';
 
 const [care, intervention, health, pots] = services;
 const thisMonth = months[new Date().getMonth()];
-
-const heroCols = [
-  [
-    ['gal-39', 'A striped lawn leading to a white bench and hydrangeas.'],
-    ['pots-urn-white-hydrangea', 'White hydrangeas spilling from a black urn.'],
-    ['gal-15', 'Pleached trees above box balls along a white wall.'],
-    ['gal-12', 'A purple allium among ferns.'],
-    ['topiary-tulips', 'Lollipop topiary above pink tulips at a granite entrance.'],
-    ['gal-34', 'Cone topiary and box beside a red-brick house.'],
-    ['gi-3', 'Lime-green panicle hydrangeas.'],
-    ['gal-30', 'Magenta azaleas by a granite path.'],
-  ],
-  [
-    ['gal-07', 'A long striped lawn beside a modern garden room.'],
-    ['gal-17', 'A terracotta urn framed by clipped box.'],
-    ['gal-25', 'Alliums around a silver birch before a yew hedge.'],
-    ['pots-olive-tree', 'A cloud-pruned olive tree in a dark glazed pot.'],
-    ['gal-44', 'Rudbeckia and persicaria in full flower.'],
-    ['hg-3', 'Pleached trees forming a green screen above a wall.'],
-    ['gal-21', 'Annabelle hydrangeas.'],
-    ['bulb-12', 'Pink and orange tulips in a spring border.'],
-  ],
-  [
-    ['gal-01', 'A courtyard with a steel pergola and planted walls.'],
-    ['gal-18', 'Alliums in front of the Darragh Connolly van.'],
-    ['pots-front-door', 'Evergreen planters at a modern front door.'],
-    ['gal-40', 'Box balls beneath a brick screen wall.'],
-    ['gal-36', 'Dark tulips against a stone wall.'],
-    ['mw-3', 'A colourful border of hydrangeas and perennials.'],
-    ['gal-05', 'A tree fern against trellis.'],
-    ['gal-37', 'Box balls lining a modern stone path.'],
-  ],
-].map((col) => col.map(([f, alt]) => ({ src: `/img/${f}.jpg`, alt })));
 
 const railPhotos = [
   ['gal-42', 'A lawn below a curved stone wall.'],
@@ -88,38 +55,55 @@ const statement =
 ---
 
 <Base garden>
-  <!-- Hero -->
-  <section class="hero" aria-labelledby="hero-title">
-    <div class="hero-copy">
-      <h1 id="hero-title" class="ink" style="--n:30" aria-label={"Your garden, looked after all year."}><Split text={"Your garden, looked after all year."} letters /><span class="swash" aria-hidden="true"><svg viewBox="0 0 300 24" preserveAspectRatio="none"><path d="M4 16C60 6 120 4 180 9s90 8 116-2" /></svg></span></h1>
-      <p class="lede hero-lede">
+  <!-- Hero: one full-bleed garden, the title centred on it, the menu sitting on the photo. -->
+  <section class="stage" aria-labelledby="hero-title">
+    <div class="stage-photo" aria-hidden="true">
+      <img src="/img/gh-hero.jpg" alt="" fetchpriority="high" decoding="async" />
+    </div>
+    <div class="stage-shade" aria-hidden="true"></div>
+
+    <div class="stage-bar">
+      <a class="stage-brand" href="/" aria-label="Darragh Connolly Garden Care, home">
+        <img src="/img/logo.png" alt="" width="432" height="296" />
+      </a>
+      <nav class="stage-nav" aria-label="Main">
+        <ul>
+          {nav.map((item, i) => (
+            <li style={`--i:${i}`}><a href={item.href}>{item.label}</a></li>
+          ))}
+        </ul>
+      </nav>
+      <a class="stage-call" href={contact.phoneHref}><Icon name="phone" /> <span>{contact.phone}</span></a>
+    </div>
+
+    <div class="stage-copy">
+      <a class="stage-now" href="#year-title">
+        <span class="now-dot" aria-hidden="true"></span>
+        <span><strong>This {thisMonth.name}</strong> · {thisMonth.work[0].toLowerCase()}</span>
+        <Icon name="arrow" />
+      </a>
+      <h1 id="hero-title" class="ink stage-title" aria-label="Your garden, looked after all year.">
+        <span class="t1"><Split text="Your garden," letters /></span>
+        <span class="t2"><Split text="looked after" letters start={12} /> <span class="hl"><Split text="all year." letters start={23} /><span class="swash" aria-hidden="true"><svg viewBox="0 0 300 24" preserveAspectRatio="none"><path d="M4 16C60 6 120 4 180 9s90 8 116-2" /></svg></span></span></span>
+      </h1>
+      <p class="stage-lede">
         Darragh Connolly and his team care for gardens across Dublin and North Wicklow: regular maintenance, seasonal
         interventions, lawn health and planted pots.
       </p>
-      <div class="hero-actions">
-        <a class="btn btn-primary" href="/contact/">Get a quote <Icon name="arrow" /></a>
-        <a class="btn btn-ghost" href={contact.phoneHref}><Icon name="phone" /> {contact.phone}</a>
+      <div class="stage-actions">
+        <a class="btn btn-leaf" href="/contact/">Get a quote <Icon name="arrow" /></a>
+        <a class="btn stage-glass" href={contact.phoneHref}><Icon name="phone" /> {contact.phone}</a>
       </div>
-      <a class="now" href="#year-title">
-        <span class="now-dot" aria-hidden="true"></span>
-        <span><strong>This {thisMonth.name}:</strong> {thisMonth.work[0].toLowerCase()}</span>
-        <Icon name="arrow" />
-      </a>
     </div>
 
-    <div class="hero-cols" aria-label="Gardens we look after">
-      {
-        heroCols.map((col, c) => (
-          <div class={`col c${c}`}>
-            <div class="col-track">
-              {[...col, ...col].map((p, i) => (
-                <img src={p.src} alt={i < col.length ? p.alt : ''} loading={i < 2 ? 'eager' : 'lazy'} class={`r${i % 3}`} />
-              ))}
-            </div>
-          </div>
-        ))
-      }
-    </div>
+    <nav class="stage-services" aria-label="Services">
+      <span class="stage-services-label">What we do</span>
+      <ul>
+        {serviceMenu.map((s, i) => (
+          <li style={`--i:${i}`}><a href={s.href}>{s.label}</a></li>
+        ))}
+      </ul>
+    </nav>
   </section>
 
   <!-- Ticker -->
@@ -280,6 +264,14 @@ const statement =
 </Base>
 
 <script>
+  // Where scroll-linked CSS isn't supported, hide the green bar while the hero is on screen.
+  const stage = document.querySelector('.stage');
+  if (stage && document.documentElement.classList.contains('js-io') && 'IntersectionObserver' in window) {
+    new IntersectionObserver(([e]) => document.documentElement.classList.toggle('on-stage', e.intersectionRatio > 0.35), {
+      threshold: [0, 0.35, 1],
+    }).observe(stage);
+  }
+
   // A small note that pops up once per visit.
   const toast = document.querySelector<HTMLElement>('.toast');
   if (toast) {
@@ -342,50 +334,238 @@ const statement =
 
 <style>
   /* Hero */
-  .hero {
+  .stage {
+    --inset: 0.75rem;
+    position: relative;
+    isolation: isolate;
     display: grid;
-    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
-    gap: clamp(2rem, 5vw, 5rem);
+    grid-template-rows: auto 1fr auto;
+    grid-template-columns: minmax(0, 1fr);
+    margin: calc(-5.75rem + var(--inset)) var(--inset) 0;
+    height: clamp(38rem, calc(100svh - var(--inset) * 2), 60rem);
+    border-radius: clamp(20px, 2.4vw, 34px);
+    overflow: clip;
+    color: #fff;
+    background: var(--evergreen);
+    /* The photo opens like a curtain from a framed card on arrival. */
+    animation: stage-open 1500ms cubic-bezier(0.7, 0, 0.2, 1) both;
+  }
+  @keyframes stage-open {
+    from {
+      clip-path: inset(9% 14% round 40px);
+    }
+    to {
+      clip-path: inset(0 0 round 0);
+    }
+  }
+  .stage-photo {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+  }
+  .stage-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 62%;
+    filter: saturate(1.12) contrast(1.04);
+    animation: stage-zoom 2600ms cubic-bezier(0.2, 0.7, 0.2, 1) both, stage-drift 30s 2600ms ease-in-out infinite alternate;
+  }
+  @keyframes stage-zoom {
+    from {
+      scale: 1.35;
+      filter: saturate(0.6) contrast(1.04) brightness(0.7);
+    }
+  }
+  @keyframes stage-drift {
+    to {
+      scale: 1.08;
+      translate: 0 -1.5%;
+    }
+  }
+  .stage-shade {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background:
+      radial-gradient(70% 55% at 50% 48%, rgb(10 28 18 / 0.5), transparent 75%),
+      linear-gradient(180deg, rgb(10 28 18 / 0.62) 0%, rgb(10 28 18 / 0.08) 26%, rgb(10 28 18 / 0.08) 62%, rgb(10 28 18 / 0.72) 100%);
+  }
+
+  /* The menu, sitting straight on the photo. */
+  .stage-bar {
+    display: flex;
     align-items: center;
-    max-width: calc(var(--max) + 4rem);
-    margin-inline: auto;
-    padding: clamp(1.5rem, 4vw, 3rem) var(--gutter) clamp(2rem, 4vw, 3rem);
-    min-height: min(calc(100svh - 5.75rem), 56rem);
+    justify-content: space-between;
+    gap: 1rem;
+    padding: clamp(1rem, 2vw, 1.5rem) clamp(1.1rem, 2.6vw, 2.25rem);
   }
-  .hero-copy {
+  .stage-brand img {
+    display: block;
+    height: 3.3rem;
+    width: auto;
+    filter: drop-shadow(0 2px 10px rgb(0 0 0 / 0.35));
+  }
+  .stage-nav ul {
+    display: flex;
+    gap: 0.25rem;
+    margin: 0;
+    padding: 0.35rem;
+    list-style: none;
+    border-radius: 999px;
+    background: rgb(255 255 255 / 0.12);
+    border: 1px solid rgb(255 255 255 / 0.22);
+    -webkit-backdrop-filter: blur(14px) saturate(1.3);
+    backdrop-filter: blur(14px) saturate(1.3);
+  }
+  .stage-nav li {
+    animation: drop-in 700ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    animation-delay: calc(1100ms + var(--i) * 70ms);
+  }
+  @keyframes drop-in {
+    from {
+      opacity: 0;
+      translate: 0 -14px;
+    }
+  }
+  .stage-nav a {
+    display: block;
+    padding: 0.6rem 1.05rem;
+    border-radius: 999px;
+    color: #fff;
+    font-weight: 550;
+    text-decoration: none;
+    transition: background-color 200ms, color 200ms;
+  }
+  .stage-nav a:hover {
+    background: #fff;
+    color: var(--evergreen);
+  }
+  .stage-call {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.8rem 1.2rem;
+    border-radius: 999px;
+    background: var(--leaf);
+    color: var(--ink);
+    font-weight: 650;
+    text-decoration: none;
+    font-variant-numeric: tabular-nums;
+    transition: background-color 200ms, scale 200ms;
+  }
+  .stage-call:hover {
+    background: #9ed356;
+    scale: 1.03;
+  }
+
+  /* The centred title block. */
+  .stage-copy {
+    align-self: center;
+    justify-self: center;
     display: grid;
-    gap: 1.75rem;
-    justify-items: start;
+    justify-items: center;
+    gap: clamp(1.1rem, 2.2vw, 1.6rem);
+    width: min(100% - 2.5rem, 62rem);
+    text-align: center;
+    padding-bottom: clamp(1rem, 3vh, 2.5rem);
   }
-  .hero h1 {
-    font-size: clamp(3.25rem, 7vw, 6.5rem);
+  .stage-now {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.5rem 0.95rem 0.5rem 0.8rem;
+    border-radius: 999px;
+    background: rgb(255 255 255 / 0.14);
+    border: 1px solid rgb(255 255 255 / 0.25);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    color: #fff;
+    font-size: 0.95rem;
+    text-decoration: none;
+    animation: pop-in 800ms cubic-bezier(0.34, 1.56, 0.64, 1) 700ms both;
+  }
+  .stage-now strong {
+    color: var(--leaf);
+  }
+  .stage-now :global(svg) {
+    transition: translate 220ms var(--ease-out);
+  }
+  .stage-now:hover :global(svg) {
+    translate: 3px 0;
+  }
+  .now-dot {
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 50%;
+    background: var(--leaf);
+    box-shadow: 0 0 0 0 rgb(140 198 63 / 0.7);
+    animation: pulse 2.4s var(--ease-out) infinite;
+  }
+  @keyframes pulse {
+    70% {
+      box-shadow: 0 0 0 10px transparent;
+    }
+    100% {
+      box-shadow: 0 0 0 0 transparent;
+    }
+  }
+  .stage-title {
+    margin: 0;
+    font-size: clamp(3rem, 8.4vw, 8.25rem);
     font-weight: 600;
-    line-height: 0.92;
-    letter-spacing: -0.045em;
-    max-width: 12ch;
+    line-height: 0.9;
+    letter-spacing: -0.055em;
+    text-shadow: 0 4px 40px rgb(0 0 0 / 0.35);
+    padding-bottom: 0.12em;
   }
-  .hero-lede {
-    max-width: 34ch;
+  .stage-title > span {
+    display: block;
   }
-  .hero-lede,
-  .hero-actions,
-  .now {
-    animation: fade-up 900ms var(--ease-out) both;
+  .stage-title :global(.ic) {
+    animation-delay: calc(900ms + var(--i) * 45ms);
   }
-  .hero-lede {
-    animation-delay: 1700ms;
+  .hl {
+    position: relative;
+    display: inline-block;
+    color: var(--leaf);
   }
-  .hero-actions,
-  .now {
-    animation-name: pop-in;
-    animation-duration: 800ms;
-    animation-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
+  .stage-title .swash {
+    left: 0;
+    width: 100%;
+    bottom: -0.1em;
   }
-  .hero-actions {
-    animation-delay: 2100ms;
+  .stage-title .swash :global(path) {
+    stroke: #fff;
+    animation-delay: 2.4s;
   }
-  .now {
-    animation-delay: 2500ms;
+  .stage-lede {
+    max-width: 44ch;
+    margin: 0;
+    font-size: clamp(1.05rem, 1.5vw, 1.25rem);
+    line-height: 1.55;
+    color: rgb(255 255 255 / 0.88);
+    text-shadow: 0 1px 16px rgb(0 0 0 / 0.4);
+    animation: fade-up 900ms var(--ease-out) 2300ms both;
+  }
+  .stage-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem;
+    animation: pop-in 800ms cubic-bezier(0.34, 1.56, 0.64, 1) 2600ms both;
+  }
+  .stage-glass {
+    color: #fff;
+    border-color: rgb(255 255 255 / 0.4);
+    background: rgb(255 255 255 / 0.12);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    font-variant-numeric: tabular-nums;
+  }
+  .stage-glass:hover {
+    background: #fff;
+    color: var(--evergreen);
   }
   @keyframes pop-in {
     from {
@@ -400,109 +580,174 @@ const statement =
       filter: blur(6px);
     }
   }
-  .hero-actions {
+
+  /* Every service along the foot of the photo. */
+  .stage-services {
     display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-  }
-  .hero-actions .btn-ghost {
-    font-variant-numeric: tabular-nums;
-  }
-  .now {
-    display: inline-flex;
     align-items: center;
-    gap: 0.65rem;
-    padding: 0.5rem 0.9rem 0.5rem 0.75rem;
+    gap: 1rem;
+    margin: 0 clamp(0.75rem, 2vw, 1.5rem) clamp(0.75rem, 2vw, 1.5rem);
+    padding: 0.5rem 0.5rem 0.5rem 1.25rem;
     border-radius: 999px;
-    background: var(--season-soft);
-    color: var(--ink);
-    text-decoration: none;
+    background: rgb(10 28 18 / 0.35);
+    border: 1px solid rgb(255 255 255 / 0.18);
+    -webkit-backdrop-filter: blur(16px) saturate(1.3);
+    backdrop-filter: blur(16px) saturate(1.3);
+    animation: rise-bar 900ms cubic-bezier(0.2, 0.9, 0.2, 1) 2900ms both;
+  }
+  @keyframes rise-bar {
+    from {
+      opacity: 0;
+      translate: 0 120%;
+    }
+  }
+  .stage-services-label {
+    flex: none;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--leaf);
+  }
+  .stage-services ul {
+    display: flex;
+    flex: 1;
+    justify-content: space-between;
+    gap: 0.35rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .stage-services li {
+    flex: none;
+    animation: pop-in 600ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    animation-delay: calc(3200ms + var(--i) * 80ms);
+  }
+  .stage-services a {
+    display: block;
+    padding: 0.6rem 0.85rem;
+    border-radius: 999px;
+    color: #fff;
     font-size: 0.95rem;
-    transition: background-color 200ms;
+    font-weight: 550;
+    white-space: nowrap;
+    text-decoration: none;
+    transition: background-color 200ms, color 200ms;
   }
-  .now strong {
-    color: var(--season-ink);
-  }
-  .now-dot {
-    width: 0.6rem;
-    height: 0.6rem;
-    border-radius: 50%;
-    background: var(--season-ink);
-    box-shadow: 0 0 0 0 color-mix(in srgb, var(--season-ink) 60%, transparent);
-    animation: pulse 2.4s var(--ease-out) infinite;
-  }
-  @keyframes pulse {
-    70% {
-      box-shadow: 0 0 0 10px transparent;
-    }
-    100% {
-      box-shadow: 0 0 0 0 transparent;
-    }
-  }
-  .now :global(svg) {
-    transition: transform 220ms var(--ease-out);
-  }
-  .now:hover :global(svg) {
-    transform: translateX(3px);
+  .stage-services a:hover {
+    background: var(--leaf);
+    color: var(--ink);
   }
 
-  .hero-cols {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 0.75rem;
-    height: min(calc(100svh - 9rem), 48rem);
-    min-height: 30rem;
-    overflow: clip;
-    border-radius: var(--radius-lg);
-    -webkit-mask: linear-gradient(transparent, #000 10%, #000 90%, transparent);
-    mask: linear-gradient(transparent, #000 10%, #000 90%, transparent);
+  /* As you scroll away the photo settles back and the title lifts off. */
+  @supports (animation-timeline: view()) {
+    .stage-copy {
+      animation: lift linear both;
+      animation-timeline: view();
+      animation-range: exit 0% exit 80%;
+    }
+    @keyframes lift {
+      to {
+        translate: 0 -18vh;
+        opacity: 0;
+        scale: 0.94;
+      }
+    }
   }
-  .col {
-    overflow: clip;
+
+  /* While the hero is on screen the green bar steps aside; the menu is on the photo instead. */
+  @media (min-width: 861px) {
+    @supports (animation-timeline: view()) {
+      :global(body) {
+        timeline-scope: --stage;
+      }
+      .stage {
+        view-timeline: --stage block;
+      }
+      :global(.masthead) {
+        animation: masthead-drop linear both;
+        animation-timeline: --stage;
+        animation-range: exit 55% exit 85%;
+      }
+    }
+    :global(html.on-stage .masthead) {
+      translate: 0 -160%;
+      opacity: 0;
+    }
+    :global(.masthead) {
+      transition: translate 500ms var(--ease-out), opacity 300ms;
+    }
   }
-  .col-track {
-    display: grid;
-    gap: 0.75rem;
-    animation: col-up 60s linear infinite;
-  }
-  .c1 .col-track {
-    animation-duration: 75s;
-    animation-delay: -25s;
-  }
-  .c2 .col-track {
-    animation-duration: 52s;
-    animation-delay: -10s;
-  }
-  .hero-cols:hover .col-track {
-    animation-play-state: paused;
-  }
-  @keyframes col-up {
+  @keyframes masthead-drop {
+    from {
+      translate: 0 -160%;
+      opacity: 0;
+      visibility: hidden;
+    }
     to {
-      transform: translateY(calc(-50% - 0.375rem));
+      translate: 0 0;
+      opacity: 1;
+      visibility: visible;
     }
-  }
-  .col img.r1 {
-    aspect-ratio: 1;
-  }
-  .col img.r2 {
-    aspect-ratio: 3 / 4.4;
-  }
-  .col img {
-    width: 100%;
-    aspect-ratio: 4 / 5;
-    object-fit: cover;
-    border-radius: 16px;
-    background: var(--paper-2);
   }
 
-  @media (max-width: 860px) {
-    .hero {
-      grid-template-columns: 1fr;
-      min-height: 0;
+  /* When the services don't all fit, the strip scrolls sideways and fades at its end. */
+  @media (max-width: 1500px) {
+    .stage-services-label {
+      display: none;
     }
-    .hero-cols {
-      height: 24rem;
-      min-height: 0;
+    .stage-services {
+      padding-left: 0.5rem;
+    }
+  }
+  @media (max-width: 1340px) {
+    .stage-services ul {
+      justify-content: flex-start;
+      -webkit-mask-image: linear-gradient(90deg, #000 88%, transparent);
+      mask-image: linear-gradient(90deg, #000 88%, transparent);
+      padding-right: 3rem;
+    }
+  }
+  /* On phones and small tablets the regular menu stays, and the photo sits under it. */
+  @media (max-width: 860px) {
+    .stage {
+      margin-top: 0;
+      height: auto;
+      min-height: min(48rem, calc(100svh - 6.5rem));
+    }
+    .stage-bar {
+      display: none;
+    }
+    .stage-copy {
+      padding-block: 3.5rem 2rem;
+      grid-row: 1 / 3;
+    }
+    .stage-services {
+      border-radius: 22px;
+      padding: 0.4rem;
+    }
+  }
+  @media (max-width: 1180px) and (min-width: 861px) {
+    .stage-nav a {
+      padding-inline: 0.75rem;
+    }
+    .stage-call span {
+      display: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .stage,
+    .stage-photo img,
+    .stage-copy,
+    .stage-nav li,
+    .stage-services,
+    .stage-services li,
+    .stage-now,
+    .stage-lede,
+    .stage-actions {
+      animation: none;
     }
   }
 

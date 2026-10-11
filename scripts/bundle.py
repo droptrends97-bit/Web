@@ -24,7 +24,9 @@ def img_uri(rel: str) -> str:
         src = dist / rel.lstrip('/')
         if src.suffix.lower() in ('.jpg', '.jpeg', '.png'):
             out_webp = cache / (src.stem + '.webp')
-            subprocess.run(['ffmpeg', '-loglevel', 'error', '-y', '-i', str(src), '-vf', r'scale=min(1100\,iw):-2', '-c:v', 'libwebp', '-quality', '70', str(out_webp)], check=True)
+            # Full-width hero photos keep more of their size so they stay sharp across the screen.
+            cap, q = ('2200', '78') if src.stem.endswith('-hero') else ('1100', '70')
+            subprocess.run(['ffmpeg', '-loglevel', 'error', '-y', '-i', str(src), '-vf', rf'scale=min({cap}\,iw):-2', '-c:v', 'libwebp', '-quality', q, str(out_webp)], check=True)
             _uris[rel] = 'data:image/webp;base64,' + base64.b64encode(out_webp.read_bytes()).decode()
         else:
             _uris[rel] = data_uri(src)

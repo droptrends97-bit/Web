@@ -4,9 +4,11 @@
 interface Props {
   text: string;
   letters?: boolean;
+  /** Where the letter count starts, so two splits in one heading write on in sequence. */
+  start?: number;
 }
-const { text, letters = false } = Astro.props;
-let n = 0;
+const { text, letters = false, start = 0 } = Astro.props;
+let n = start;
 const words = text.trim().split(/\s+/).map((w) => ({ w, chars: [...w].map((c) => ({ c, i: n++ })), i: letters ? 0 : n++ }));
 ---
 
