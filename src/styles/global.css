@@ -1,4 +1,6 @@
-@import '@fontsource-variable/geist/wght.css';
+@import '@fontsource-variable/plus-jakarta-sans/wght.css';
+@import '@fontsource-variable/playfair-display/wght.css';
+@import '@fontsource-variable/playfair-display/wght-italic.css';
 
 :root {
   --paper: #f6f7f2;
@@ -21,8 +23,10 @@
   --season-soft: #ecdcd8;
   --season-ink: #5e1f2d;
 
-  --display: 'Geist Variable', 'Helvetica Neue', Arial, sans-serif;
-  --text: 'Geist Variable', 'Helvetica Neue', Arial, sans-serif;
+  --display: 'Plus Jakarta Sans Variable', 'Helvetica Neue', Arial, sans-serif;
+  --text: 'Plus Jakarta Sans Variable', 'Helvetica Neue', Arial, sans-serif;
+  /* Page titles: an elegant serif against the clean sans everywhere else. */
+  --serif: 'Playfair Display Variable', Georgia, 'Times New Roman', serif;
   --card: #ffffff;
   --border: #e3e7dc;
   --shadow: 0 1px 2px rgb(23 37 28 / 0.05), 0 16px 40px -24px rgb(23 37 28 / 0.28);
@@ -423,9 +427,14 @@ a {
 }
 
 /* ---------- Ink-written hero headlines ---------- */
+.ink {
+  font-family: var(--serif);
+}
 .ink .iw {
   display: inline-block;
   white-space: nowrap;
+  /* Playfair needs far less tightening than the sans the pages were set in. */
+  letter-spacing: -0.012em;
 }
 .ink .ic {
   display: inline-block;
