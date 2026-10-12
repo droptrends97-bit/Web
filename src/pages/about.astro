@@ -1,4 +1,5 @@
 ---
+import Count from '../components/Count.astro';
 import Split from '../components/Split.astro';
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
@@ -92,7 +93,7 @@ const belief = "Nature isn't just a background to our lives; it actively support
             <span class="fact-big">
               {f.count ? (
                 <Fragment>
-                  <span data-count="now" style={`--to:${f.count}`}>{f.count}</span>+
+                  <Count to={f.count} now delay="1.2s" />+
                 </Fragment>
               ) : (
                 f.big

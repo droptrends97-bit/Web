@@ -1,4 +1,5 @@
 ---
+import Count from '../../components/Count.astro';
 import Split from '../../components/Split.astro';
 import Base from '../../layouts/Base.astro';
 import Icon from '../../components/Icon.astro';
@@ -121,7 +122,7 @@ const youtube = 'https://www.youtube.com/results?search_query=Darragh+Connolly+G
         </p>
       </div>
       <div class="price-right">
-        <p class="price"><span class="cur">€</span><span data-count style="--to:125">125</span></p>
+        <p class="price"><span class="cur">€</span><Count to={125} /></p>
         <p class="price-note">Fully deductible from the final cost</p>
         <a class="btn btn-leaf" href={contact.phoneHref}><Icon name="phone" /> Book on {contact.phone}</a>
       </div>

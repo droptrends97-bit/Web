@@ -190,34 +190,19 @@ const jsonLd = {
 
       const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-      // Numbers count up to their value when they come into view.
+      // Where scroll-linked CSS isn't supported, start each count-up when it comes into view.
       const countIO = new IntersectionObserver(
         (entries) => {
           for (const e of entries) {
             if (!e.isIntersecting) continue;
             countIO.unobserve(e.target);
-            const el = e.target as HTMLElement;
-            const m = (el.textContent ?? '').match(/^(\D*?)(\d[\d,]*)(.*)$/s);
-            if (!m || reduce) continue;
-            const [, pre, num, post] = m;
-            const target = Number(num.replace(/,/g, ''));
-            const dur = Math.min(1800, 700 + target * 12);
-            const t0 = performance.now();
-            const tick = (t: number) => {
-              const k = Math.min(1, (t - t0) / dur);
-              const v = Math.round(target * (1 - Math.pow(1 - k, 4)));
-              el.textContent = pre + v.toLocaleString('en-IE') + post;
-              if (k < 1) requestAnimationFrame(tick);
-              else el.classList.add('counted');
-            };
-            el.textContent = pre + '0' + post;
-            requestAnimationFrame(tick);
+            e.target.classList.add('in');
           }
         },
         { threshold: 0.6 },
       );
       if (document.documentElement.classList.contains('js-io'))
-        document.querySelectorAll('[data-count]').forEach((el) => countIO.observe(el));
+        document.querySelectorAll('.tally:not([data-count="now"])').forEach((el) => countIO.observe(el));
 
       // Scroll progress line under the menu (fallback where scroll timelines aren't supported).
       const bar = document.querySelector<HTMLElement>('.progress span');
@@ -629,6 +614,8 @@ const jsonLd = {
     color: var(--on-evergreen-2);
     padding-top: clamp(4rem, 8vw, 6rem);
     overflow: clip;
+    /* If a device still stretches past the end, it shows more footer green, never a white gap or the garden. */
+    box-shadow: 0 100vh 0 100vh var(--evergreen);
   }
   .footer-grid {
     display: grid;

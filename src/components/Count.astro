@@ -1,0 +1,19 @@
+---
+// A number that counts up from 0 by rolling through every value on the way.
+// `now` starts it as soon as the page shows (for figures already on screen);
+// otherwise it waits until it scrolls into view. Styles live in global.css.
+interface Props {
+  to: number;
+  now?: boolean;
+  /** Extra wait before a `now` count starts, e.g. "3s". */
+  delay?: string;
+}
+const { to, now = false, delay } = Astro.props;
+const steps = Array.from({ length: to + 1 }, (_, i) => i);
+---
+
+<span
+  class="tally"
+  data-count={now ? 'now' : ''}
+  style={`--to:${to}${delay ? `;--count-delay:${delay}` : ''}`}
+><span class="tally-sizer">{to}</span><span class="tally-roll" aria-hidden="true">{steps.map((n) => <span>{n}</span>)}</span></span>

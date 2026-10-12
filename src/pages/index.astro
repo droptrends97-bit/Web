@@ -1,4 +1,5 @@
 ---
+import Count from '../components/Count.astro';
 import Split from '../components/Split.astro';
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
@@ -56,10 +57,21 @@ const steps = [
   },
 ];
 
-const statement =
-  "We don't lay paving, paths or patios. We look after gardens, and that's all we do, so yours gets our full attention every single visit.".split(
-    ' ',
-  );
+// The statement is written over letter by letter as it scrolls up the screen. Its letters are split
+// into eight runs; each run starts writing when the paragraph passes the next point on screen.
+const statementText =
+  "We don't lay paving, paths or patios. We look after gardens, and that's all we do, so yours gets our full attention every single visit.";
+const RUNS = 8;
+const totalLetters = statementText.replace(/ /g, '').length;
+const perRun = Math.ceil(totalLetters / RUNS);
+let letterNo = 0;
+const statement = statementText.split(' ').map((word) =>
+  [...word].map((c) => {
+    const n = letterNo++;
+    const run = Math.floor(n / perRun);
+    return { c, run, j: n - run * perRun };
+  }),
+);
 ---
 
 <Base garden>
@@ -76,9 +88,25 @@ const statement =
       </a>
       <nav class="stage-nav" aria-label="Main">
         <ul>
-          {nav.map((item, i) => (
-            <li style={`--i:${i}`}><a href={item.href}>{item.label}</a></li>
-          ))}
+          {nav.map((item, i) =>
+            item.href === '/services/' ? (
+              <li class="stage-has-sub" style={`--i:${i}`}>
+                <details class="stage-sub">
+                  <summary>
+                    Services
+                    <svg viewBox="0 0 24 24" class="stage-chev" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
+                  </summary>
+                  <ul class="stage-sub-list">
+                    {serviceMenu.map((s, k) => (
+                      <li style={`--k:${k}`}><a href={s.href}>{s.label}</a></li>
+                    ))}
+                  </ul>
+                </details>
+              </li>
+            ) : (
+              <li style={`--i:${i}`}><a href={item.href}>{item.label}</a></li>
+            ),
+          )}
         </ul>
       </nav>
       <a class="stage-call" href={contact.phoneHref}><Icon name="phone" /> <span>{contact.phone}</span></a>
@@ -105,7 +133,7 @@ const statement =
       <ul class="stage-stats" aria-label="At a glance">
         {stats.map((st, i) => (
           <li style={`--i:${i}`}>
-            <strong><span data-count="now" style={`--to:${st.to}`}>{st.to}</span>{st.suffix}</strong>
+            <strong><Count to={st.to} now delay={`${3 + i * 0.15}s`} />{st.suffix}</strong>
             <span>{st.label}</span>
           </li>
         ))}
@@ -225,8 +253,17 @@ const statement =
   <!-- Statement: words light up on scroll -->
   <section class="statement" aria-label="What we don't do">
     <div class="wrap">
-      <p class="statement-text">
-        {statement.map((w) => <span class="sw">{w} </span>)}
+      <p class="statement-text" aria-label={statementText}>
+        {statement.map((word, k) => (
+          <Fragment>
+            <span class="sw" aria-hidden="true">
+              {word.map((l) => (
+                <span class={`sc r${l.run}`} data-c={l.c} style={`--j:${l.j}`}>{l.c}</span>
+              ))}
+            </span>
+            {k < statement.length - 1 && ' '}
+          </Fragment>
+        ))}
       </p>
     </div>
   </section>
@@ -280,6 +317,12 @@ const statement =
 </Base>
 
 <script>
+  // Close the hero's Services drop-down when a link is chosen or the visitor clicks elsewhere.
+  const stageSub = document.querySelector<HTMLDetailsElement>('.stage-sub');
+  document.addEventListener('click', (e) => {
+    if (stageSub?.open && (!stageSub.contains(e.target as Node) || (e.target as Element).closest('a'))) stageSub.open = false;
+  });
+
   // Where scroll-linked CSS isn't supported, hide the green bar while the hero is on screen.
   const stage = document.querySelector('.stage');
   if (stage && document.documentElement.classList.contains('js-io') && 'IntersectionObserver' in window) {
@@ -324,34 +367,6 @@ const statement =
       tile.style.setProperty('--my', `${e.clientY - r.top}px`);
     });
   });
-
-  // Statement: light each word as the paragraph scrolls through the viewport.
-  const text = document.querySelector<HTMLElement>('.statement-text');
-  if (text) {
-    const words = Array.from(text.querySelectorAll<HTMLElement>('.sw'));
-    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    let ticking = false;
-    const update = () => {
-      ticking = false;
-      const r = text.getBoundingClientRect();
-      const start = innerHeight * 0.85;
-      const end = innerHeight * 0.3;
-      const p = reduce ? 1 : Math.min(1, Math.max(0, (start - r.top) / (start - end + r.height * 0.6)));
-      const lit = Math.round(p * words.length);
-      words.forEach((w, i) => w.classList.toggle('lit', i < lit));
-    };
-    addEventListener(
-      'scroll',
-      () => {
-        if (!ticking) {
-          ticking = true;
-          requestAnimationFrame(update);
-        }
-      },
-      { passive: true },
-    );
-    update();
-  }
 </script>
 
 <style>
@@ -405,6 +420,8 @@ const statement =
 
   /* The menu, sitting straight on the photo. */
   .stage-bar {
+    position: relative;
+    z-index: 5;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -417,7 +434,7 @@ const statement =
     width: auto;
     filter: drop-shadow(0 2px 10px rgb(0 0 0 / 0.35));
   }
-  .stage-nav ul {
+  .stage-nav > ul {
     display: flex;
     gap: 0.25rem;
     margin: 0;
@@ -429,7 +446,7 @@ const statement =
     -webkit-backdrop-filter: blur(14px) saturate(1.3);
     backdrop-filter: blur(14px) saturate(1.3);
   }
-  .stage-nav li {
+  .stage-nav > ul > li {
     animation: drop-in 700ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
     animation-delay: calc(1100ms + var(--i) * 70ms);
   }
@@ -448,9 +465,83 @@ const statement =
     text-decoration: none;
     transition: background-color 200ms, color 200ms;
   }
-  .stage-nav a:hover {
+  .stage-nav a:hover,
+  .stage-sub summary:hover,
+  .stage-sub[open] summary {
     background: #fff;
     color: var(--evergreen);
+  }
+  /* Services opens a drop-down of every service, on the photo. */
+  .stage-has-sub {
+    position: relative;
+  }
+  .stage-sub summary {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.6rem 0.9rem 0.6rem 1.05rem;
+    border-radius: 999px;
+    color: #fff;
+    font-weight: 550;
+    cursor: pointer;
+    list-style: none;
+    transition: background-color 200ms, color 200ms;
+  }
+  .stage-sub summary::-webkit-details-marker {
+    display: none;
+  }
+  .stage-chev {
+    width: 1rem;
+    height: 1rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: rotate 250ms var(--ease-out);
+  }
+  .stage-sub[open] .stage-chev {
+    rotate: 180deg;
+  }
+  .stage-sub-list {
+    position: absolute;
+    top: calc(100% + 0.75rem);
+    left: 0;
+    z-index: 10;
+    display: grid;
+    gap: 0.15rem;
+    min-width: 17rem;
+    margin: 0;
+    padding: 0.5rem;
+    list-style: none;
+    border-radius: 22px;
+    background: rgb(16 38 26 / 0.94);
+    border: 1px solid rgb(255 255 255 / 0.2);
+    -webkit-backdrop-filter: blur(18px) saturate(1.3);
+    backdrop-filter: blur(18px) saturate(1.3);
+    box-shadow: 0 30px 60px -24px rgb(0 0 0 / 0.55);
+    transform-origin: 20% 0;
+    animation: sub-open 320ms cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
+  }
+  @keyframes sub-open {
+    from {
+      opacity: 0;
+      scale: 0.92;
+      translate: 0 -8px;
+    }
+  }
+  .stage-sub-list li {
+    animation: drop-in 420ms cubic-bezier(0.2, 0.9, 0.3, 1) both;
+    animation-delay: calc(60ms + var(--k) * 35ms);
+  }
+  .stage-sub-list a {
+    padding: 0.7rem 1rem;
+    border-radius: 14px;
+    font-size: 0.98rem;
+  }
+  .stage-sub-list a:hover {
+    background: var(--leaf);
+    color: var(--ink);
   }
   .stage-call {
     display: inline-flex;
@@ -592,9 +683,6 @@ const statement =
     font-weight: 500;
     line-height: 1;
     color: #fff;
-  }
-  .stage-stats [data-count] {
-    animation-delay: 3s;
   }
   .stage-stats li > span {
     font-size: 0.85rem;
@@ -1241,12 +1329,69 @@ const statement =
     letter-spacing: -0.04em;
     max-width: 22ch;
   }
+  /* Each letter is drawn grey and light, then written over in full ink and bold as the paragraph
+     rises. Its box is sized for the bold letter, so nothing shifts as the weight grows. */
   .sw {
-    color: color-mix(in srgb, var(--ink) 16%, transparent);
-    transition: color 350ms var(--ease-out);
+    white-space: nowrap;
   }
-  .sw.lit {
+  .sc {
+    display: inline-block;
+    font-weight: 780;
     color: var(--ink);
+  }
+  .sc::after {
+    content: attr(data-c);
+    display: block;
+    height: 0;
+    overflow: hidden;
+    visibility: hidden;
+    font-weight: 780;
+  }
+  @keyframes write {
+    from {
+      font-weight: 300;
+      color: color-mix(in srgb, var(--ink) 18%, transparent);
+    }
+    40% {
+      color: var(--leaf-ink);
+    }
+  }
+  @property --r0 { syntax: '<integer>'; inherits: true; initial-value: 1; }
+  @property --r1 { syntax: '<integer>'; inherits: true; initial-value: 1; }
+  @property --r2 { syntax: '<integer>'; inherits: true; initial-value: 1; }
+  @property --r3 { syntax: '<integer>'; inherits: true; initial-value: 1; }
+  @property --r4 { syntax: '<integer>'; inherits: true; initial-value: 1; }
+  @property --r5 { syntax: '<integer>'; inherits: true; initial-value: 1; }
+  @property --r6 { syntax: '<integer>'; inherits: true; initial-value: 1; }
+  @property --r7 { syntax: '<integer>'; inherits: true; initial-value: 1; }
+  @keyframes run0 { from { --r0: 0; } to { --r0: 1; } }
+  @keyframes run1 { from { --r1: 0; } to { --r1: 1; } }
+  @keyframes run2 { from { --r2: 0; } to { --r2: 1; } }
+  @keyframes run3 { from { --r3: 0; } to { --r3: 1; } }
+  @keyframes run4 { from { --r4: 0; } to { --r4: 1; } }
+  @keyframes run5 { from { --r5: 0; } to { --r5: 1; } }
+  @keyframes run6 { from { --r6: 0; } to { --r6: 1; } }
+  @keyframes run7 { from { --r7: 0; } to { --r7: 1; } }
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .statement-text {
+        animation: run0 steps(1, end) both, run1 steps(1, end) both, run2 steps(1, end) both, run3 steps(1, end) both, run4 steps(1, end) both, run5 steps(1, end) both, run6 steps(1, end) both, run7 steps(1, end) both;
+        animation-timeline: view(), view(), view(), view(), view(), view(), view(), view();
+        animation-range: cover 0% cover 18%, cover 0% cover 23%, cover 0% cover 28%, cover 0% cover 33%, cover 0% cover 38%, cover 0% cover 43%, cover 0% cover 48%, cover 0% cover 53%;
+      }
+      .sc {
+        animation: write 650ms cubic-bezier(0.3, 0.7, 0.3, 1) both;
+        animation-delay: calc(var(--j) * 32ms);
+      }
+      @container style(--r0: 0) { .r0 { animation-play-state: paused; } }
+      @container style(--r1: 0) { .r1 { animation-play-state: paused; } }
+      @container style(--r2: 0) { .r2 { animation-play-state: paused; } }
+      @container style(--r3: 0) { .r3 { animation-play-state: paused; } }
+      @container style(--r4: 0) { .r4 { animation-play-state: paused; } }
+      @container style(--r5: 0) { .r5 { animation-play-state: paused; } }
+      @container style(--r6: 0) { .r6 { animation-play-state: paused; } }
+      @container style(--r7: 0) { .r7 { animation-play-state: paused; } }
+    }
   }
 
   /* About */

@@ -81,10 +81,13 @@
 html {
   -webkit-text-size-adjust: 100%;
   scroll-padding-top: 5rem;
+  /* The page stops at the footer: no elastic bounce past the top or bottom. */
+  overscroll-behavior: none;
 }
 
 body {
   margin: 0;
+  overscroll-behavior: none;
   background: var(--paper);
   color: var(--ink);
   font-family: var(--text);
@@ -648,90 +651,142 @@ a {
 [data-stagger] > :nth-child(23) { --s: 22; }
 [data-stagger] > :nth-child(24) { --s: 23; }
 
-/* Counting numbers in plain CSS: a registered integer animates and is shown via a counter. */
-@property --n {
+/* ========== Entrances that play once and stay (no JavaScript needed) ==========
+   Each group's container flips --in from 0 to 1 as it scrolls into view. Its items carry a normal
+   one-shot animation that is held paused while --in is 0. Once played, an animation has finished,
+   so scrolling back up never undoes it. --in defaults to 1, so a browser that can't do any of this
+   simply plays the entrances on load and nothing is ever left hidden. */
+@property --in {
   syntax: '<integer>';
-  initial-value: 0;
-  inherits: false;
+  inherits: true;
+  initial-value: 1;
 }
-
-/* ========== Scroll-driven entrances (no JavaScript needed) ========== */
+@keyframes in-view {
+  from { --in: 0; }
+  to { --in: 1; }
+}
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
-    [data-reveal] {
-      animation: sd-reveal linear both;
+    /* Containers that watch the scroll on behalf of their items. */
+    [data-stagger],
+    .rise,
+    [data-curtain],
+    .tally:not([data-count='now']),
+    :has(> [data-reveal]),
+    :has(> [data-pop]) {
+      animation: in-view steps(1, end) both;
       animation-timeline: view();
-      animation-range: entry 0% cover 28%;
+      animation-range: entry 0% entry 35%;
+    }
+
+    [data-reveal] {
+      animation: sd-reveal 1000ms cubic-bezier(0.16, 1, 0.3, 1) both;
     }
     [data-pop] {
-      animation: sd-pop linear both;
-      animation-timeline: view();
-      animation-range: entry calc(var(--d, 0) * 5%) cover calc(26% + var(--d, 0) * 5%);
+      animation: sd-pop 850ms cubic-bezier(0.34, 1.4, 0.64, 1) both;
+      animation-delay: calc(var(--d, 0) * 110ms);
     }
     [data-stagger] > * {
-      animation-timeline: view();
+      animation-duration: 900ms;
       animation-fill-mode: both;
       animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
-      animation-duration: auto;
-      animation-range: entry calc(var(--s, 0) * 6%) cover calc(28% + var(--s, 0) * 6%);
+      animation-delay: calc(var(--s, 0) * 110ms);
     }
     [data-stagger='slide'] > * { animation-name: st-slide; }
-    [data-stagger='flip'] > * { animation-name: st-flip; transform-origin: 50% 100%; }
+    [data-stagger='flip'] > * { animation-name: st-flip; animation-duration: 1000ms; transform-origin: 50% 100%; }
     [data-stagger='rise'] > * { animation-name: st-rise; }
     [data-stagger='scatter'] > * {
       animation-name: st-scatter;
-      animation-range: entry calc(var(--s, 0) * 4%) cover calc(26% + var(--s, 0) * 4%);
+      animation-duration: 1000ms;
+      animation-delay: calc(var(--s, 0) * 75ms);
     }
-    [data-stagger='grow'] > * { animation-name: st-grow; animation-timing-function: ease-out; }
+    [data-stagger='grow'] > * { animation-name: st-grow; animation-timing-function: cubic-bezier(0.34, 1.4, 0.64, 1); }
 
     [data-stagger] .tick svg path {
       stroke-dasharray: 26;
-      animation: sd-draw linear both;
-      animation-timeline: view();
-      animation-range: entry calc(30% + var(--s, 0) * 6%) cover calc(34% + var(--s, 0) * 6%);
+      animation: sd-draw 500ms ease-out both;
+      animation-delay: calc(var(--s, 0) * 110ms + 400ms);
     }
 
     [data-curtain] img {
-      animation: curtain linear both;
-      animation-timeline: view();
-      animation-range: entry 0% cover 45%;
+      animation: curtain 1400ms cubic-bezier(0.76, 0, 0.24, 1) both;
     }
 
     .rise .wr > span {
-      animation: word-rise linear both;
-      animation-timeline: view();
-      animation-range: entry calc(10% + var(--i) * 5%) cover calc(22% + var(--i) * 5%);
+      animation: word-rise 900ms cubic-bezier(0.16, 1, 0.3, 1) both;
+      animation-delay: calc(var(--i) * 80ms);
     }
     .rise-blur .wr > span {
       animation-name: word-blur;
     }
 
-    [data-count] {
-      --n: var(--to);
-      counter-reset: n var(--n);
-      animation: sd-count linear both;
-      animation-timeline: view();
-      animation-range: entry 10% entry 100%;
+    .tally:not([data-count='now']) .tally-roll {
+      animation: tally-roll 2600ms cubic-bezier(0.3, 0.5, 0.2, 1) 200ms both;
     }
-    /* Numbers already on screen when a page opens count on a timer instead. */
-    [data-count='now'] {
-      animation: sd-count 1.8s 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both;
-      animation-timeline: auto;
-    }
-    /* The real number keeps its width but is see-through; the counter sits on top of it. */
-    [data-count] {
-      position: relative;
-      display: inline-block;
-      -webkit-text-fill-color: transparent;
-    }
-    [data-count]::after {
-      content: counter(n);
-      position: absolute;
-      inset: 0;
-      -webkit-text-fill-color: currentColor;
+
+    /* Hold every entrance until its container has scrolled into view. */
+    @container style(--in: 0) {
+      [data-reveal],
+      [data-pop],
+      [data-stagger] > *,
+      [data-stagger] .tick svg path,
+      [data-curtain] img,
+      .rise .wr > span,
+      .tally:not([data-count='now']) .tally-roll {
+        animation-play-state: paused;
+      }
     }
   }
 }
+
+/* ---------- Count-ups ----------
+   Every number from 0 to the total sits in a column; the column rolls up to the total, so the
+   figure visibly counts through each number on the way. The real number stays in the text for
+   screen readers and sets the width. */
+.tally {
+  position: relative;
+  display: inline-block;
+  overflow: clip;
+  line-height: 1.1;
+  vertical-align: bottom;
+}
+.tally-sizer {
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+.tally-roll {
+  position: absolute;
+  inset: 0 0 auto 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  translate: 0 calc(-100% * var(--to) / (var(--to) + 1));
+}
+.tally-roll > span {
+  display: block;
+  line-height: 1.1;
+}
+@keyframes tally-roll {
+  from {
+    translate: 0 0;
+  }
+}
+.js-io .tally .tally-roll {
+  animation: tally-roll 2600ms cubic-bezier(0.3, 0.5, 0.2, 1) both paused;
+}
+.js-io .tally.in .tally-roll {
+  animation-play-state: running;
+}
+[data-count='now'] .tally-roll {
+  animation: tally-roll 2600ms cubic-bezier(0.3, 0.5, 0.2, 1) both;
+  animation-delay: var(--count-delay, 500ms);
+}
+@media (prefers-reduced-motion: reduce) {
+  .tally-roll {
+    animation: none !important;
+  }
+}
+
 @keyframes sd-reveal {
   from { opacity: 0; translate: 0 28px; filter: blur(6px); }
   to { opacity: 1; filter: blur(0); }
@@ -743,10 +798,6 @@ a {
 @keyframes sd-draw {
   from { stroke-dashoffset: 26; }
   to { stroke-dashoffset: 0; }
-}
-@keyframes sd-count {
-  from { --n: 0; }
-  to { --n: var(--to); }
 }
 @keyframes word-blur {
   from { opacity: 0; filter: blur(12px); translate: 0 0.3em; }

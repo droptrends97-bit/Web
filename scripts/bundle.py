@@ -25,8 +25,8 @@ def img_uri(rel: str) -> str:
         if src.suffix.lower() in ('.jpg', '.jpeg', '.png'):
             out_webp = cache / (src.stem + '.webp')
             # Full-width hero photos keep more of their size so they stay sharp across the screen.
-            cap, q = ('2200', '78') if src.stem.endswith('-hero') else ('1100', '70')
-            subprocess.run(['ffmpeg', '-loglevel', 'error', '-y', '-i', str(src), '-vf', rf'scale=min({cap}\,iw):-2', '-c:v', 'libwebp', '-quality', q, str(out_webp)], check=True)
+            cap, q = ('2800', '76') if src.stem.endswith('-hero') else ('1200', '70')
+            subprocess.run(['ffmpeg', '-loglevel', 'error', '-y', '-i', str(src), '-vf', rf'scale=min({cap}\,iw):-2', '-c:v', 'libwebp', '-quality', q, '-compression_level', '6', str(out_webp)], check=True)
             _uris[rel] = 'data:image/webp;base64,' + base64.b64encode(out_webp.read_bytes()).decode()
         else:
             _uris[rel] = data_uri(src)
@@ -105,7 +105,7 @@ def styles(html: str) -> list:
 
 
 # Extra pages carried in the single-file site, as (page id, built route).
-SITE_PAGES = [('about', 'about'), ('pots', 'services/pots-and-planters'), ('intervention', 'services/garden-intervention'), ('health', 'services/garden-health'), ('care', 'services/garden-care'), ('hedging', 'services/hedging'), ('passion', 'services/passionate-about-pots'), ('bulbs', 'services/bulb-planting'), ('reviews', 'testimonials'), ('gallery', 'gallery')]
+SITE_PAGES = [('about', 'about'), ('pots', 'services/pots-and-planters'), ('intervention', 'services/garden-intervention'), ('health', 'services/garden-health'), ('care', 'services/garden-care'), ('hedging', 'services/hedging'), ('passion', 'services/passionate-about-pots'), ('bulbs', 'services/bulb-planting'), ('reviews', 'testimonials'), ('gallery', 'gallery'), ('contact', 'contact')]
 
 
 def page_css(ids):
@@ -119,6 +119,8 @@ def page_css(ids):
     rules.append("body:has([data-page='gallery']:target, [data-page='gallery'] :target) .nav a[href='#gallery'] "
                  "{ color: var(--on-evergreen); background: rgb(255 255 255 / 0.12); }")
     rules.append("body:has([data-page='reviews']:target, [data-page='reviews'] :target) .nav a[href='#reviews'] "
+                 "{ color: var(--on-evergreen); background: rgb(255 255 255 / 0.12); }")
+    rules.append("body:has([data-page='contact']:target, [data-page='contact'] :target) .nav a[href='#contact'] "
                  "{ color: var(--on-evergreen); background: rgb(255 255 255 / 0.12); }")
     rules.append("body:has([data-page='about']:target, [data-page='about'] :target) .nav a[href='#about'] "
                  "{ color: var(--on-evergreen); background: rgb(255 255 255 / 0.12); }")
@@ -144,7 +146,7 @@ def build_site() -> str:
     links = {
         '/': '#home', '/about/': '#about', '/services/pots-and-planters/': '#pots', '/services/garden-intervention/': '#intervention', '/services/garden-health/': '#health', '/services/garden-care/': '#care', '/services/hedging/': '#hedging', '/services/passionate-about-pots/': '#passion', '/services/bulb-planting/': '#bulbs', '/testimonials/': '#reviews',
         '/services/': '#services-title', '/the-year/': '#year-title', '/gallery/': '#gallery',
-        '/contact/': '#cta-title',
+        '/contact/': '#contact',
     }
     home_main = main_inner(home)
     used_ids = set(re.findall(r' id="([^"]+)"', home_main))
@@ -167,8 +169,6 @@ def build_site() -> str:
         for dup in set(re.findall(r' id="([^"]+)"', inner)) & used_ids:
             inner = inner.replace(f' id="{dup}"', f' id="{pid}-{dup}"')
             inner = inner.replace(f'aria-labelledby="{dup}"', f'aria-labelledby="{pid}-{dup}"')
-            if dup == 'cta-title':
-                inner = inner.replace('href="/contact/"', f'href="#{pid}-cta-title"')
         used_ids |= set(re.findall(r' id="([^"]+)"', inner))
         blocks.append(f'<div id="{pid}" data-page="{pid}">' + inner + '</div>')
         for st in styles(page):
@@ -178,6 +178,8 @@ def build_site() -> str:
             if js not in home_scripts and js not in extra_js:
                 extra_js.append(js)
     html = home.replace(home_main, ''.join(blocks), 1)
+    # The preview has no server, so the contact form shows its thank-you note in place.
+    html = html.replace('method="POST" action="/thanks/"', 'method="get" action="#contact-sent"')
     # One garden for the whole preview: every page's plants live in it, and the page on show picks its set.
     _, home_block = garden_set(html)
     if home_block:

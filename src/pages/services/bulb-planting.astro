@@ -1,4 +1,5 @@
 ---
+import Count from '../../components/Count.astro';
 import Split from '../../components/Split.astro';
 import Base from '../../layouts/Base.astro';
 import Icon from '../../components/Icon.astro';
@@ -91,7 +92,7 @@ const gallery = Array.from({ length: 16 }, (_, i) => ({ src: `/img/bulb-${i + 1}
             <li class:list={['plan', { popular: p.popular }]} data-pop style={`--d:${i}`}>
               {p.popular && <span class="badge">Most popular</span>}
               <h3>{p.name}</h3>
-              <p class="count"><span data-count style={`--to:${p.bulbs.length}`}>{p.bulbs.length}</span> bulb types</p>
+              <p class="count"><Count to={p.bulbs.length} /> bulb types</p>
               <ul class="bulbs">
                 {p.bulbs.map((b) => (
                   <li>
