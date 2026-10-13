@@ -11,10 +11,10 @@ import { contact, services, alsoOffer, visitOptions, months, nav, serviceMenu, r
 // Figures from Darragh's own pages: years in gardens, team size, the year-round calendar, client reviews.
 // The hero runs through the gardening year in four of Darragh's gardens.
 const slides = [
-  { src: '/img/stage-2-hero.jpg', season: 'Spring', note: 'Tulips along the lawn', origin: '70% 70%' },
-  { src: '/img/stage-3-hero.jpg', season: 'Early summer', note: 'Alliums and silver birch', origin: '40% 60%' },
-  { src: '/img/stage-1-hero.jpg', season: 'Summer evening', note: 'Roses around the terrace', origin: '30% 40%' },
-  { src: '/img/stage-4-hero.jpg', season: 'Late summer', note: 'Rudbeckia and persicaria', origin: '55% 50%' },
+  { src: '/img/stage-1-hero.jpg', season: 'Spring', note: 'Tulips along the lawn', origin: '70% 70%' },
+  { src: '/img/stage-2-hero.jpg', season: 'Late spring', note: 'Bay standards over tulips', origin: '50% 40%' },
+  { src: '/img/stage-3-hero.jpg', season: 'Summer evening', note: 'Roses around the terrace', origin: '30% 45%' },
+  { src: '/img/stage-4-hero.jpg', season: 'High summer', note: 'Pleached hedging, freshly clipped', origin: '50% 60%' },
 ];
 
 const stats = [
@@ -424,11 +424,11 @@ const statement = statementText.split(' ').map((word) =>
     animation-delay: calc(var(--k) * 8s);
   }
   @keyframes slide {
-    0% { opacity: 0; scale: 1.16; }
+    0% { opacity: 0; scale: 1.08; }
     4% { opacity: 1; }
     25% { opacity: 1; }
-    30% { opacity: 0; scale: 1.02; }
-    100% { opacity: 0; scale: 1.02; }
+    30% { opacity: 0; scale: 1; }
+    100% { opacity: 0; scale: 1; }
   }
   .stage-shade {
     position: absolute;
