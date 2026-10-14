@@ -9,14 +9,6 @@ import CallToAction from '../components/CallToAction.astro';
 import { contact, services, alsoOffer, visitOptions, months, nav, serviceMenu, reviews } from '../data/site';
 
 // Figures from Darragh's own pages: years in gardens, team size, the year-round calendar, client reviews.
-// The hero runs through the gardening year in four of Darragh's gardens.
-const slides = [
-  { src: '/img/stage-1-hero.jpg', season: 'Spring', note: 'Tulips along the lawn', origin: '70% 70%' },
-  { src: '/img/stage-2-hero.jpg', season: 'Late spring', note: 'Bay standards over tulips', origin: '50% 40%' },
-  { src: '/img/stage-3-hero.jpg', season: 'Summer evening', note: 'Roses around the terrace', origin: '30% 45%' },
-  { src: '/img/stage-4-hero.jpg', season: 'High summer', note: 'Pleached hedging, freshly clipped', origin: '50% 60%' },
-];
-
 const stats = [
   { to: 20, suffix: '+', label: 'Years caring for gardens' },
   { to: 2, suffix: '', label: 'Gardeners on every visit' },
@@ -85,10 +77,11 @@ const statement = statementText.split(' ').map((word) =>
 <Base garden>
   <!-- Hero: one full-bleed garden, the title centred on it, the menu sitting on the photo. -->
   <section class="stage" aria-labelledby="hero-title">
+    <!-- The whole bench photo, edge to edge and uncropped, set into a soft blurred wash of itself
+         that fills the rest of the screen. -->
     <div class="stage-photo" aria-hidden="true">
-      {slides.map((sl, k) => (
-        <img src={sl.src} alt="" style={`--k:${k};transform-origin:${sl.origin}`} fetchpriority={k === 0 ? 'high' : undefined} decoding="async" />
-      ))}
+      <img class="stage-wash" src="/img/bench-hero.jpg" alt="" decoding="async" />
+      <img class="stage-full" src="/img/bench-hero.jpg" alt="" fetchpriority="high" decoding="async" />
     </div>
     <div class="stage-shade" aria-hidden="true"></div>
 
@@ -159,16 +152,6 @@ const statement = statementText.split(' ').map((word) =>
       </ul>
     </nav>
 
-    <div class="stage-season" aria-hidden="true">
-      <div class="stage-season-text">
-        {slides.map((sl, k) => (
-          <p style={`--k:${k}`}><strong>{sl.season}</strong> {sl.note}</p>
-        ))}
-      </div>
-      <div class="stage-bars">
-        {slides.map((_, k) => <span class={`b${k}`}><i></i></span>)}
-      </div>
-    </div>
   </section>
 
   <!-- Ticker -->
@@ -410,25 +393,32 @@ const statement = statementText.split(' ').map((word) =>
     inset: 0;
     z-index: -2;
   }
-  /* Four gardens through the year, each slowly drifting in and handing over to the next.
-     The whole cycle is 32s: 8s a garden, with a soft crossfade between them. */
   .stage-photo img {
     position: absolute;
-    inset: 0;
+    left: 0;
     width: 100%;
+  }
+  /* The same photo, enlarged and softly blurred, colours the whole screen. */
+  .stage-wash {
+    top: 0;
     height: 100%;
     object-fit: cover;
-    filter: saturate(1.08) contrast(1.03);
-    opacity: 0;
-    animation: slide 32s linear infinite both;
-    animation-delay: calc(var(--k) * 8s);
+    filter: blur(28px) saturate(1.15) brightness(0.9);
+    scale: 1.15;
   }
-  @keyframes slide {
-    0% { opacity: 0; scale: 1.08; }
-    4% { opacity: 1; }
-    25% { opacity: 1; }
-    30% { opacity: 0; scale: 1; }
-    100% { opacity: 0; scale: 1; }
+  /* The photo itself, whole and sharp across the full width, rising out of the wash. */
+  .stage-full {
+    bottom: 0;
+    height: auto;
+    -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 30%);
+    mask-image: linear-gradient(180deg, transparent 0%, #000 30%);
+    animation: full-in 1800ms cubic-bezier(0.2, 0.8, 0.2, 1) 200ms both;
+  }
+  @keyframes full-in {
+    from {
+      opacity: 0;
+      translate: 0 6%;
+    }
   }
   .stage-shade {
     position: absolute;
@@ -436,81 +426,9 @@ const statement = statementText.split(' ').map((word) =>
     z-index: -1;
     /* Just enough shade for the words to read; the photos stay bright and warm. */
     background:
-      radial-gradient(56% 50% at 50% 50%, rgb(10 26 16 / 0.58), rgb(10 26 16 / 0.22) 62%, transparent 82%),
-      linear-gradient(180deg, rgb(10 26 16 / 0.5) 0%, rgb(10 26 16 / 0) 20%, rgb(10 26 16 / 0) 52%, rgb(10 26 16 / 0.7) 100%);
+      radial-gradient(50% 34% at 50% 36%, rgb(10 26 16 / 0.5), transparent 80%),
+      linear-gradient(180deg, rgb(10 26 16 / 0.45) 0%, rgb(10 26 16 / 0) 20%, rgb(10 26 16 / 0) 70%, rgb(10 26 16 / 0.45) 100%);
   }
-
-  /* Which garden and season is showing, with a bar for each one filling as it plays. */
-  .stage-season {
-    position: absolute;
-    right: clamp(1.1rem, 2.6vw, 2.25rem);
-    top: clamp(5.75rem, 9vw, 7rem);
-    display: grid;
-    gap: 0.6rem;
-    width: min(15rem, 60vw);
-    text-align: right;
-    animation: fade-up 900ms var(--ease-out) 3600ms both;
-  }
-  .stage-season-text {
-    display: grid;
-  }
-  .stage-season-text p {
-    grid-area: 1 / 1;
-    margin: 0;
-    color: rgb(255 255 255 / 0.9);
-    font-size: 0.95rem;
-    text-shadow: 0 1px 10px rgb(0 0 0 / 0.5);
-    opacity: 0;
-    animation: caption 32s linear infinite both;
-    animation-delay: calc(var(--k) * 8s);
-  }
-  .stage-season-text strong {
-    display: block;
-    font-family: var(--serif);
-    font-style: italic;
-    font-weight: 500;
-    font-size: 1.5rem;
-    line-height: 1.1;
-    color: var(--leaf);
-  }
-  @keyframes caption {
-    0% { opacity: 0; translate: 0 10px; }
-    4% { opacity: 1; translate: 0 0; }
-    24% { opacity: 1; translate: 0 0; }
-    28% { opacity: 0; translate: 0 -8px; }
-    100% { opacity: 0; }
-  }
-  @media (max-width: 1040px) {
-    .stage-season {
-      display: none;
-    }
-  }
-  .stage-bars {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 0.4rem;
-  }
-  .stage-bars span {
-    height: 3px;
-    border-radius: 3px;
-    background: rgb(255 255 255 / 0.28);
-    overflow: clip;
-  }
-  .stage-bars i {
-    display: block;
-    height: 100%;
-    background: #fff;
-    transform-origin: 0 50%;
-    animation: 32s linear infinite both;
-  }
-  .b0 i { animation-name: bar0; }
-  .b1 i { animation-name: bar1; }
-  .b2 i { animation-name: bar2; }
-  .b3 i { animation-name: bar3; }
-  @keyframes bar0 { 0% { scale: 0 1; } 25% { scale: 1 1; } 99.9% { scale: 1 1; } 100% { scale: 0 1; } }
-  @keyframes bar1 { 0%, 25% { scale: 0 1; } 50% { scale: 1 1; } 99.9% { scale: 1 1; } 100% { scale: 0 1; } }
-  @keyframes bar2 { 0%, 50% { scale: 0 1; } 75% { scale: 1 1; } 99.9% { scale: 1 1; } 100% { scale: 0 1; } }
-  @keyframes bar3 { 0%, 75% { scale: 0 1; } 100% { scale: 1 1; } }
 
   /* The menu, sitting straight on the photo. */
   .stage-bar {
@@ -752,10 +670,11 @@ const statement = statementText.split(' ').map((word) =>
     animation: pop-in 800ms cubic-bezier(0.34, 1.56, 0.64, 1) 2600ms both;
   }
   /* The figures, counting up once the title has written on. */
+  /* Two figures either side, leaving the middle open so the white bench shows between them. */
   .stage-stats {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    width: min(100%, 52rem);
+    grid-template-columns: repeat(2, minmax(0, 1fr)) clamp(7rem, 14vw, 13rem) repeat(2, minmax(0, 1fr));
+    width: min(100%, 62rem);
     margin: 0.5rem 0 0;
     padding: 0;
     list-style: none;
@@ -769,6 +688,10 @@ const statement = statementText.split(' ').map((word) =>
     animation-delay: calc(2900ms + var(--i) * 120ms);
   }
   .stage-stats li:first-child {
+    border-left: 0;
+  }
+  .stage-stats li:nth-child(3) {
+    grid-column: 4;
     border-left: 0;
   }
   .stage-stats li {
@@ -965,6 +888,7 @@ const statement = statementText.split(' ').map((word) =>
       row-gap: 1.25rem;
     }
     .stage-stats li:nth-child(3) {
+      grid-column: auto;
       border-left: 0;
     }
     .stage-services {
@@ -983,16 +907,10 @@ const statement = statementText.split(' ').map((word) =>
     }
   }
   @media (prefers-reduced-motion: reduce) {
-    .stage-photo img {
+    .stage-full {
       animation: none;
     }
-    .stage-photo img:first-child,
-    .stage-season-text p:first-child {
-      opacity: 1;
-    }
     .stage,
-    .stage-season-text p,
-    .stage-bars i,
     .stage-copy,
     .stage-nav li,
     .stage-services,
