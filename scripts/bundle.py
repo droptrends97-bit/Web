@@ -30,7 +30,9 @@ def img_uri(rel: str) -> str:
     if rel not in _uris:
         src = dist / rel.lstrip('/')
         if src.suffix.lower() in ('.jpg', '.jpeg', '.png') and 'logo' not in src.stem:
-            out = cache / f'{src.stem}-{QUALITY}.avif'
+            # Keyed on the file's size and time too, so a replaced photo is never served from an old copy.
+            st = src.stat()
+            out = cache / f'{src.stem}-{st.st_size}-{int(st.st_mtime)}-{QUALITY}.avif'
             if not out.exists():
                 im = Image.open(src).convert('RGB')
                 want = int(SIZES.get(rel, 1600) * 1.05)

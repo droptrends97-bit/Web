@@ -77,11 +77,8 @@ const statement = statementText.split(' ').map((word) =>
 <Base garden>
   <!-- Hero: one full-bleed garden, the title centred on it, the menu sitting on the photo. -->
   <section class="stage" aria-labelledby="hero-title">
-    <!-- The whole bench photo, edge to edge and uncropped, set into a soft blurred wash of itself
-         that fills the rest of the screen. -->
     <div class="stage-photo" aria-hidden="true">
-      <img class="stage-wash" src="/img/bench-hero.jpg" alt="" decoding="async" />
-      <img class="stage-full" src="/img/bench-hero.jpg" alt="" fetchpriority="high" decoding="async" />
+      <img src="/img/bench-hero.jpg" alt="" fetchpriority="high" decoding="async" />
     </div>
     <div class="stage-shade" aria-hidden="true"></div>
 
@@ -393,31 +390,23 @@ const statement = statementText.split(' ').map((word) =>
     inset: 0;
     z-index: -2;
   }
+  /* The white bench garden fills the hero, settling in with a slow, gentle zoom. */
   .stage-photo img {
-    position: absolute;
-    left: 0;
     width: 100%;
-  }
-  /* The same photo, enlarged and softly blurred, colours the whole screen. */
-  .stage-wash {
-    top: 0;
     height: 100%;
     object-fit: cover;
-    filter: blur(28px) saturate(1.15) brightness(0.9);
-    scale: 1.15;
+    object-position: 50% 70%;
+    animation: photo-in 2400ms cubic-bezier(0.2, 0.8, 0.2, 1) both, photo-drift 24s 2400ms ease-in-out infinite alternate;
   }
-  /* The photo itself, whole and sharp across the full width, rising out of the wash. */
-  .stage-full {
-    bottom: 0;
-    height: auto;
-    -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 30%);
-    mask-image: linear-gradient(180deg, transparent 0%, #000 30%);
-    animation: full-in 1800ms cubic-bezier(0.2, 0.8, 0.2, 1) 200ms both;
-  }
-  @keyframes full-in {
+  @keyframes photo-in {
     from {
       opacity: 0;
-      translate: 0 6%;
+      scale: 1.12;
+    }
+  }
+  @keyframes photo-drift {
+    to {
+      scale: 1.05;
     }
   }
   .stage-shade {
@@ -427,7 +416,7 @@ const statement = statementText.split(' ').map((word) =>
     /* Just enough shade for the words to read; the photos stay bright and warm. */
     background:
       radial-gradient(50% 34% at 50% 36%, rgb(10 26 16 / 0.5), transparent 80%),
-      linear-gradient(180deg, rgb(10 26 16 / 0.45) 0%, rgb(10 26 16 / 0) 20%, rgb(10 26 16 / 0) 70%, rgb(10 26 16 / 0.45) 100%);
+      linear-gradient(180deg, rgb(10 26 16 / 0.6) 0%, rgb(10 26 16 / 0) 18%, rgb(10 26 16 / 0) 70%, rgb(10 26 16 / 0.5) 100%);
   }
 
   /* The menu, sitting straight on the photo. */
@@ -670,11 +659,10 @@ const statement = statementText.split(' ').map((word) =>
     animation: pop-in 800ms cubic-bezier(0.34, 1.56, 0.64, 1) 2600ms both;
   }
   /* The figures, counting up once the title has written on. */
-  /* Two figures either side, leaving the middle open so the white bench shows between them. */
   .stage-stats {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr)) clamp(7rem, 14vw, 13rem) repeat(2, minmax(0, 1fr));
-    width: min(100%, 62rem);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    width: min(100%, 52rem);
     margin: 0.5rem 0 0;
     padding: 0;
     list-style: none;
@@ -688,10 +676,6 @@ const statement = statementText.split(' ').map((word) =>
     animation-delay: calc(2900ms + var(--i) * 120ms);
   }
   .stage-stats li:first-child {
-    border-left: 0;
-  }
-  .stage-stats li:nth-child(3) {
-    grid-column: 4;
     border-left: 0;
   }
   .stage-stats li {
@@ -847,6 +831,40 @@ const statement = statementText.split(' ').map((word) =>
     }
   }
 
+  /* On wider screens the hero is laid out around the photo: the title over the trees and trellis,
+     the white bench left clear in the middle, and the buttons and figures out on the lawn. */
+  .stage-copy {
+    align-self: stretch;
+    grid-template-rows: auto auto auto 1fr auto auto;
+    padding-block: 0.25rem 1.5rem;
+  }
+  .stage-actions {
+    grid-row: 5;
+  }
+  .stage-stats {
+    grid-row: 6;
+  }
+  /* The bench needs a clear window of its own between the words and the buttons. */
+  .stage-copy::after {
+    content: '';
+    grid-row: 4;
+    min-height: clamp(9rem, 24vh, 15rem);
+  }
+  @media (min-width: 861px) {
+    .stage-lede {
+      display: none;
+    }
+    .stage-copy::after {
+      min-height: 0;
+    }
+  }
+  /* Tall screens have room for the intro line under the title as well. */
+  @media (min-width: 861px) and (min-height: 1000px) {
+    .stage-lede {
+      display: block;
+    }
+  }
+
   /* When the services don't all fit, the strip scrolls sideways and fades at its end. */
   @media (max-width: 1500px) {
     .stage-services-label {
@@ -888,7 +906,6 @@ const statement = statementText.split(' ').map((word) =>
       row-gap: 1.25rem;
     }
     .stage-stats li:nth-child(3) {
-      grid-column: auto;
       border-left: 0;
     }
     .stage-services {
@@ -907,7 +924,7 @@ const statement = statementText.split(' ').map((word) =>
     }
   }
   @media (prefers-reduced-motion: reduce) {
-    .stage-full {
+    .stage-photo img {
       animation: none;
     }
     .stage,
