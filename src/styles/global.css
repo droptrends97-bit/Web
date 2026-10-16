@@ -669,6 +669,7 @@ a {
   @media (prefers-reduced-motion: no-preference) {
     /* Containers that watch the scroll on behalf of their items. */
     [data-stagger],
+    [data-play],
     .rise,
     [data-curtain],
     .tally:not([data-count='now']),
@@ -735,6 +736,10 @@ a {
       .tally:not([data-count='now']) .tally-roll {
         animation-play-state: paused;
       }
+      /* Any one-off sequence: a [data-play] group holds its .play parts until it scrolls in. */
+      [data-play] .play {
+        animation-play-state: paused !important;
+      }
     }
   }
 }
@@ -782,7 +787,8 @@ a {
   animation-delay: var(--count-delay, 500ms);
 }
 @media (prefers-reduced-motion: reduce) {
-  .tally-roll {
+  .tally-roll,
+  .play {
     animation: none !important;
   }
 }

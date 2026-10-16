@@ -33,7 +33,7 @@ const gallery = [
 >
   <section class="hero" aria-labelledby="mw-title">
     <div class="hero-card">
-      <img class="hero-img" src="/img/gh-hero.jpg" alt="A striped lawn leading to a white bench, clipped bay trees and hydrangeas." />
+      <img class="hero-img" src="/img/bench-hero.jpg" alt="A striped lawn leading to a white bench, clipped bay trees and hydrangeas." />
       <div class="hero-copy">
         <a class="crumb" href="/services/">Services</a>
         <h1 id="mw-title" class="ink" style="--n:23" aria-label={"Maintenance for wellness."}><Split text={"Maintenance for wellness."} letters /><span class="swash" aria-hidden="true"><svg viewBox="0 0 300 24" preserveAspectRatio="none"><path d="M4 16C60 6 120 4 180 9s90 8 116-2" /></svg></span></h1>
@@ -124,7 +124,7 @@ const gallery = [
     position: relative; max-width: calc(var(--max) + 4rem); margin-inline: auto; border-radius: var(--radius-lg);
     overflow: clip; isolation: isolate; min-height: clamp(28rem, 44vw, 38rem); display: flex; align-items: flex-end; color: #f4f6ee;
   }
-  .hero-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 45%; z-index: -2; animation: settle-in 14s var(--ease-out) both; }
+  .hero-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 62%; z-index: -2; animation: settle-in 14s var(--ease-out) both; }
   @keyframes settle-in { from { transform: scale(1.12); } }
   .hero-card::before { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgb(12 26 17 / 0) 30%, rgb(12 26 17 / 0.5) 58%, rgb(12 26 17 / 0.88) 100%); }
   .hero-copy { padding: clamp(1.5rem, 5vw, 4rem); display: grid; gap: 1.25rem; justify-items: start; max-width: 56rem; }

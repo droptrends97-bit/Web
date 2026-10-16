@@ -139,6 +139,8 @@ def page_css(ids):
                  "{ color: var(--on-evergreen); background: rgb(255 255 255 / 0.12); }")
     rules.append("body:has([data-page='pots']:target, [data-page='pots'] :target, [data-page='intervention']:target, [data-page='intervention'] :target, [data-page='health']:target, [data-page='health'] :target, [data-page='care']:target, [data-page='care'] :target, [data-page='hedging']:target, [data-page='hedging'] :target, [data-page='passion']:target, [data-page='passion'] :target, [data-page='bulbs']:target, [data-page='bulbs'] :target) .sub summary "
                  "{ color: var(--on-evergreen); background: rgb(255 255 255 / 0.12); }")
+    others = ', '.join(f"[data-page='{p}']:target, [data-page='{p}'] :target" for p in ids)
+    rules.append(f"body:not(:has({others})) .nav a[data-home-link] {{ color: var(--on-evergreen); background: rgb(255 255 255 / 0.12); }}")
     return '<style>' + '\n'.join(rules) + '</style>'
 
 
@@ -190,6 +192,9 @@ def build_site() -> str:
         for js in module_scripts(page):
             if js not in home_scripts and js not in extra_js:
                 extra_js.append(js)
+    # The one menu serves every page, so Home is only highlighted while the home page is on show.
+    home = home.replace(' aria-current="page"', ' data-home-link', 1)
+    home_main = main_inner(home)
     html = home.replace(home_main, ''.join(blocks), 1)
     # The preview has no server, so the contact form shows its thank-you note in place.
     html = html.replace('method="POST" action="/thanks/"', 'method="get" action="#contact-sent"')

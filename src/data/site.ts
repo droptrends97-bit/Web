@@ -6,6 +6,7 @@ export const contact = {
 };
 
 export const nav = [
+  { href: '/', label: 'Home' },
   { href: '/services/', label: 'Services' },
   { href: '/the-year/', label: 'The year' },
   { href: '/gallery/', label: 'Gallery' },

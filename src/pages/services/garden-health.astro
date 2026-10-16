@@ -54,7 +54,7 @@ const gallery = [
   <!-- Hero -->
   <section class="hero" aria-labelledby="gh-title">
     <div class="hero-card">
-      <img class="hero-img" src="/img/gh-hero.jpg" alt="A freshly striped lawn leading to a white bench, clipped bay trees and hydrangeas before a trellis." />
+      <img class="hero-img" src="/img/bench-hero.jpg" alt="A freshly striped lawn leading to a white bench, clipped bay trees and hydrangeas before a trellis." />
       <div class="hero-copy">
         <a class="crumb" href="/services/">Services</a>
         <h1 id="gh-title" class="ink" style="--n:29" aria-label={"Your garden's wellness check-up."}><Split text={"Your garden's wellness check-up."} letters /><span class="swash" aria-hidden="true"><svg viewBox="0 0 300 24" preserveAspectRatio="none"><path d="M4 16C60 6 120 4 180 9s90 8 116-2" /></svg></span></h1>
@@ -113,15 +113,15 @@ const gallery = [
           healthy, happy and flourishing.
         </p>
       </div>
-      <ol class="visits" aria-label="Three programme visits a year">
+      <ol class="visits" data-play aria-label="Three programme visits a year">
         {
           [1, 2, 3].map((n) => (
             <li style={`--n:${n}`}>
               <span class="ring" aria-hidden="true">
-                <svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" /></svg>
+                <svg viewBox="0 0 100 100"><circle class="ring-track" cx="50" cy="50" r="44" /><circle class="ring-line play" cx="50" cy="50" r="44" /></svg>
               </span>
-              <span class="visit-n">{n}</span>
-              <span class="visit-label">Visit {n}</span>
+              <span class="visit-n play">{n}</span>
+              <span class="visit-label play">Visit {n}</span>
             </li>
           ))
         }
@@ -226,7 +226,7 @@ const gallery = [
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: 50% 45%;
+    object-position: 50% 62%;
     z-index: -2;
     animation: settle-in 14s var(--ease-out) both;
   }
@@ -453,21 +453,26 @@ const gallery = [
     height: 100%;
     transform: rotate(-90deg);
   }
-  .ring circle {
+  .ring-track {
     fill: rgb(255 255 255 / 0.05);
+    stroke: rgb(255 255 255 / 0.1);
+    stroke-width: 6;
+  }
+  /* One by one, a green line draws all the way round each number. */
+  .ring-line {
+    fill: none;
     stroke: var(--leaf);
     stroke-width: 6;
     stroke-linecap: round;
     stroke-dasharray: 277;
     stroke-dashoffset: 0;
+    animation: ring-draw 1300ms cubic-bezier(0.65, 0, 0.35, 1) both;
+    animation-delay: calc(250ms + (var(--n) - 1) * 1100ms);
   }
-  .js .rhythm-card .ring circle {
-    stroke-dashoffset: 277;
-    transition: stroke-dashoffset 1400ms var(--ease-out);
-    transition-delay: calc(300ms + var(--n) * 350ms);
-  }
-  .js .rhythm-card.in .ring circle {
-    stroke-dashoffset: 0;
+  @keyframes ring-draw {
+    from {
+      stroke-dashoffset: 277;
+    }
   }
   .visit-n {
     position: absolute;
@@ -481,10 +486,26 @@ const gallery = [
     font-weight: 600;
     font-size: clamp(2rem, 4vw, 3rem);
     letter-spacing: -0.04em;
+    animation: visit-pop 700ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    animation-delay: calc(250ms + (var(--n) - 1) * 1100ms + 900ms);
+  }
+  @keyframes visit-pop {
+    from {
+      opacity: 0.25;
+      scale: 0.7;
+    }
   }
   .visit-label {
     font-weight: 600;
     color: var(--on-evergreen-2);
+    animation: visit-label 600ms ease-out both;
+    animation-delay: calc(250ms + (var(--n) - 1) * 1100ms + 1000ms);
+  }
+  @keyframes visit-label {
+    from {
+      opacity: 0;
+      translate: 0 8px;
+    }
   }
   .partner {
     display: flex;

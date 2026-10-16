@@ -91,7 +91,7 @@ const jsonLd = {
                   </li>
                 ) : (
                   <li>
-                    <a href={item.href} aria-current={path.startsWith(item.href) ? 'page' : undefined}>
+                    <a href={item.href} aria-current={(item.href === '/' ? path === '/' : path.startsWith(item.href)) ? 'page' : undefined}>
                       {item.label}
                     </a>
                   </li>
@@ -111,7 +111,6 @@ const jsonLd = {
           </summary>
           <div class="menu-panel">
             <ul>
-              <li><a href="/">Home</a></li>
               {
                 nav.map((item) =>
                   item.href === '/services/' ? (
