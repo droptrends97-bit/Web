@@ -43,6 +43,11 @@ export default function Weather() {
   return (
     <>
       {heading}
+      {w.sample && (
+        <p className="mb-4 rounded-xl border border-teal/40 bg-teal/10 px-4 py-3 text-sm">
+          Sample conditions. This preview can't reach the live forecast, so it shows an example blustery morning.
+        </p>
+      )}
       {weather.status === "error" && (
         <p className="mb-4 rounded-xl border border-danger/40 bg-danger/10 px-4 py-3 text-sm">Refresh failed — showing the last reading.</p>
       )}
@@ -133,7 +138,7 @@ export default function Weather() {
         </section>
 
         <p className="text-center font-mono text-xs text-faint">
-          Source: Open-Meteo · fetched {w.fetchedAt.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+          {w.sample ? "Sample data" : "Source: Open-Meteo"} · fetched {w.fetchedAt.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
         </p>
       </div>
     </>

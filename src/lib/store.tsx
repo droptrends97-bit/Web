@@ -1,7 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import type { Boat } from "./boats";
 import { DEFAULT_PLACE, type Place, type SailType } from "./session";
-import { fetchConditions, type Conditions } from "./weather";
+import { fetchConditions, sampleConditions, type Conditions } from "./weather";
 import type { Band } from "./wind";
 
 interface Persisted {
@@ -17,9 +17,13 @@ interface Persisted {
 
 const KEY = "tacktical:v1";
 
+const DEMO = import.meta.env.VITE_DEMO === "1";
+
+const DEMO_BOAT: Boat = { id: "demo-rs200", classId: "rs200", name: "RS200", rig: "sloop-kite", pointing: 40, sails: ["Main", "Jib", "Asymmetric kite"] };
+
 const DEFAULTS: Persisted = {
-  boats: [],
-  boatId: null,
+  boats: DEMO ? [DEMO_BOAT] : [],
+  boatId: DEMO ? DEMO_BOAT.id : null,
   sailType: "racing",
   place: DEFAULT_PLACE,
   bandOverride: null,
@@ -74,6 +78,12 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const ctrl = new AbortController();
     setWeather({ status: "loading", data: lastData.current });
+    if (DEMO) {
+      const data = sampleConditions();
+      lastData.current = data;
+      setWeather({ status: "ready", data });
+      return;
+    }
     fetchConditions({ name: "", lat, lon }, ctrl.signal)
       .then((data) => {
         lastData.current = data;

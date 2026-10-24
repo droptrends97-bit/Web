@@ -11,6 +11,7 @@ export default function BoatForm() {
   const navigate = useNavigate();
   const existing = boats.find((b) => b.id === id);
 
+  const [confirmDelete, setConfirmDelete] = useState(false);
   const [classId, setClassId] = useState(existing?.classId ?? "");
   const [name, setName] = useState(existing?.name ?? "");
   const [rig, setRig] = useState<RigType>(existing?.rig ?? "una");
@@ -110,20 +111,33 @@ export default function BoatForm() {
           Save boat
         </button>
 
-        {existing && (
-          <button
-            type="button"
-            onClick={() => {
-              if (confirm(`Delete ${existing.name}?`)) {
-                deleteBoat(existing.id);
-                navigate("/boats");
-              }
-            }}
-            className="mx-auto flex items-center gap-2 text-sm text-danger hover:underline"
-          >
-            <Trash2 className="size-4" /> Delete boat
-          </button>
-        )}
+        {existing &&
+          (confirmDelete ? (
+            <div className="flex flex-wrap items-center justify-center gap-3 text-sm">
+              <span>Delete {existing.name}? This can't be undone.</span>
+              <button
+                type="button"
+                onClick={() => {
+                  deleteBoat(existing.id);
+                  navigate("/boats");
+                }}
+                className="btn-ghost border-danger/60 text-danger"
+              >
+                <Trash2 className="size-4" /> Delete
+              </button>
+              <button type="button" onClick={() => setConfirmDelete(false)} className="btn-ghost">
+                Keep it
+              </button>
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={() => setConfirmDelete(true)}
+              className="mx-auto flex items-center gap-2 text-sm text-danger hover:underline"
+            >
+              <Trash2 className="size-4" /> Delete boat
+            </button>
+          ))}
       </div>
     </form>
   );

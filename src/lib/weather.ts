@@ -18,6 +18,34 @@ export interface Conditions {
   wavePeriod: number | null;
   hours: HourForecast[];
   fetchedAt: Date;
+  /** True when this is built-in example data rather than a live forecast. */
+  sample?: boolean;
+}
+
+/** A blustery autumn morning, used by the demo build where live requests are blocked. */
+export function sampleConditions(): Conditions {
+  const now = new Date();
+  const wind = [12, 12, 13, 11, 10, 9];
+  const gust = [21, 23, 24, 20, 17, 16];
+  const dir = [338, 20, 45, 110, 135, 135];
+  return {
+    wind: 11.7,
+    gust: 21,
+    dir: 338,
+    airTemp: 10,
+    pressure: 1026,
+    waterTemp: 14,
+    waveHeight: 1.0,
+    wavePeriod: 4,
+    hours: wind.map((w, i) => ({
+      time: `${String((now.getHours() + i) % 24).padStart(2, "0")}:00`,
+      wind: w,
+      gust: gust[i],
+      dir: dir[i],
+    })),
+    fetchedAt: now,
+    sample: true,
+  };
 }
 
 const FORECAST = "https://api.open-meteo.com/v1/forecast";

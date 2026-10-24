@@ -1,6 +1,6 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, MemoryRouter, Route, Routes } from "react-router-dom";
 import "./index.css";
 import { StoreProvider } from "./lib/store";
 import Layout from "./components/Layout";
@@ -11,10 +11,13 @@ import Checklist from "./pages/Checklist";
 import Boats from "./pages/Boats";
 import BoatForm from "./pages/BoatForm";
 
+// The demo build runs inside a sandboxed frame that can't use URL routes.
+const Router = import.meta.env.VITE_DEMO === "1" ? MemoryRouter : BrowserRouter;
+
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <StoreProvider>
-      <BrowserRouter>
+      <Router>
         <Routes>
           <Route element={<Layout />}>
             <Route index element={<Session />} />
@@ -27,7 +30,7 @@ createRoot(document.getElementById("root")!).render(
             <Route path="*" element={<Session />} />
           </Route>
         </Routes>
-      </BrowserRouter>
+      </Router>
     </StoreProvider>
   </StrictMode>,
 );
